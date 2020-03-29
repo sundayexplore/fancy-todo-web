@@ -1,12 +1,15 @@
 import { Router } from 'express';
 
-const todoRouter = Router();
+import Authorize from '../middlewares/authorize';
+import TodoController from '../controllers/todo';
 
-todoRouter.get('/:userId');
-todoRouter.get('/:userId/:todoId');
-todoRouter.post('/:userId');
-todoRouter.put('/:userId/:todoId');
-todoRouter.patch('/:userId/:todoId');
-todoRouter.delete('/:userId/:todoId');
+const todoRouter = Router();
+const authorize = new Authorize();
+
+todoRouter.get('/:userId', TodoController.findAll);
+todoRouter.get('/:userId/:todoId', TodoController.findOne);
+todoRouter.post('/:userId', authorize.authorizeTodo, TodoController.create);
+todoRouter.put('/:userId/:todoId', authorize.authorizeTodo, TodoController.update);
+todoRouter.delete('/:userId/:todoId', authorize.authorizeTodo, TodoController.delete);
 
 export default todoRouter;

@@ -8,13 +8,13 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-mongoose.connect('mongodb://mongodb:27017/fancy-todo-api', {
+mongoose.connect('mongodb://localhost:27017/fancy-todo-api', {
   useNewUrlParser: true
 });
 

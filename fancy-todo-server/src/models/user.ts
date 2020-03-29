@@ -1,8 +1,19 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document, Model } from 'mongoose';
 import validator from 'validator';
-import {hashSync} from 'bcryptjs';
+import { hashSync } from 'bcryptjs';
 
-const UserSchema = new Schema({
+interface IUserModel extends Document {
+  userId: any;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const UserSchema: Schema = new Schema({
   firstName: {
     type: String,
     required: [true, 'First name cannot be empty!']
@@ -28,16 +39,18 @@ const UserSchema = new Schema({
   }
 });
 
-UserSchema.pre('save', function (next: any) {
+UserSchema.pre('save', function(this: IUserModel, next: any) {
   this.password = hashSync(this.password, 10);
   this.createdAt = new Date();
   next();
 });
 
-UserSchema.pre('update', function (next: any) {
+UserSchema.pre('update', function(this: IUserModel, next: any) {
   this.password = hashSync(this.password, 10);
   this.updatedAt = new Date();
   next();
 });
 
-export default model('User', UserSchema);
+const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
+
+export default User;
