@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import { config } from 'dotenv';
 import mongoose from 'mongoose';
+import { config } from 'dotenv';
+
+import router from './routes';
 
 if (process.env.NODE_ENV !== 'production') {
   config();
@@ -14,8 +16,11 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+app.use(router);
+
 mongoose.connect('mongodb://localhost:27017/fancy-todo-api', {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 app.listen(port, () => {

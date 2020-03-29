@@ -35,7 +35,7 @@ const UserSchema: Schema = new Schema({
   password: {
     type: String,
     required: [true, 'Password cannot be empty!'],
-    minlength: [8, 'Minimum length is 8 characters!']
+    minlength: [6, 'Minimum length is 6 characters!']
   }
 });
 

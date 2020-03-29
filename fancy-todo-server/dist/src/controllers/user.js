@@ -64,6 +64,7 @@ var UserController = /** @class */ (function () {
                             })];
                     case 1:
                         newUser = _c.sent();
+                        newUser.userId = ObjectId(newUser._id);
                         res
                             .status(201)
                             .json({ user: newUser, message: 'Successfully signed up!' });
@@ -79,7 +80,7 @@ var UserController = /** @class */ (function () {
     };
     UserController.signIn = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, userIdentifier, password, signInUser, _id, firstName, lastName, username, email, err_2;
+            var _a, userIdentifier, password, signInUser, firstName, lastName, username, email, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -97,11 +98,12 @@ var UserController = /** @class */ (function () {
                             })];
                     case 1:
                         signInUser = _b.sent();
-                        _id = signInUser._id, firstName = signInUser.firstName, lastName = signInUser.lastName, username = signInUser.username, email = signInUser.email;
+                        firstName = signInUser.firstName, lastName = signInUser.lastName, username = signInUser.username, email = signInUser.email;
                         if (bcryptjs_1.compareSync(password, signInUser.password)) {
-                            res.status(200).json({
+                            res
+                                .status(200)
+                                .json({
                                 user: {
-                                    _id: _id,
                                     firstName: firstName,
                                     lastName: lastName,
                                     username: username,
@@ -128,22 +130,22 @@ var UserController = /** @class */ (function () {
     };
     UserController.updatePut = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var userId, _a, firstName, _b, lastName, username, email, updatedPutUser, err_3;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var userId, _a, fullName, username, email, updatedPutUser, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _c.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 2, , 3]);
                         userId = req.params.userId;
-                        _a = req.body, firstName = _a.firstName, _b = _a.lastName, lastName = _b === void 0 ? '' : _b, username = _a.username, email = _a.email;
-                        return [4 /*yield*/, user_1.default.findOneAndUpdate({ _id: ObjectId(userId) }, { firstName: firstName, lastName: lastName, username: username, email: email })];
+                        _a = req.body, fullName = _a.fullName, username = _a.username, email = _a.email;
+                        return [4 /*yield*/, user_1.default.findOneAndUpdate({ _id: ObjectId(userId) }, { fullName: fullName, username: username, email: email })];
                     case 1:
-                        updatedPutUser = _c.sent();
+                        updatedPutUser = _b.sent();
                         res
                             .status(200)
                             .json({ user: updatedPutUser, message: 'Successfully updated user!' });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_3 = _c.sent();
+                        err_3 = _b.sent();
                         next(err_3);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -163,7 +165,9 @@ var UserController = /** @class */ (function () {
                         return [4 /*yield*/, user_1.default.findOneAndUpdate({ _id: ObjectId(userId) }, { password: password })];
                     case 1:
                         updatedPatchUser = _a.sent();
-                        res.status(200).json({
+                        res
+                            .status(200)
+                            .json({
                             user: updatedPatchUser,
                             message: 'Successfully updated user password!'
                         });
@@ -190,7 +194,9 @@ var UserController = /** @class */ (function () {
                             })];
                     case 1:
                         deletedUser = _a.sent();
-                        res.status(200).json({
+                        res
+                            .status(200)
+                            .json({
                             user: deletedUser,
                             message: 'Successfully deleted user account!'
                         });

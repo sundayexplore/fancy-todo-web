@@ -39,37 +39,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var bcryptjs_1 = require("bcryptjs");
 var mongoose_1 = require("mongoose");
 var user_1 = __importDefault(require("../models/user"));
-var generateToken_1 = __importDefault(require("../helpers/generateToken"));
 var ObjectId = mongoose_1.Types.ObjectId;
-var UserController = /** @class */ (function () {
-    function UserController() {
+var TodoController = /** @class */ (function () {
+    function TodoController() {
     }
-    UserController.signUp = function (req, res, next) {
+    TodoController.findAll = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, firstName, _b, lastName, username, email, password, newUser, err_1;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var userId, todos, err_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _c.trys.push([0, 2, , 3]);
-                        _a = req.body, firstName = _a.firstName, _b = _a.lastName, lastName = _b === void 0 ? '' : _b, username = _a.username, email = _a.email, password = _a.password;
-                        return [4 /*yield*/, user_1.default.create({
-                                firstName: firstName,
-                                lastName: lastName,
-                                username: username,
-                                email: email,
-                                password: password
+                        _a.trys.push([0, 2, , 3]);
+                        userId = req.params.userId;
+                        return [4 /*yield*/, user_1.default.find({
+                                _id: ObjectId(userId)
                             })];
                     case 1:
-                        newUser = _c.sent();
-                        res
-                            .status(201)
-                            .json({ user: newUser, message: 'Successfully signed up!' });
+                        todos = _a.sent();
+                        res.status(200).json({ todos: todos });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_1 = _c.sent();
+                        err_1 = _a.sent();
                         next(err_1);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -77,45 +69,27 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    UserController.signIn = function (req, res, next) {
+    TodoController.findOne = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, userIdentifier, password, signInUser, _id, firstName, lastName, username, email, err_2;
+            var _a, userId, todoId, todo, err_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
-                        _a = req.body, userIdentifier = _a.userIdentifier, password = _a.password;
+                        _a = req.params, userId = _a.userId, todoId = _a.todoId;
                         return [4 /*yield*/, user_1.default.findOne({
-                                $or: [
+                                $and: [
                                     {
-                                        username: userIdentifier
+                                        _id: ObjectId(todoId)
                                     },
                                     {
-                                        email: userIdentifier
+                                        userId: ObjectId(userId)
                                     }
                                 ]
                             })];
                     case 1:
-                        signInUser = _b.sent();
-                        _id = signInUser._id, firstName = signInUser.firstName, lastName = signInUser.lastName, username = signInUser.username, email = signInUser.email;
-                        if (bcryptjs_1.compareSync(password, signInUser.password)) {
-                            res.status(200).json({
-                                user: {
-                                    _id: _id,
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    username: username,
-                                    email: email
-                                },
-                                message: "Welcome, " + firstName,
-                                token: generateToken_1.default({
-                                    firstName: firstName,
-                                    lastName: lastName,
-                                    username: username,
-                                    email: email
-                                })
-                            });
-                        }
+                        todo = _b.sent();
+                        res.status(200).json({ todo: todo });
                         return [3 /*break*/, 3];
                     case 2:
                         err_2 = _b.sent();
@@ -126,24 +100,26 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    UserController.updatePut = function (req, res, next) {
+    TodoController.create = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var userId, _a, firstName, _b, lastName, username, email, updatedPutUser, err_3;
-            return __generator(this, function (_c) {
-                switch (_c.label) {
+            var userId, _a, name_1, dueDate, todo, err_3;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _c.trys.push([0, 2, , 3]);
+                        _b.trys.push([0, 2, , 3]);
                         userId = req.params.userId;
-                        _a = req.body, firstName = _a.firstName, _b = _a.lastName, lastName = _b === void 0 ? '' : _b, username = _a.username, email = _a.email;
-                        return [4 /*yield*/, user_1.default.findOneAndUpdate({ _id: ObjectId(userId) }, { firstName: firstName, lastName: lastName, username: username, email: email })];
+                        _a = req.body, name_1 = _a.name, dueDate = _a.dueDate;
+                        return [4 /*yield*/, user_1.default.create({
+                                name: name_1,
+                                dueDate: dueDate
+                            })];
                     case 1:
-                        updatedPutUser = _c.sent();
-                        res
-                            .status(200)
-                            .json({ user: updatedPutUser, message: 'Successfully updated user!' });
+                        todo = _b.sent();
+                        todo.userId = userId;
+                        res.status(201).json({ todo: todo, message: 'Successfully created todo!' });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_3 = _c.sent();
+                        err_3 = _b.sent();
                         next(err_3);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -151,25 +127,35 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    UserController.updatePatch = function (req, res, next) {
+    TodoController.update = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var userId, password, updatedPatchUser, err_4;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, userId, todoId, _b, name_2, dueDate, todo, err_4;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        userId = req.params.userId;
-                        password = req.body.password;
-                        return [4 /*yield*/, user_1.default.findOneAndUpdate({ _id: ObjectId(userId) }, { password: password })];
+                        _c.trys.push([0, 2, , 3]);
+                        _a = req.params, userId = _a.userId, todoId = _a.todoId;
+                        _b = req.body, name_2 = _b.name, dueDate = _b.dueDate;
+                        return [4 /*yield*/, user_1.default.findOneAndUpdate({
+                                $and: [
+                                    {
+                                        _id: ObjectId(todoId)
+                                    },
+                                    {
+                                        userId: ObjectId(userId)
+                                    }
+                                ]
+                            }, {
+                                name: name_2,
+                                dueDate: dueDate,
+                                updatedAt: new Date()
+                            })];
                     case 1:
-                        updatedPatchUser = _a.sent();
-                        res.status(200).json({
-                            user: updatedPatchUser,
-                            message: 'Successfully updated user password!'
-                        });
+                        todo = _c.sent();
+                        res.status(200).json({ todo: todo, message: 'Successfully updated todo!' });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_4 = _a.sent();
+                        err_4 = _c.sent();
                         next(err_4);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -177,26 +163,30 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    UserController.delete = function (req, res, next) {
+    TodoController.delete = function (req, res, next) {
         return __awaiter(this, void 0, void 0, function () {
-            var userId, deletedUser, err_5;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var _a, userId, todoId, todo, err_5;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        userId = req.params.userId;
+                        _b.trys.push([0, 2, , 3]);
+                        _a = req.params, userId = _a.userId, todoId = _a.todoId;
                         return [4 /*yield*/, user_1.default.findOneAndDelete({
-                                _id: ObjectId(userId)
+                                $and: [
+                                    {
+                                        _id: ObjectId(todoId)
+                                    },
+                                    {
+                                        userId: ObjectId(userId)
+                                    }
+                                ]
                             })];
                     case 1:
-                        deletedUser = _a.sent();
-                        res.status(200).json({
-                            user: deletedUser,
-                            message: 'Successfully deleted user account!'
-                        });
+                        todo = _b.sent();
+                        res.status(200).json({ todo: todo, message: 'Successfully deleted todo!' });
                         return [3 /*break*/, 3];
                     case 2:
-                        err_5 = _a.sent();
+                        err_5 = _b.sent();
                         next(err_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -204,6 +194,6 @@ var UserController = /** @class */ (function () {
             });
         });
     };
-    return UserController;
+    return TodoController;
 }());
-exports.default = UserController;
+exports.default = TodoController;

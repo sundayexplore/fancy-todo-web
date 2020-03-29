@@ -8,7 +8,7 @@ const authorize = new Authorize();
 
 todoRouter.get('/:userId', TodoController.findAll);
 todoRouter.get('/:userId/:todoId', TodoController.findOne);
-todoRouter.post('/:userId', authorize.authorizeTodo, TodoController.create);
+todoRouter.post('/:userId', TodoController.create);
 todoRouter.put('/:userId/:todoId', authorize.authorizeTodo, TodoController.update);
 todoRouter.delete('/:userId/:todoId', authorize.authorizeTodo, TodoController.delete);
 

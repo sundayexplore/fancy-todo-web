@@ -5,9 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var cors_1 = __importDefault(require("cors"));
-var mongoose_1 = __importDefault(require("mongoose"));
 var dotenv_1 = require("dotenv");
-var routes_1 = __importDefault(require("./routes"));
+var mongoose_1 = __importDefault(require("mongoose"));
 if (process.env.NODE_ENV !== 'production') {
     dotenv_1.config();
 }
@@ -16,10 +15,8 @@ var port = process.env.PORT || 3000;
 app.use(cors_1.default());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use(express_1.default.json());
-app.use(routes_1.default);
 mongoose_1.default.connect('mongodb://localhost:27017/fancy-todo-api', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    useNewUrlParser: true
 });
 app.listen(port, function () {
     console.log("Sunday's API is running on port " + port + "!");

@@ -2,6 +2,7 @@ import { compareSync } from 'bcryptjs';
 import { Types } from 'mongoose';
 
 import User from '../models/user';
+import generateToken from '../helpers/generateToken';
 
 const { ObjectId } = Types;
 
@@ -16,7 +17,6 @@ class UserController {
         email,
         password
       });
-      newUser.userId = newUser._id;
       res
         .status(201)
         .json({ user: newUser, message: 'Successfully signed up!' });
@@ -38,13 +38,24 @@ class UserController {
           }
         ]
       });
+      const { _id, firstName, lastName, username, email } = signInUser;
       if (compareSync(password, signInUser.password)) {
-        res
-          .status(200)
-          .json({
-            user: signInUser,
-            message: `Welcome, ${signInUser.firstName}`
-          });
+        res.status(200).json({
+          user: {
+            _id,
+            firstName,
+            lastName,
+            username,
+            email
+          },
+          message: `Welcome, ${firstName}`,
+          token: generateToken({
+            firstName,
+            lastName,
+            username,
+            email
+          })
+        });
       }
     } catch (err) {
       next(err);
@@ -54,10 +65,10 @@ class UserController {
   static async updatePut(req: any, res: any, next: any) {
     try {
       const { userId } = req.params;
-      const { fullName, username, email } = req.body;
+      const { firstName, lastName = '', username, email } = req.body;
       const updatedPutUser = await User.findOneAndUpdate(
         { _id: ObjectId(userId) },
-        { fullName, username, email }
+        { firstName, lastName, username, email }
       );
       res
         .status(200)
@@ -75,12 +86,10 @@ class UserController {
         { _id: ObjectId(userId) },
         { password }
       );
-      res
-        .status(200)
-        .json({
-          user: updatedPatchUser,
-          message: 'Successfully updated user password!'
-        });
+      res.status(200).json({
+        user: updatedPatchUser,
+        message: 'Successfully updated user password!'
+      });
     } catch (err) {
       next(err);
     }
@@ -92,12 +101,10 @@ class UserController {
       const deletedUser = await User.findOneAndDelete({
         _id: ObjectId(userId)
       });
-      res
-        .status(200)
-        .json({
-          user: deletedUser,
-          message: 'Successfully deleted user account!'
-        });
+      res.status(200).json({
+        user: deletedUser,
+        message: 'Successfully deleted user account!'
+      });
     } catch (err) {
       next(err);
     }
