@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-import Todo from '../models/user';
+import Todo from '../models/todo';
 
 const { ObjectId } = Types;
 
@@ -41,6 +41,7 @@ class TodoController {
       const { userId } = req.params;
       const { name, dueDate } = req.body;
       const todo = await Todo.create({
+        userId,
         name,
         dueDate
       });
@@ -70,7 +71,8 @@ class TodoController {
           name,
           dueDate,
           updatedAt: new Date()
-        }
+        },
+        { new: true }
       );
       res.status(200).json({ todo, message: 'Successfully updated todo!' });
     } catch (err) {

@@ -30,7 +30,7 @@ class Authorize {
       const foundTodo: any = await Todo.findOne({
         _id: ObjectId(todoId)
       });
-      if (foundTodo.userId !== userId) {
+      if (foundTodo.userId.toString() !== userId) {
         throw createError({name: 'AuthorizationError', message: 'You are not authorized to do this!'});
       } else {
         next();

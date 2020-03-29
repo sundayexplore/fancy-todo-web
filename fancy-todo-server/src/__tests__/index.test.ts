@@ -3,7 +3,11 @@ import { connect, disconnect, connection } from 'mongoose';
 
 import app from '../app';
 
-export const request = supertest(app);
+const request = supertest(app);
+
+let token: string;
+let userId: string;
+let todoId: string;
 
 describe('User Model Tests', () => {
   beforeAll(async () => {
@@ -35,8 +39,8 @@ describe('User Model Tests', () => {
     expect(response.body).toHaveProperty('user');
     expect(response.body).toHaveProperty('message');
     expect(response.body).toHaveProperty('token');
-    process.env.TOKEN = response.body.token;
-    process.env.USER_ID = response.body.user._id;
+    token = response.body.token;
+    userId = response.body.user._id;
   });
 
   test('Update Profile - Success', async () => {
@@ -46,8 +50,10 @@ describe('User Model Tests', () => {
       username: 'jackiechen',
       email: 'jackiechen'
     };
-    const token: any = process.env.TOKEN;
-    const response = await request.put(`/users/${process.env.USER_ID}`).send(updateProfileData).set('token', token);
+    const response = await request
+      .put(`/users/${userId}`)
+      .send(updateProfileData)
+      .set('token', token);
     expect(response.body).toHaveProperty('user');
     expect(response.body).toHaveProperty('message');
     expect(response.body.message).toBe('Successfully updated user!');
@@ -57,8 +63,10 @@ describe('User Model Tests', () => {
     const updatePasswordData = {
       password: 'jackiechen'
     };
-    const token: any = process.env.TOKEN;
-    const response = await request.patch(`/users/${process.env.USER_ID}`).send(updatePasswordData).set('token', token);
+    const response = await request
+      .patch(`/users/${userId}`)
+      .send(updatePasswordData)
+      .set('token', token);
     expect(response.body).toHaveProperty('user');
     expect(response.body).toHaveProperty('message');
     expect(response.body.message).toBe('Successfully updated user password!');
@@ -75,16 +83,37 @@ describe('Todo Model Test', () => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
-  })
+  });
 
   test('Create Todo - Success', async () => {
     const createTodoData = {
       name: 'Create Client using Vue.js',
       dueDate: new Date()
     };
-    const token: any = process.env.TOKEN;
-    const response = await request.post(`/todos/${process.env.USER_ID}`).send(createTodoData).set('token', token);
-    expect(response).toHaveProperty('todo');
+    const response = await request
+      .post(`/todos/${userId}`)
+      .send(createTodoData)
+      .set('token', token);
+    todoId = response.body.todo._id;
+    expect(response.body).toHaveProperty('todo');
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.todo.name).toBe(createTodoData.name);
+    expect(response.body.message).toBe('Successfully created todo!');
+  });
+
+  test('Update Todo - Success', async () => {
+    const updateTodoData = {
+      name: 'Install MySQL',
+      dueDate: new Date()
+    };
+    const response = await request
+      .put(`/todos/${userId}/${todoId}`)
+      .send(updateTodoData)
+      .set('token', token);
+    expect(response.body).toHaveProperty('todo');
+    expect(response.body).toHaveProperty('message');
+    expect(response.body.todo.name).toBe(updateTodoData.name);
+    expect(response.body.message).toBe('Successfully updated todo!');
   });
 
   afterAll(async () => {

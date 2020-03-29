@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
-var user_1 = __importDefault(require("../models/user"));
+var todo_1 = __importDefault(require("../models/todo"));
 var ObjectId = mongoose_1.Types.ObjectId;
 var TodoController = /** @class */ (function () {
     function TodoController() {
@@ -53,7 +53,7 @@ var TodoController = /** @class */ (function () {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
                         userId = req.params.userId;
-                        return [4 /*yield*/, user_1.default.find({
+                        return [4 /*yield*/, todo_1.default.find({
                                 _id: ObjectId(userId)
                             })];
                     case 1:
@@ -77,7 +77,7 @@ var TodoController = /** @class */ (function () {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
                         _a = req.params, userId = _a.userId, todoId = _a.todoId;
-                        return [4 /*yield*/, user_1.default.findOne({
+                        return [4 /*yield*/, todo_1.default.findOne({
                                 $and: [
                                     {
                                         _id: ObjectId(todoId)
@@ -109,7 +109,8 @@ var TodoController = /** @class */ (function () {
                         _b.trys.push([0, 2, , 3]);
                         userId = req.params.userId;
                         _a = req.body, name_1 = _a.name, dueDate = _a.dueDate;
-                        return [4 /*yield*/, user_1.default.create({
+                        return [4 /*yield*/, todo_1.default.create({
+                                userId: userId,
                                 name: name_1,
                                 dueDate: dueDate
                             })];
@@ -136,7 +137,7 @@ var TodoController = /** @class */ (function () {
                         _c.trys.push([0, 2, , 3]);
                         _a = req.params, userId = _a.userId, todoId = _a.todoId;
                         _b = req.body, name_2 = _b.name, dueDate = _b.dueDate;
-                        return [4 /*yield*/, user_1.default.findOneAndUpdate({
+                        return [4 /*yield*/, todo_1.default.findOneAndUpdate({
                                 $and: [
                                     {
                                         _id: ObjectId(todoId)
@@ -149,7 +150,7 @@ var TodoController = /** @class */ (function () {
                                 name: name_2,
                                 dueDate: dueDate,
                                 updatedAt: new Date()
-                            })];
+                            }, { new: true })];
                     case 1:
                         todo = _c.sent();
                         res.status(200).json({ todo: todo, message: 'Successfully updated todo!' });
@@ -171,7 +172,7 @@ var TodoController = /** @class */ (function () {
                     case 0:
                         _b.trys.push([0, 2, , 3]);
                         _a = req.params, userId = _a.userId, todoId = _a.todoId;
-                        return [4 /*yield*/, user_1.default.findOneAndDelete({
+                        return [4 /*yield*/, todo_1.default.findOneAndDelete({
                                 $and: [
                                     {
                                         _id: ObjectId(todoId)

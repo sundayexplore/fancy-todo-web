@@ -11,7 +11,7 @@ export default (err: IError, req: object, res: any, next: any) => {
       break;
   
     default:
-      console.log(err);
+      console.log(err.name);
       res.status(500).json({message: err.message});
       break;
   }

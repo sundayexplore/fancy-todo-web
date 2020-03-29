@@ -6,7 +6,7 @@ exports.default = (function (err, req, res, next) {
             res.status(401).json({ message: err.message });
             break;
         default:
-            console.log(err);
+            console.log(err.name);
             res.status(500).json({ message: err.message });
             break;
     }

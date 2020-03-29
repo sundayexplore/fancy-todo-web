@@ -90,7 +90,7 @@ var Authorize = /** @class */ (function () {
                             })];
                     case 1:
                         foundTodo = _b.sent();
-                        if (foundTodo.userId !== userId) {
+                        if (foundTodo.userId.toString() !== userId) {
                             throw http_errors_1.default({ name: 'AuthorizationError', message: 'You are not authorized to do this!' });
                         }
                         else {
