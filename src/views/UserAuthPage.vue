@@ -1,11 +1,20 @@
 <template>
-  <div>Hello WOrld</div>
+  <v-container fluid>
+    <v-row align="center" justify="center">
+      <v-col>
+        <h1>This is User Auth Page</h1>
+      </v-col>
+      <v-col cols="6">
+        <router-view />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   name: "UserAuthPage"
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped></style>

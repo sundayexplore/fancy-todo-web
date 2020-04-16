@@ -1,5 +1,8 @@
 <template>
-  <Header />
+  <div>
+    <Header v-if="this.$store.isSignedIn" />
+    <router-view />
+  </div>
 </template>
 
 <script lang="ts">
