@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header v-if="this.$store.isSignedIn" />
+    <Header />
     <router-view />
   </div>
 </template>

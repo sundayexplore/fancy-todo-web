@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import { HomePage, AboutPage, UserAuthPage, UserPage } from "@/views";
-import { SignInForm, SignUpForm } from "@/components";
+import { HomePage, AboutPage, UserPage } from "@/views";
+import { SignInForm, SignUpForm, TodoList } from "@/components";
 import { userAPI } from "@/utils";
 
 Vue.use(VueRouter);
@@ -34,31 +34,25 @@ const routes = [
     component: AboutPage
   },
   {
-    path: "/auth",
-    name: "Auth",
-    component: UserAuthPage,
-    children: [
-      {
-        path: "signin",
-        name: "SignIn",
-        component: SignInForm,
-        meta: {
-          title: "Sign In"
-        }
-      },
-      {
-        path: "signup",
-        name: "SignUp",
-        component: SignUpForm,
-        meta: {
-          title: "Sign Up"
-        }
-      }
-    ],
+    path: "/signin",
+    name: "SignIn",
+    component: SignInForm,
+    meta: {
+      title: "Sign In"
+    },
     beforeEnter
   },
   {
-    path: "/users/:userId",
+    path: "/signup",
+    name: "SignUp",
+    component: SignUpForm,
+    meta: {
+      title: "Sign Up"
+    },
+    beforeEnter
+  },
+  {
+    path: "/:username",
     name: "User",
     component: UserPage,
     props: true,
@@ -68,18 +62,9 @@ const routes = [
     },
     children: [
       {
-        path: "profile",
-        name: "Profile",
-        component: SignInForm,
-        meta: {
-          requiresAuth: true,
-          title: "Profile"
-        }
-      },
-      {
-        path: "/todos",
+        path: "todos",
         name: "TodoList",
-        component: SignInForm,
+        component: TodoList,
         meta: {
           requiresAuth: true,
           title: "Todo List"

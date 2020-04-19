@@ -1,27 +1,35 @@
 <template>
-  <v-card class="mx-auto signInForm" max-width="400" outlined>
-    <v-form ref="form" @submit.prevent="signIn">
-      <v-text-field
-        v-model="userIdentifier"
-        label="Email or username"
-        required
-      />
-      <v-text-field v-model="password" label="Password" required />
-      <v-btn outlined type="submit">Sign In</v-btn>
-      <div class="questionContainer">
-        <p class="subtitle-2 questionParagraph">Don't have an account?</p>
-        <router-link to="SignUp" class="subtitle-2 questionParagraph">
-          Sign Up!
-        </router-link>
-      </div>
-    </v-form>
-  </v-card>
+  <v-container class="container">
+    <v-card class="mx-auto signInForm" max-width="400" outlined>
+      <v-form ref="form" @submit.prevent="signIn">
+        <v-text-field
+          v-model="userData.userIdentifier"
+          label="Email or username"
+          required
+          type="text"
+        />
+        <v-text-field
+          v-model="userData.password"
+          label="Password"
+          required
+          type="password"
+        />
+        <v-btn outlined type="submit" @click.prevent="signIn">Sign In</v-btn>
+        <div class="questionContainer">
+          <p class="subtitle-2 questionParagraph">Don't have an account?</p>
+          <router-link to="SignUp" class="subtitle-2 questionParagraph">
+            Sign Up!
+          </router-link>
+        </div>
+      </v-form>
+    </v-card>
+  </v-container>
 </template>
 
-<script>
-import { userAPI } from "@/utils";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
+export default Vue.extend({
   name: "SignInForm",
   data: () => ({
     isLoading: false,
@@ -34,12 +42,10 @@ export default {
     async signIn() {
       this.isLoading = true;
       try {
-        const signInData = {
-          userIdentifier: this.userData.userIdentifier,
-          password: this.userData.password
-        };
-        const { data } = await userAPI.post("/signin", signInData);
-        console.log(data);
+        const { data } = await this.$userAPI.post("/signin", this.userData);
+        localStorage.setItem("token", data.token);
+        this.$store.dispatch("signIn", data.user);
+        this.$router.push({ name: "User", params: { userId: data.user._id } });
         this.isLoading = false;
       } catch (err) {
         this.isLoading = false;
@@ -47,10 +53,19 @@ export default {
       }
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
+.container {
+  display: grid;
+  place-items: center center;
+  height: 100vh;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+
 .signInForm {
   display: flex;
   justify-content: center;

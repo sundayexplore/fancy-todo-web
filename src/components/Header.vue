@@ -1,41 +1,66 @@
 <template>
   <div>
     <v-app-bar color="deep-purple accent-4" dense dark>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-
       <v-toolbar-title>Fancy Todo</v-toolbar-title>
-
       <v-spacer></v-spacer>
-
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-
-      <v-menu left bottom>
-        <template v-slot:activator="{ on }">
-          <v-btn icon v-on="on">
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-
-        <v-list>
-          <v-list-item v-for="n in 5" :key="n" @click="() => {}">
-            <v-list-item-title>Option {{ n }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
+      <v-btn outlined @click.prevent="redirect">{{ decision.text }}</v-btn>
     </v-app-bar>
   </div>
 </template>
 
-<script>
-export default {
-  name: "Header"
-};
+<script lang="ts">
+import Vue from "vue";
+
+export default Vue.extend({
+  name: "Header",
+  data() {
+    return {
+      decision: {
+        name: "SignIn",
+        path: "/signin",
+        text: "Sign In"
+      }
+    };
+  },
+  methods: {
+    async decideUserStatus() {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          await this.$userAPI.get("/check", {
+            headers: { token }
+          });
+          this.decision.text = "Sign Out";
+        } catch (err) {
+          console.log(err.response);
+        }
+      } else if (this.$router.currentRoute.name == "SignIn") {
+        this.decision.name = "SignUp";
+        this.decision.path = "/signup";
+        this.decision.text = "Sign Up";
+      } else if (this.$router.currentRoute.name == "SignUp") {
+        this.decision.name = "SignIn";
+        this.decision.path = "/signin";
+        this.decision.text = "Sign In";
+      }
+    },
+    redirect() {
+      if (this.decision.text == "Sign Out") {
+        this.$store.dispatch("signOut");
+        this.decision.path = "/signin";
+      }
+      this.$router.push(this.decision.path);
+    }
+  },
+  mounted() {
+    this.decideUserStatus();
+  },
+  watch: {
+    $route(to, from) {
+      this.decideUserStatus();
+    }
+  }
+});
 </script>
 
 <style></style>

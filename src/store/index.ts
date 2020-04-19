@@ -23,6 +23,7 @@ export default new Vuex.Store({
     SIGN_OUT(state) {
       state.isSignedIn = false;
       state.currentUser = null;
+      localStorage.clear();
     },
     SET_LOADING_TRUE(state) {
       state.isLoading = true;

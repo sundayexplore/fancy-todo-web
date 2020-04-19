@@ -1,7 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
-import { ApiBaseURL } from "@/utils";
+import decideApiBaseURL from "@/utils/decideApiBaseURL";
 
-const userAPI = axios.create({baseURL: `${ApiBaseURL}/users`});
+const userAPI = axios.create({ baseURL: `${decideApiBaseURL()}/users` });
 
 export default userAPI;
