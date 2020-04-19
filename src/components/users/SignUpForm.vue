@@ -62,10 +62,18 @@ export default Vue.extend({
     async signUp() {
       this.isLoading = true;
       try {
-        console.log(this.userData);
-        const { data } = await this.$userAPI.post("/signup", this.userData);
-        // Currently, we ask user to sign in after signing up.
-        this.$router.push({ name: "SignIn" });
+        const signInData = {
+          userIdentifier: this.userData.username,
+          password: this.userData.password
+        };
+        await this.$userAPI.post("/signup", this.userData);
+        const { data } = await this.$userAPI.post("/signin", signInData);
+        localStorage.setItem("token", data.token);
+        this.$store.dispatch("signIn", data.user);
+        this.$router.push({
+          name: "Dashboard",
+          params: { username: data.user.username }
+        });
         this.isLoading = false;
       } catch (err) {
         console.log(err.response);

@@ -1,13 +1,17 @@
 <template>
-  <v-data-table
-    :headers="headers"
-    :items="todos"
-    class="elevation-1"
-  ></v-data-table>
+  <v-container class="container">
+    <v-data-table
+      :headers="headers"
+      :items="todos"
+      class="elevation-1"
+    ></v-data-table>
+  </v-container>
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "TodoList",
   data() {
     return {
@@ -108,7 +112,7 @@ export default {
       ]
     };
   }
-};
+});
 </script>
 
 <style lang="scss" scoped></style>

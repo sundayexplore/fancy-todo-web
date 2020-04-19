@@ -45,7 +45,10 @@ export default Vue.extend({
         const { data } = await this.$userAPI.post("/signin", this.userData);
         localStorage.setItem("token", data.token);
         this.$store.dispatch("signIn", data.user);
-        this.$router.push({ name: "User", params: { userId: data.user._id } });
+        this.$router.push({
+          name: "User",
+          params: { username: data.user.username }
+        });
         this.isLoading = false;
       } catch (err) {
         this.isLoading = false;

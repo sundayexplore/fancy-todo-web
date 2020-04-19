@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import { HomePage, AboutPage, UserPage } from "@/views";
+import { HomePage, AboutPage, Dashboard } from "@/views";
 import { SignInForm, SignUpForm, TodoList } from "@/components";
 import { userAPI } from "@/utils";
 
@@ -11,8 +11,7 @@ const beforeEnter = async (to: any, from: any, next: any) => {
   const token = localStorage.getItem("token");
   if (token) {
     try {
-      const { data } = await userAPI.get("/check", { headers: { token } });
-      console.log(data.message);
+      await userAPI.get("/check", { headers: { token } });
       next({ path: from.path });
     } catch (err) {
       console.log(err.response);
@@ -53,8 +52,8 @@ const routes = [
   },
   {
     path: "/:username",
-    name: "User",
-    component: UserPage,
+    name: "Dashboard",
+    component: Dashboard,
     props: true,
     meta: {
       requiresAuth: true,
