@@ -6,7 +6,7 @@ import vuetify from "./plugins/vuetify";
 import router from "./router";
 import store from './store';
 
-import { userAPI, todoAPI } from "@/utils";
+import { userAPI, todoAPI, IUser } from "@/utils";
 
 Vue.config.productionTip = false;
 
@@ -16,7 +16,8 @@ Vue.prototype.$todoAPI = todoAPI;
 declare module "vue/types/vue" {
   interface Vue {
     $userAPI: AxiosInstance;
-    $todAPi: AxiosInstance;
+    $todoAPI: AxiosInstance;
+    currentUser: IUser;
   }
 }
 

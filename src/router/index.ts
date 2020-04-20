@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import { HomePage, AboutPage, Dashboard } from "@/views";
-import { SignInForm, SignUpForm, TodoList } from "@/components";
+import { SignInForm, SignUpForm } from "@/components";
 import { userAPI } from "@/utils";
 
 Vue.use(VueRouter);
@@ -57,19 +57,8 @@ const routes = [
     props: true,
     meta: {
       requiresAuth: true,
-      title: "User"
-    },
-    children: [
-      {
-        path: "todos",
-        name: "TodoList",
-        component: TodoList,
-        meta: {
-          requiresAuth: true,
-          title: "Todo List"
-        }
-      }
-    ]
+      title: "Dashboard"
+    }
   }
 ];
 

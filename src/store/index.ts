@@ -16,6 +16,7 @@ export default new Vuex.Store({
     },
     SET_CURRENT_USER(state, user) {
       state.currentUser = user;
+      localStorage.setItem("currentUser", JSON.stringify(user));
     },
     SIGN_IN(state) {
       state.isSignedIn = true;

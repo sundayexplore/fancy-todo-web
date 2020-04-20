@@ -1,19 +1,23 @@
 <template>
   <v-container class="container">
     <user-profile-card class="userProfileCard" />
-    <router-view class="routerView"></router-view>
+    <todo-list class="todoList"></todo-list>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 
-import { UserProfileCard } from "@/components";
+import { UserProfileCard, TodoList } from "@/components";
 
 export default Vue.extend({
   name: "UserPage",
   components: {
-    UserProfileCard
+    UserProfileCard,
+    TodoList
+  },
+  mounted() {
+    console.log(this.$store.state);
   }
 });
 </script>
@@ -21,21 +25,18 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .container {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
-  grid-template-areas: "UserProfileCard RouterView";
+  grid-template-areas: "UserProfileCard TodoList";
   height: 100vh;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  place-items: center center;
+  justify-items: center;
 }
 
 .userProfileCard {
   grid-area: UserProfileCard;
 }
 
-.routerView {
-  grid-area: RouterView;
+.todoList {
+  grid-area: TodoList;
 }
 </style>

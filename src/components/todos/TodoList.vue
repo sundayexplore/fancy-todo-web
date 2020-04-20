@@ -1,118 +1,88 @@
 <template>
-  <v-container class="container">
+  <v-container class="todoListContainer">
     <v-data-table
+      v-model="selected"
       :headers="headers"
       :items="todos"
-      class="elevation-1"
-    ></v-data-table>
+      class="elevation-1 todoListTable"
+      show-select
+      group-by="Due Date"
+      show-group-by
+    >
+      <template v-slot:no-data>
+        <p>No todos. Click here to create one!</p>
+        <v-btn outlined small>Create todo</v-btn>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import moment from "moment";
+import { Todo } from "@/utils";
 
 export default Vue.extend({
   name: "TodoList",
   data() {
     return {
+      selected: [],
       headers: [
         {
-          text: "Dessert (100g serving)",
+          text: "Todo",
           align: "start",
-          sortable: false,
-          value: "name"
-        },
-        { text: "Calories", value: "calories" },
-        { text: "Fat (g)", value: "fat" },
-        { text: "Carbs (g)", value: "carbs" },
-        { text: "Protein (g)", value: "protein" },
-        { text: "Iron (%)", value: "iron" }
-      ],
-      todos: [
-        {
-          name: "Frozen Yogurt",
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: "1%"
+          sortable: true,
+          value: "Todo"
         },
         {
-          name: "Ice cream sandwich",
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          iron: "1%"
+          text: "Due Date",
+          align: "center",
+          sortable: true,
+          value: "Due Date"
         },
         {
-          name: "Eclair",
-          calories: 262,
-          fat: 16.0,
-          carbs: 23,
-          protein: 6.0,
-          iron: "7%"
-        },
-        {
-          name: "Cupcake",
-          calories: 305,
-          fat: 3.7,
-          carbs: 67,
-          protein: 4.3,
-          iron: "8%"
-        },
-        {
-          name: "Gingerbread",
-          calories: 356,
-          fat: 16.0,
-          carbs: 49,
-          protein: 3.9,
-          iron: "16%"
-        },
-        {
-          name: "Jelly bean",
-          calories: 375,
-          fat: 0.0,
-          carbs: 94,
-          protein: 0.0,
-          iron: "0%"
-        },
-        {
-          name: "Lollipop",
-          calories: 392,
-          fat: 0.2,
-          carbs: 98,
-          protein: 0,
-          iron: "2%"
-        },
-        {
-          name: "Honeycomb",
-          calories: 408,
-          fat: 3.2,
-          carbs: 87,
-          protein: 6.5,
-          iron: "45%"
-        },
-        {
-          name: "Donut",
-          calories: 452,
-          fat: 25.0,
-          carbs: 51,
-          protein: 4.9,
-          iron: "22%"
-        },
-        {
-          name: "KitKat",
-          calories: 518,
-          fat: 26.0,
-          carbs: 65,
-          protein: 7,
-          iron: "6%"
+          text: "Due Time",
+          align: "center",
+          sortable: true,
+          value: "Due Time"
         }
       ]
     };
+  },
+  computed: {
+    todos() {
+      // const todos = this.$store.state.todos;
+      const todos = [
+        {
+          name: "check",
+          dueDate: moment()
+        },
+        {
+          name: "check2",
+          dueDate: moment("05/05/1973")
+        }
+      ];
+
+      todos.forEach((todo: Todo) => {
+        const currentDueDate = todo.dueDate;
+        todo["Todo"] = todo.name;
+        todo["Due Date"] = currentDueDate.format("LL");
+        todo["Due Time"] = currentDueDate.format("LT");
+      });
+
+      return todos;
+    }
   }
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.todoListContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.todoListTable {
+  width: 50vw;
+}
+</style>
