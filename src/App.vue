@@ -8,7 +8,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Header } from "@/components";
-import { IUser } from "@/utils";
+import { User } from "@/utils";
 
 export default Vue.extend({
   name: "App",
@@ -18,7 +18,7 @@ export default Vue.extend({
   methods: {
     async checkAll() {
       const token: string = localStorage.getItem("token")!;
-      const currentUser: IUser = JSON.parse(
+      const currentUser: User = JSON.parse(
         localStorage.getItem("currentUser")!
       );
 
@@ -43,3 +43,10 @@ export default Vue.extend({
   }
 });
 </script>
+
+<style lang="scss" scoped>
+.addTodoFormContainer {
+  width: 300px;
+  height: 60px;
+}
+</style>

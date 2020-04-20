@@ -1,12 +1,13 @@
 import Vue from "vue";
 import { AxiosInstance } from "axios";
+import "material-design-icons-iconfont/dist/material-design-icons.css"
 
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
 import store from './store';
 
-import { userAPI, todoAPI, IUser } from "@/utils";
+import { userAPI, todoAPI, User } from "@/utils";
 
 Vue.config.productionTip = false;
 
@@ -17,7 +18,7 @@ declare module "vue/types/vue" {
   interface Vue {
     $userAPI: AxiosInstance;
     $todoAPI: AxiosInstance;
-    currentUser: IUser;
+    currentUser: User;
   }
 }
 

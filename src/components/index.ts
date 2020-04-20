@@ -8,3 +8,4 @@ export { default as UserProfileCard } from "@/components/users/UserProfileCard.v
 
 // TODO COMPONENTS
 export { default as TodoList } from "@/components/todos/TodoList.vue";
+export { default as AddTodoModal } from "@/components/todos/AddTodoModal.vue";

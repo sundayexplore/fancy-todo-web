@@ -1,5 +1,6 @@
 <template>
   <v-container class="todoListContainer">
+    <add-todo-modal></add-todo-modal>
     <v-data-table
       v-model="selected"
       :headers="headers"
@@ -20,10 +21,15 @@
 <script lang="ts">
 import Vue from "vue";
 import moment from "moment";
+
+import AddTodoModal from "./AddTodoModal.vue";
 import { Todo } from "@/utils";
 
 export default Vue.extend({
   name: "TodoList",
+  components: {
+    AddTodoModal
+  },
   data() {
     return {
       selected: [],
