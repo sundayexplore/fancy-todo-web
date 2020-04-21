@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { AxiosInstance } from "axios";
-import "material-design-icons-iconfont/dist/material-design-icons.css"
+import "material-design-icons-iconfont/dist/material-design-icons.css";
 
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";

@@ -1,13 +1,18 @@
 <template>
   <v-container class="addTodoFormContainer">
     <v-form ref="form" @submit.prevent="addTodo">
-      <v-text-field v-model="todoName" label="Todo Name" required type="text" />
+      <v-text-field
+        v-model="todoName"
+        @input="addTodo"
+        label="Todo Name"
+        required
+        type="text"
+      />
 
       <v-menu
         ref="menu"
         v-model="datePickerMenu"
         :close-on-content-click="false"
-        :return-value.sync="computedDueDate"
         transition="scale-transition"
         offset-y
         min-width="290px"
@@ -22,7 +27,8 @@
           ></v-text-field>
         </template>
         <v-date-picker
-          v-model="computedDueDate"
+          v-model="dueDate"
+          @change="addTodo"
           no-title
           scrollable
           :min="computedMinDate"
@@ -31,7 +37,7 @@
           <v-btn text color="primary" @click="datePickerMenu = false"
             >Cancel</v-btn
           >
-          <v-btn text color="primary" @click="setDate(computedDueDate)">OK</v-btn>
+          <v-btn text color="primary" @click="setDate(dueDate)">OK</v-btn>
         </v-date-picker>
       </v-menu>
 
@@ -40,7 +46,6 @@
         v-model="timePickerMenu"
         :close-on-content-click="false"
         :nudge-right="40"
-        :return-value.sync="computedDueTime"
         transition="scale-transition"
         offset-y
         max-width="290px"
@@ -57,9 +62,10 @@
         </template>
         <v-time-picker
           v-if="timePickerMenu"
-          v-model="computedDueTime"
+          v-model="dueTime"
+          @change="addTodo"
           full-width
-          @click:minute="setTime(computedDueTime)"
+          @click:minute="setTime(dueTime)"
         ></v-time-picker>
       </v-menu>
     </v-form>
@@ -70,43 +76,48 @@
 import Vue from "vue";
 import moment from "moment";
 
-export default Vue.extend({
+interface Data {
+  todoName: string;
+  dueDate: string;
+  dueTime: string;
+  datePickerMenu: boolean;
+  timePickerMenu: boolean;
+  modal: boolean;
+}
+
+interface Computed {
+  computedDueDate: string;
+  computedDueTime: string;
+  computedMinDate: string;
+  computedMinTime: string;
+}
+
+interface Methods {
+  setDate: (newDueDate: string) => void;
+  setTime: (newDueTime: string) => void;
+  addTodo: () => void;
+}
+
+export default Vue.extend<Data, Methods, Computed>({
   name: "AddTodoForm",
   data() {
     return {
       todoName: "",
-      dueDate: moment(),
+      dueDate: moment()
+        .toISOString()
+        .substr(0, 10),
+      dueTime: moment().format("HH:mm"),
       datePickerMenu: false,
       timePickerMenu: false,
       modal: false
     };
   },
   computed: {
-    computedDueDate: {
-      get() {
-        return this.dueDate.toISOString().substr(0, 10);
-      },
-      set(newDueDate: string) {
-        const newDate = moment(newDueDate);
-        this.dueDate = this.dueDate.set({
-          year: newDate.get("year"),
-          month: newDate.get("month"),
-          date: newDate.get("date")
-        });
-      }
+    computedDueDate() {
+      return moment(this.dueDate).format("LL");
     },
-    computedDueTime: {
-      get() {
-        return this.dueDate.format("HH:mm");
-      },
-      set(newDueTime: string) {
-        const newTime = moment(newDueTime, "HH:mm");
-        this.dueDate = this.dueDate.set({
-          hour: newTime.get("hour"),
-          minute: newTime.get("minute"),
-          second: newTime.get("second")
-        });
-      }
+    computedDueTime() {
+      return moment(`${this.dueDate} ${this.dueTime}`).format("LT");
     },
     computedMinDate() {
       return moment()
@@ -118,24 +129,18 @@ export default Vue.extend({
     }
   },
   methods: {
-    setDate(newDueDate: string) {
-      console.log(newDueDate);
-      const newDate = moment(newDueDate);
-      this.dueDate = this.dueDate.set({
-        year: newDate.get("year"),
-        month: newDate.get("month"),
-        date: newDate.get("date")
-      });
+    setDate(newDueDate) {
+      this.dueDate = newDueDate;
       this.datePickerMenu = false;
     },
-    setTime(newDueTime: string) {
-      console.log(newDueTime);
-      const newTime = moment(newDueTime, "HH:mm");
-      this.dueDate = this.dueDate.set({
-        hour: newTime.get("hour"),
-        minute: newTime.get("minute"),
-        second: newTime.get("second")
-      });
+    setTime(newDueTime) {
+      this.dueTime = newDueTime;
+      this.timePickerMenu = false;
+    },
+    addTodo() {
+      const name = this.todoName;
+      const dueDate = moment(`${this.dueDate} ${this.dueTime}`).toISOString();
+      this.$emit("change", { name, dueDate });
     }
   }
 });

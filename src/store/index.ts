@@ -1,11 +1,15 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import { Todo, User } from "@/utils";
+
 Vue.use(Vuex);
+
+const todos: Array<Todo> = [];
 
 export default new Vuex.Store({
   state: {
-    todos: [],
+    todos,
     currentUser: null,
     isSignedIn: false,
     isLoading: false
@@ -31,13 +35,28 @@ export default new Vuex.Store({
     },
     SET_LOADING_FALSE(state) {
       state.isLoading = false;
+    },
+    ADD_TODO(state, todo) {
+      state.todos.concat(todo);
+    },
+    UPDATE_TODO(state, todoIn: Todo) {
+      state.todos.forEach(todo => {
+        if (todo._id == todoIn._id) {
+          todo = todoIn;
+        }
+      });
+    },
+    DELETE_TODO(state, todoId: string) {
+      state.todos.filter(todo => {
+        return todo._id != todoId;
+      });
     }
   },
   actions: {
-    fetchAllTodos({ commit }, todos) {
+    fetchAllTodos({ commit }, todos: Array<Todo>) {
       commit("FETCH_ALL_TODOS", todos);
     },
-    signIn({ commit }, currentUser) {
+    signIn({ commit }, currentUser: User) {
       commit("SIGN_IN");
       commit("SET_CURRENT_USER", currentUser);
     },
@@ -49,6 +68,15 @@ export default new Vuex.Store({
     },
     setLoadingFalse({ commit }) {
       commit("SET_LOADING_FALSE");
+    },
+    addTodo({ commit }, todo: Todo) {
+      commit("ADD_TODO", todo);
+    },
+    updateTodo({ commit }, todo: Todo) {
+      commit("UPDATE_TODO", todo);
+    },
+    deleteTodo({ commit }, todoId: string) {
+      commit("DELETE_TODO", todoId);
     }
   },
   modules: {}
