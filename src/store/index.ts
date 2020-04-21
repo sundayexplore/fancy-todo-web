@@ -16,7 +16,7 @@ export default new Vuex.Store({
   },
   mutations: {
     FETCH_ALL_TODOS(state, todos) {
-      state.todos.concat(todos);
+      state.todos = state.todos.concat(todos);
     },
     SET_CURRENT_USER(state, user) {
       state.currentUser = user;
@@ -37,17 +37,18 @@ export default new Vuex.Store({
       state.isLoading = false;
     },
     ADD_TODO(state, todo) {
-      state.todos.concat(todo);
+      state.todos = state.todos.concat(todo);
     },
     UPDATE_TODO(state, todoIn: Todo) {
-      state.todos.forEach(todo => {
+      state.todos = state.todos.map(todo => {
         if (todo._id == todoIn._id) {
           todo = todoIn;
         }
+        return todo;
       });
     },
     DELETE_TODO(state, todoId: string) {
-      state.todos.filter(todo => {
+      state.todos = state.todos.filter(todo => {
         return todo._id != todoId;
       });
     }

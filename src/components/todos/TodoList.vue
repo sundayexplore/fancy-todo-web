@@ -8,6 +8,7 @@
       class="elevation-1 todoListTable"
       show-select
       group-by="Due Date"
+      item-key="_id"
       show-group-by
     >
       <template v-slot:no-data>
@@ -57,26 +58,12 @@ export default Vue.extend({
   },
   computed: {
     todos() {
-      // const todos = this.$store.state.todos;
-      const todos = [
-        {
-          name: "check",
-          dueDate: moment()
-        },
-        {
-          name: "check2",
-          dueDate: moment("05/05/1973")
-        }
-      ];
-
-      todos.forEach((todo: Todo) => {
-        const currentDueDate = todo.dueDate;
+      return this.$store.state.todos.map((todo: Todo) => {
         todo["Todo"] = todo.name;
-        todo["Due Date"] = currentDueDate.format("LL");
-        todo["Due Time"] = currentDueDate.format("LT");
+        todo["Due Date"] = moment(todo.dueDate).format("LL");
+        todo["Due Time"] = moment(todo.dueDate).format("LT");
+        return todo;
       });
-
-      return todos;
     }
   }
 });
