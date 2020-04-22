@@ -1,5 +1,18 @@
 <template>
   <v-container class="container">
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      multi-line
+      right
+      :timeout="6000"
+      top
+    >
+      {{ message }}
+      <v-btn dark text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
     <v-card class="mx-auto signUpForm" max-height="400" outlined>
       <v-form ref="form" @submit.prevent="signUp">
         <v-text-field
@@ -46,6 +59,8 @@
 <script lang="ts">
 import Vue from "vue";
 
+import { colors } from "@/utils";
+
 export default Vue.extend({
   name: "SignUpForm",
   data: () => ({
@@ -56,7 +71,10 @@ export default Vue.extend({
       username: "",
       email: "",
       password: ""
-    }
+    },
+    message: "",
+    color: "",
+    snackbar: false
   }),
   methods: {
     async signUp() {
@@ -76,9 +94,14 @@ export default Vue.extend({
         });
         this.isLoading = false;
       } catch (err) {
-        console.log(err.response);
+        this.setSnackbar(err.response.data.message, colors.error);
         this.isLoading = false;
       }
+    },
+    setSnackbar(message: string, color: string) {
+      this.message = message;
+      this.color = color;
+      this.snackbar = true;
     }
   }
 });

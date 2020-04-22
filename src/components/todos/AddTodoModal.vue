@@ -49,9 +49,10 @@
 
 <script lang="ts">
 import Vue from "vue";
+import moment from "moment";
 
 import AddTodoForm from "./AddTodoForm.vue";
-import moment from "moment";
+import { colors } from "@/utils";
 
 interface AddTodoData {
   name: string;
@@ -75,11 +76,7 @@ export default Vue.extend({
       isLoading: false,
       snackbar: false,
       message: "",
-      color: "",
-      colors: {
-        error: "#F44336",
-        success: "#4CAF50"
-      }
+      color: ""
     };
   },
   methods: {
@@ -92,7 +89,7 @@ export default Vue.extend({
       const username = this.$store.state.currentUser.username;
       const token = localStorage.getItem("token");
       if (addTodoData.name.length == 0) {
-        this.setSnackbar("Please fill out all the fields!", this.colors.error);
+        this.setSnackbar("Please fill out all the fields!", colors.error);
         this.isLoading = false;
       } else {
         try {
@@ -101,11 +98,11 @@ export default Vue.extend({
             addTodoData,
             { headers: { token } }
           );
-          this.setSnackbar(data.message, this.colors.success);
+          this.setSnackbar(data.message, colors.success);
           this.dismiss();
           this.$store.dispatch("addTodo", data.todo);
         } catch (err) {
-          this.setSnackbar(err.response.data.message, this.colors.error);
+          this.setSnackbar(err.response.data.message, colors.error);
         }
         this.isLoading = false;
       }

@@ -1,6 +1,19 @@
 <template>
   <div>
     <Header />
+    <v-snackbar
+      v-model="snackbar"
+      :color="color"
+      multi-line
+      right
+      :timeout="6000"
+      top
+    >
+      {{ message }}
+      <v-btn dark text @click="snackbar = false">
+        Close
+      </v-btn>
+    </v-snackbar>
     <router-view />
   </div>
 </template>
@@ -8,15 +21,24 @@
 <script lang="ts">
 import Vue from "vue";
 import { Header } from "@/components";
-import { User } from "@/utils";
+import { User, colors } from "@/utils";
 
 export default Vue.extend({
   name: "App",
   components: {
     Header
   },
+  data() {
+    return {
+      message: "",
+      color: "",
+      snackbar: false,
+      isLoading: false
+    };
+  },
   methods: {
     async checkAll() {
+      this.isLoading = true;
       const token: string = localStorage.getItem("token")!;
       const currentUser: User = JSON.parse(
         localStorage.getItem("currentUser")!
@@ -31,9 +53,15 @@ export default Vue.extend({
           this.$store.dispatch("signIn", currentUser);
           this.$store.dispatch("fetchAllTodos", data.todos);
         } catch (err) {
-          console.log(err.response);
+          this.setSnackbar(err.response.data.message, colors.error);
         }
       }
+      this.isLoading = false;
+    },
+    setSnackbar(message: string, color: string) {
+      this.message = message;
+      this.color = color;
+      this.snackbar = true;
     }
   },
   created() {
