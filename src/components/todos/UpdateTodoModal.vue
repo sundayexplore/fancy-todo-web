@@ -57,7 +57,7 @@ import Vue from "vue";
 import moment from "moment";
 
 import UpdateTodoForm from "./UpdateTodoForm.vue";
-import { Todo } from "@/utils";
+import { Todo, colors } from "@/utils";
 
 interface UpdateTodoData {
   name: string;
@@ -90,11 +90,7 @@ export default Vue.extend({
       isLoading: false,
       snackbar: false,
       message: "",
-      color: "",
-      colors: {
-        error: "#F44336",
-        success: "#4CAF50"
-      }
+      color: ""
     };
   },
   methods: {
@@ -107,7 +103,7 @@ export default Vue.extend({
       const username = this.$store.state.currentUser.username;
       const token = localStorage.getItem("token");
       if (finalUpdateTodoData.name.length == 0) {
-        this.setSnackbar("Please fill out all the fields!", this.colors.error);
+        this.setSnackbar("Please fill out all the fields!", colors.error);
         this.isLoading = false;
       } else if (
         finalUpdateTodoData.dueDate < this.minDate &&
@@ -117,7 +113,7 @@ export default Vue.extend({
           `Cannot set the date and time, please review the date and time!
           As the minimum date is ${moment(this.minDate).format("LL")}.
           And the minimum time is ${moment(this.minDate).format("LT")}`,
-          this.colors.error
+          colors.error
         );
         this.updateTodoData.name = finalUpdateTodoData.name;
         this.updateTodoData.dueDate = moment(finalUpdateTodoData.dueDate)
@@ -136,11 +132,11 @@ export default Vue.extend({
             finalUpdateTodoData,
             { headers: { token } }
           );
-          this.setSnackbar(data.message, this.colors.success);
+          this.setSnackbar(data.message, colors.success);
           this.dismiss();
           this.$store.dispatch("updateTodo", data.todo);
         } catch (err) {
-          this.setSnackbar(err.response.data.message, this.colors.error);
+          this.setSnackbar(err.response.data.message, colors.error);
         }
         this.isLoading = false;
       }
