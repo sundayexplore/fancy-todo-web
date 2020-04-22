@@ -12,7 +12,7 @@ export interface User {
 }
 
 export interface Todo {
-  _id?: string;
+  _id: string;
   name?: string;
   "Name"?: string;
   "Todo"?: string;

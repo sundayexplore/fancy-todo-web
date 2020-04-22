@@ -25,7 +25,7 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.5fr 1.5fr;
   grid-template-rows: auto;
   grid-template-areas: "UserProfileCard TodoList";
   height: 100vh;

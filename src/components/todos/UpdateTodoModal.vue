@@ -17,26 +17,31 @@
       <div class="text-center">
         <v-dialog
           persistent
-          v-model="showAddTodoModal"
-          width="500"
           @click:outside="dismiss"
+          v-model="showUpdateTodoModal"
+          width="500"
         >
           <v-card>
             <v-card-title class="headline lighten-2" primary-title>
-              Add Todo
+              Update Todo
             </v-card-title>
 
-            <add-todo-form
+            <update-todo-form
               v-if="!isLoading"
-              @change="handleAddTodoData"
-            ></add-todo-form>
+              :todoName="updateTodoData.name"
+              :dueDate="updateTodoData.dueDate"
+              :dueTime="updateTodoData.dueTime"
+              @change="handleUpdateTodoData"
+              @updateDueDate="handleUpdateDueDate"
+              @updateDueTime="handleUpdateDueTime"
+            ></update-todo-form>
 
             <v-divider></v-divider>
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn v-if="!isLoading" color="primary" text @click="addTodo">
-                Add Todo
+              <v-btn v-if="!isLoading" color="primary" text @click="updateTodo">
+                Update Todo
               </v-btn>
               <v-progress-circular
                 v-if="isLoading"
@@ -53,26 +58,35 @@
 
 <script lang="ts">
 import Vue from "vue";
-
-import AddTodoForm from "./AddTodoForm.vue";
 import moment from "moment";
 
-interface AddTodoData {
+import UpdateTodoForm from "./UpdateTodoForm.vue";
+import { Todo } from "@/utils";
+
+interface UpdateTodoData {
   name: string;
   dueDate: string;
 }
 
 export default Vue.extend({
-  name: "AddTodoModal",
+  name: "UpdateTodoModal",
   components: {
-    AddTodoForm
+    UpdateTodoForm
   },
   props: {
-    showAddTodoModal: Boolean
+    todoId: String,
+    showUpdateTodoModal: Boolean
   },
   data() {
     return {
-      addTodoData: {
+      updateTodoData: {
+        name: "",
+        dueDate: moment()
+          .toISOString()
+          .substr(0, 10),
+        dueTime: moment().format("HH:mm")
+      },
+      finalUpdateTodoData: {
         name: "",
         dueDate: moment().toISOString()
       },
@@ -87,27 +101,29 @@ export default Vue.extend({
     };
   },
   methods: {
-    handleAddTodoData(addTodoData: AddTodoData) {
-      this.addTodoData = addTodoData;
+    handleUpdateTodoData(updateTodoData: UpdateTodoData) {
+      this.finalUpdateTodoData = updateTodoData;
     },
-    async addTodo() {
+    async updateTodo() {
       this.isLoading = true;
-      const addTodoData = this.addTodoData;
+      const updateTodoData = this.updateTodoData;
       const username = this.$store.state.currentUser.username;
       const token = localStorage.getItem("token");
-      if (addTodoData.name.length == 0) {
+      if (updateTodoData.name.length == 0) {
         this.setSnackbar("Please fill out all the fields!", this.colors.error);
         this.isLoading = false;
       } else {
         try {
-          const { data } = await this.$todoAPI.post(
-            `/${username}`,
-            addTodoData,
+          const {
+            data
+          } = await this.$todoAPI.put(
+            `/${username}/${this.todoId}`,
+            updateTodoData,
             { headers: { token } }
           );
           this.setSnackbar(data.message, this.colors.success);
           this.dismiss();
-          this.$store.dispatch("addTodo", data.todo);
+          this.$store.dispatch("updateTodo", data.todo);
         } catch (err) {
           this.setSnackbar(err.response.data.message, this.colors.error);
         }
@@ -121,6 +137,26 @@ export default Vue.extend({
     },
     dismiss() {
       this.$emit("dismiss");
+    },
+    handleUpdateDueDate(newDueDate: string) {
+      this.updateTodoData.dueDate = newDueDate;
+    },
+    handleUpdateDueTime(newDueTime: string) {
+      this.updateTodoData.dueTime = newDueTime;
+    }
+  },
+  watch: {
+    todoId() {
+      const todos = this.$store.state.todos;
+      const updateTodoData = todos.filter((todo: Todo) => {
+        return todo._id == this.todoId;
+      })[0];
+      const currentDueDate = updateTodoData.dueDate;
+      updateTodoData.dueDate = moment(currentDueDate)
+        .toISOString()
+        .substr(0, 10);
+      updateTodoData.dueTime = moment(currentDueDate).format("HH:mm");
+      this.updateTodoData = updateTodoData;
     }
   }
 });
