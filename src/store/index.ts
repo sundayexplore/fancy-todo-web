@@ -12,11 +12,15 @@ export default new Vuex.Store({
     todos,
     currentUser: null,
     isSignedIn: false,
-    isLoading: false
+    isLoading: false,
+    generalError: {
+      snackbar: false,
+      message: ""
+    }
   },
   mutations: {
     FETCH_ALL_TODOS(state, todos) {
-      state.todos = state.todos.concat(todos);
+      state.todos = [...todos];
     },
     SET_CURRENT_USER(state, user) {
       state.currentUser = user;
@@ -51,6 +55,12 @@ export default new Vuex.Store({
       state.todos = state.todos.filter(todo => {
         return todo._id != todoId;
       });
+    },
+    SET_ERROR_SNACKBAR(state, target: boolean) {
+      state.generalError.snackbar = target;
+    },
+    SET_ERROR_MESSAGE(state, errorMessage: string) {
+      state.generalError.message = errorMessage;
     }
   },
   actions: {
@@ -78,6 +88,15 @@ export default new Vuex.Store({
     },
     deleteTodo({ commit }, todoId: string) {
       commit("DELETE_TODO", todoId);
+    },
+    setGeneralError({ commit }, message: string | undefined = "") {
+      if (message == undefined) {
+        commit("SET_ERROR_SNACKBAR", false);
+        commit("SET_ERROR_MESSAGE", "");
+      } else {
+        commit("SET_ERROR_SNACKBAR", true);
+        commit("SET_ERROR_MESSAGE", message);
+      }
     }
   },
   modules: {}

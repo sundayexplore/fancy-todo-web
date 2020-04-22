@@ -15,9 +15,6 @@ export default Vue.extend({
   components: {
     UserProfileCard,
     TodoList
-  },
-  mounted() {
-    console.log(this.$store.state);
   }
 });
 </script>

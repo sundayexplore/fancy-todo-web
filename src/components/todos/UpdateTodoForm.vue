@@ -2,7 +2,7 @@
   <v-container class="updateTodoFormContainer">
     <v-form ref="form" @submit.prevent="updateTodo">
       <v-text-field
-        v-model="todoName"
+        v-model="localTodoName"
         @input="updateTodo"
         label="Todo Name"
         required
@@ -27,7 +27,7 @@
           ></v-text-field>
         </template>
         <v-date-picker
-          v-model="dueDate"
+          v-model="localDueDate"
           @change="updateTodo"
           no-title
           scrollable
@@ -62,7 +62,7 @@
         </template>
         <v-time-picker
           v-if="timePickerMenu"
-          v-model="dueTime"
+          v-model="localDueTime"
           @change="updateTodo"
           full-width
           @click:minute="setTime(dueTime)"
@@ -77,6 +77,9 @@ import Vue from "vue";
 import moment from "moment";
 
 interface Data {
+  localTodoName: string;
+  localDueDate: string;
+  localDueTime: string;
   datePickerMenu: boolean;
   timePickerMenu: boolean;
   modal: boolean;
@@ -110,6 +113,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
   data() {
     return {
+      localTodoName: this.todoName,
+      localDueDate: this.dueDate,
+      localDueTime: this.dueTime,
       datePickerMenu: false,
       timePickerMenu: false,
       modal: false
@@ -117,10 +123,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
   computed: {
     computedDueDate() {
-      return moment(this.dueDate).format("LL");
+      return moment(this.localDueDate).format("LL");
     },
     computedDueTime() {
-      return moment(`${this.dueDate} ${this.dueTime}`).format("LT");
+      return moment(`${this.localDueDate} ${this.localDueTime}`).format("LT");
     },
     computedMinDate() {
       return moment()
@@ -141,9 +147,22 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       this.timePickerMenu = false;
     },
     updateTodo() {
-      const name = this.todoName;
-      const dueDate = moment(`${this.dueDate} ${this.dueTime}`).toISOString();
+      const name = this.localTodoName;
+      const dueDate = moment(
+        `${this.localDueDate} ${this.localDueTime}`
+      ).toISOString();
       this.$emit("change", { name, dueDate });
+    }
+  },
+  watch: {
+    todoName(newTodoName: string) {
+      this.localTodoName = newTodoName;
+    },
+    dueDate(newDueDate: string) {
+      this.localDueDate = newDueDate;
+    },
+    dueTime(newDueTime: string) {
+      this.localDueTime = newDueTime;
     }
   }
 });

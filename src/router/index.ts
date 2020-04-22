@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 import { HomePage, AboutPage, Dashboard } from "@/views";
 import { SignInForm, SignUpForm } from "@/components";
+import Store from "@/store";
 import { userAPI } from "@/utils";
 
 Vue.use(VueRouter);
@@ -14,7 +15,7 @@ const beforeEnter = async (to: any, from: any, next: any) => {
       await userAPI.get("/check", { headers: { token } });
       next({ path: from.path });
     } catch (err) {
-      console.log(err.response);
+      Store.commit("setGeneralError", err.response.data.message);
     }
   } else {
     next();
@@ -68,16 +69,15 @@ const router = new VueRouter({
   routes
 });
 
-router.beforeEach( async (to, from, next) => {
+router.beforeEach(async (to: any, from: any, next: any) => {
   const token = localStorage.getItem("token");
-  if (to.matched.some(record => record.meta.requiresAuth)) {
+  if (to.matched.some((record: any) => record.meta.requiresAuth)) {
     if (token) {
       try {
-        const { data } = await userAPI.get("/check", { headers: { token } });
-        console.log(data.message);
+        await userAPI.get("/check", { headers: { token } });
         next();
       } catch (err) {
-        console.log(err.response);
+        Store.commit("setGeneralError", err.response.data.message);
       }
     } else {
       next({ name: "SignIn" });

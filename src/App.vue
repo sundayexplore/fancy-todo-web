@@ -33,12 +33,13 @@ export default Vue.extend({
         } catch (err) {
           console.log(err.response);
         }
-      } else {
-        this.$router.push({ path: "/signin" });
       }
     }
   },
   created() {
+    this.checkAll();
+  },
+  updated() {
     this.checkAll();
   }
 });

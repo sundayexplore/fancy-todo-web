@@ -56,7 +56,7 @@ export default Vue.extend({
     this.decideUserStatus();
   },
   watch: {
-    $route(to, from) {
+    $route() {
       this.decideUserStatus();
     }
   }

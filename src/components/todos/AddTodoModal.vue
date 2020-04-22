@@ -13,41 +13,37 @@
         Close
       </v-btn>
     </v-snackbar>
-    <v-app>
-      <div class="text-center">
-        <v-dialog
-          persistent
-          v-model="showAddTodoModal"
-          width="500"
-          @click:outside="dismiss"
-        >
-          <v-card>
-            <v-card-title class="headline lighten-2" primary-title>
-              Add Todo
-            </v-card-title>
+    <v-dialog
+      persistent
+      v-model="showAddTodoModal"
+      width="500"
+      @click:outside="dismiss"
+    >
+      <v-card>
+        <v-card-title class="headline lighten-2" primary-title>
+          Add Todo
+        </v-card-title>
 
-            <add-todo-form
-              v-if="!isLoading"
-              @change="handleAddTodoData"
-            ></add-todo-form>
+        <add-todo-form
+          v-if="!isLoading"
+          @change="handleAddTodoData"
+        ></add-todo-form>
 
-            <v-divider></v-divider>
+        <v-divider></v-divider>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn v-if="!isLoading" color="primary" text @click="addTodo">
-                Add Todo
-              </v-btn>
-              <v-progress-circular
-                v-if="isLoading"
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
-    </v-app>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="!isLoading" color="primary" text @click="addTodo">
+            Add Todo
+          </v-btn>
+          <v-progress-circular
+            v-if="isLoading"
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 

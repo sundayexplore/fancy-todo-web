@@ -2,20 +2,21 @@
   <v-container class="todoListContainer">
     <v-container class="actionPanel">
       <v-btn
-        color="primary lighten-2"
-        dark
+        :color="colors.addTodo"
+        small
         @click.stop="showAddTodoModal = true"
       >
         Add Todo
       </v-btn>
       <v-btn
         v-if="canUpdateTodo"
-        color="secondary lighten-2"
-        dark
+        :color="colors.updateTodo"
+        small
         @click.stop="showUpdateTodoModal = true"
       >
         Update Todo
       </v-btn>
+
       <add-todo-modal
         @dismiss="dismissAddTodoModal"
         :showAddTodoModal="showAddTodoModal"
@@ -85,7 +86,12 @@ export default Vue.extend({
           sortable: true,
           value: "Due Time"
         }
-      ]
+      ],
+      colors: {
+        addTodo: "#03A9F4",
+        updateTodo: "#607D8B",
+        doneTodo: "#8BC34A"
+      }
     };
   },
   computed: mapState(["todos"]),
@@ -113,6 +119,7 @@ export default Vue.extend({
       this.showAddTodoModal = false;
     },
     dismissUpdateTodoModal() {
+      this.selected = [];
       this.showUpdateTodoModal = false;
     }
   }
@@ -132,6 +139,14 @@ export default Vue.extend({
   grid-area: ActionPanel;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+
+  button {
+    margin: 2vh auto;
+    width: 15vw;
+    color: #ffffff;
+    font-weight: bold;
+  }
 }
 
 .todoListTable {

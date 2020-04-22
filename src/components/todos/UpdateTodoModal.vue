@@ -13,46 +13,42 @@
         Close
       </v-btn>
     </v-snackbar>
-    <v-app>
-      <div class="text-center">
-        <v-dialog
-          persistent
-          @click:outside="dismiss"
-          v-model="showUpdateTodoModal"
-          width="500"
-        >
-          <v-card>
-            <v-card-title class="headline lighten-2" primary-title>
-              Update Todo
-            </v-card-title>
+    <v-dialog
+      persistent
+      @click:outside="dismiss"
+      v-model="showUpdateTodoModal"
+      width="500"
+    >
+      <v-card>
+        <v-card-title class="headline lighten-2" primary-title>
+          Update Todo
+        </v-card-title>
 
-            <update-todo-form
-              v-if="!isLoading"
-              :todoName="updateTodoData.name"
-              :dueDate="updateTodoData.dueDate"
-              :dueTime="updateTodoData.dueTime"
-              @change="handleUpdateTodoData"
-              @updateDueDate="handleUpdateDueDate"
-              @updateDueTime="handleUpdateDueTime"
-            ></update-todo-form>
+        <update-todo-form
+          v-if="!isLoading"
+          :todoName="updateTodoData.name"
+          :dueDate="updateTodoData.dueDate"
+          :dueTime="updateTodoData.dueTime"
+          @change="handleUpdateTodoData"
+          @updateDueDate="handleUpdateDueDate"
+          @updateDueTime="handleUpdateDueTime"
+        ></update-todo-form>
 
-            <v-divider></v-divider>
+        <v-divider></v-divider>
 
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn v-if="!isLoading" color="primary" text @click="updateTodo">
-                Update Todo
-              </v-btn>
-              <v-progress-circular
-                v-if="isLoading"
-                indeterminate
-                color="primary"
-              ></v-progress-circular>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </div>
-    </v-app>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn v-if="!isLoading" color="primary" text @click="updateTodo">
+            Update Todo
+          </v-btn>
+          <v-progress-circular
+            v-if="isLoading"
+            indeterminate
+            color="primary"
+          ></v-progress-circular>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -79,6 +75,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      minDate: moment().toISOString(),
       updateTodoData: {
         name: "",
         dueDate: moment()
@@ -101,16 +98,34 @@ export default Vue.extend({
     };
   },
   methods: {
-    handleUpdateTodoData(updateTodoData: UpdateTodoData) {
-      this.finalUpdateTodoData = updateTodoData;
+    handleUpdateTodoData(finalUpdateTodoData: UpdateTodoData) {
+      this.finalUpdateTodoData = finalUpdateTodoData;
     },
     async updateTodo() {
       this.isLoading = true;
-      const updateTodoData = this.updateTodoData;
+      const finalUpdateTodoData = this.finalUpdateTodoData;
       const username = this.$store.state.currentUser.username;
       const token = localStorage.getItem("token");
-      if (updateTodoData.name.length == 0) {
+      if (finalUpdateTodoData.name.length == 0) {
         this.setSnackbar("Please fill out all the fields!", this.colors.error);
+        this.isLoading = false;
+      } else if (
+        finalUpdateTodoData.dueDate < this.minDate &&
+        finalUpdateTodoData.name.length != 0
+      ) {
+        this.setSnackbar(
+          `Cannot set the date and time, please review the date and time!
+          As the minimum date is ${moment(this.minDate).format("LL")}.
+          And the minimum time is ${moment(this.minDate).format("LT")}`,
+          this.colors.error
+        );
+        this.updateTodoData.name = finalUpdateTodoData.name;
+        this.updateTodoData.dueDate = moment(finalUpdateTodoData.dueDate)
+          .toISOString()
+          .substr(0, 10);
+        this.updateTodoData.dueTime = moment(
+          finalUpdateTodoData.dueDate
+        ).format("HH:mm");
         this.isLoading = false;
       } else {
         try {
@@ -118,7 +133,7 @@ export default Vue.extend({
             data
           } = await this.$todoAPI.put(
             `/${username}/${this.todoId}`,
-            updateTodoData,
+            finalUpdateTodoData,
             { headers: { token } }
           );
           this.setSnackbar(data.message, this.colors.success);
@@ -147,16 +162,22 @@ export default Vue.extend({
   },
   watch: {
     todoId() {
-      const todos = this.$store.state.todos;
-      const updateTodoData = todos.filter((todo: Todo) => {
-        return todo._id == this.todoId;
-      })[0];
-      const currentDueDate = updateTodoData.dueDate;
-      updateTodoData.dueDate = moment(currentDueDate)
-        .toISOString()
-        .substr(0, 10);
-      updateTodoData.dueTime = moment(currentDueDate).format("HH:mm");
-      this.updateTodoData = updateTodoData;
+      if (this.todoId.length > 0) {
+        const todos = this.$store.state.todos;
+        const updateTodoData = todos.filter((todo: Todo) => {
+          return todo._id == this.todoId;
+        })[0];
+        const currentDueDate = updateTodoData.dueDate;
+        updateTodoData.dueDate = moment(currentDueDate)
+          .toISOString()
+          .substr(0, 10);
+        updateTodoData.dueTime = moment(currentDueDate).format("HH:mm");
+        this.updateTodoData = updateTodoData;
+        this.finalUpdateTodoData = {
+          name: updateTodoData.name,
+          dueDate: currentDueDate
+        };
+      }
     }
   }
 });

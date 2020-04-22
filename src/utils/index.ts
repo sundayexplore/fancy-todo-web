@@ -14,8 +14,8 @@ export interface User {
 export interface Todo {
   _id: string;
   name?: string;
-  "Name"?: string;
-  "Todo"?: string;
+  Name?: string;
+  Todo?: string;
   dueDate: Moment | Date | string;
   dueTime?: Moment | Date | string;
   "Due Date"?: Moment | Date | string;

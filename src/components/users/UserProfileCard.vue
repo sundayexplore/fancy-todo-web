@@ -11,7 +11,9 @@
 </template>
 
 <script lang="ts">
-export default {
+import Vue from "vue";
+
+export default Vue.extend({
   name: "UserProfileCard",
   data() {
     return {
@@ -25,7 +27,7 @@ export default {
       return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
     }
   }
-};
+});
 </script>
 
 <style lang="scss" scoped>
