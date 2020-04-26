@@ -78,6 +78,7 @@ router.beforeEach(async (to: any, from: any, next: any) => {
         next();
       } catch (err) {
         Store.commit("setGeneralError", err.response.data.message);
+        next({ name: "SignIn" });
       }
     } else {
       next({ name: "SignIn" });

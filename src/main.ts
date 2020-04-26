@@ -5,7 +5,7 @@ import "material-design-icons-iconfont/dist/material-design-icons.css";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
 import router from "./router";
-import store from './store';
+import store from "./store";
 
 import { userAPI, todoAPI, User } from "@/utils";
 

@@ -26,14 +26,10 @@ export default Vue.extend({
     async decideUserStatus() {
       const token = localStorage.getItem("token");
       if (token) {
-        try {
-          await this.$userAPI.get("/check", {
-            headers: { token }
-          });
-          this.decision.text = "Sign Out";
-        } catch (err) {
-          console.log(err.response);
-        }
+        await this.$userAPI.get("/check", {
+          headers: { token }
+        });
+        this.decision.text = "Sign Out";
       } else if (this.$router.currentRoute.name == "SignIn") {
         this.decision.name = "SignUp";
         this.decision.path = "/signup";

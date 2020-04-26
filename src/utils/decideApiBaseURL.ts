@@ -9,6 +9,6 @@ export default function decideApiBaseURL(): string {
     case "test":
       return nonProdBaseURL;
   }
-  
+
   return prodBaseURL;
 }

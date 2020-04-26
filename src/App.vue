@@ -53,7 +53,10 @@ export default Vue.extend({
           this.$store.dispatch("signIn", currentUser);
           this.$store.dispatch("fetchAllTodos", data.todos);
         } catch (err) {
-          this.setSnackbar(err.response.data.message, colors.error);
+          const errMessage: string = err.response.data.message;
+          if (errMessage != "User is not verified!") {
+            this.setSnackbar(errMessage, colors.error);
+          }
         }
       }
       this.isLoading = false;
