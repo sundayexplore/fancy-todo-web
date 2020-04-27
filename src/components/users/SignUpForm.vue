@@ -13,45 +13,53 @@
         Close
       </v-btn>
     </v-snackbar>
-    <v-card class="mx-auto signUpForm" max-height="400" outlined>
-      <v-form ref="form" @submit.prevent="signUp">
+    <v-card class="mx-auto signUpFormContainer" outlined>
+      <h2 id="formTitle">Create Fancy Todo account.</h2>
+      <p id="questionParagraph">
+        Already have an account?
+        <router-link to="SignIn">
+          Sign In!
+        </router-link>
+      </p>
+      <v-form ref="form" @submit.prevent="signUp" id="signUpForm">
         <v-text-field
           v-model="userData.firstName"
           label="First Name"
           required
           type="text"
           autofocus
+          color="rgba(7, 121, 228, 1)"
         />
         <v-text-field
           v-model="userData.lastName"
           label="Last Name"
           type="text"
+          color="rgba(7, 121, 228, 1)"
         />
         <v-text-field
           v-model="userData.username"
           label="Username"
           required
           type="text"
+          color="rgba(7, 121, 228, 1)"
         />
         <v-text-field
           v-model="userData.email"
           label="Email"
           required
           type="email"
+          color="rgba(7, 121, 228, 1)"
         />
         <v-text-field
           v-model="userData.password"
           label="Password"
           required
           type="password"
+          color="rgba(7, 121, 228, 1)"
         />
-        <v-btn outlined type="submit" @click.prevent="signUp">Sign Up</v-btn>
-        <div class="questionContainer">
-          <p class="subtitle-2 questionParagraph">Already have an account?</p>
-          <router-link to="SignIn" class="subtitle-2 questionParagraph">
-            Sign In!
-          </router-link>
-        </div>
+        <v-btn type="submit" @click.prevent="signUp" id="signUpBtn"
+          >Sign Up</v-btn
+        >
       </v-form>
     </v-card>
   </v-container>
@@ -115,30 +123,60 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+$defaultGrey: #c2c2c2;
+$defaultBlue: rgba(7, 121, 228, 1);
+
 .container {
   display: grid;
-  height: 100vh;
+  height: auto;
   justify-content: center;
   align-content: center;
   align-items: center;
   place-items: center center;
 }
 
-.signUpForm {
+.signUpFormContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-content: center;
   align-items: center;
-  padding: 5vh;
-}
+  padding: 8vh 5vw;
+  box-shadow: 0 5px 10px $defaultGrey;
 
-.questionContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: 3vh;
-}
+  #formTitle {
+    text-align: left;
+    font-weight: bold;
+  }
 
-.questionParagraph {
-  margin: 3px;
+  #questionParagraph {
+    text-align: left;
+    text-decoration: none;
+    align-self: flex-start;
+    margin-top: 1.5vh;
+    color: #888888;
+
+    > * {
+      text-decoration: none;
+      color: $defaultBlue;
+      font-weight: bold;
+    }
+  }
+
+  #signUpForm {
+    margin-top: 4vh;
+    width: 100%;
+
+    #signUpBtn {
+      margin-top: 3vh;
+      height: auto;
+      padding: 1.1vh 0;
+      width: 100% !important;
+      font-size: 1.2em;
+      line-height: 1;
+      background-color: $defaultBlue;
+      color: #fff;
+    }
+  }
 }
 </style>

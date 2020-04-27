@@ -1,6 +1,12 @@
 <template>
   <div>
-    <Header v-if="!$store.state.isSignedIn" />
+    <Header
+      v-if="
+        !$store.state.isSignedIn &&
+          $route.name != 'SignIn' &&
+          $route.name != 'SignUp'
+      "
+    />
     <v-snackbar
       v-model="snackbar"
       :color="color"
