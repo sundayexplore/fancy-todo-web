@@ -53,13 +53,12 @@
 <script lang="ts">
 import Vue from "vue";
 
-import OpenSourceSVG from "-!vue-svg-loader!@/assets/open-source.svg";
 import { colors } from "@/utils";
 
 export default Vue.extend({
   name: "SignInForm",
   components: {
-    OpenSourceSVG
+    OpenSourceSVG: () => import("-!vue-svg-loader!@/assets/open-source.svg")
   },
   data: () => ({
     isLoading: false,

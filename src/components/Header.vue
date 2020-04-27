@@ -19,12 +19,10 @@
 <script lang="ts">
 import Vue from "vue";
 
-import OpenSourceSVG from "-!vue-svg-loader!@/assets/open-source.svg";
-
 export default Vue.extend({
   name: "Header",
   components: {
-    OpenSourceSVG
+    OpenSourceSVG: () => import("-!vue-svg-loader!@/assets/open-source.svg")
   },
   data() {
     return {

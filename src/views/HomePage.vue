@@ -59,14 +59,11 @@
 <script lang="ts">
 import Vue from "vue";
 
-import EasyToUseSVG from "-!vue-svg-loader!@/assets/easy-to-use.svg";
-import OpenSourceSVG from "-!vue-svg-loader!@/assets/open-source.svg";
-
 export default Vue.extend({
   name: "Home",
   components: {
-    EasyToUseSVG,
-    OpenSourceSVG
+    EasyToUseSVG: () => import("-!vue-svg-loader!@/assets/easy-to-use.svg"),
+    OpenSourceSVG: () => import("-!vue-svg-loader!@/assets/open-source.svg")
   },
   data() {
     return {
