@@ -13,6 +13,11 @@
         Close
       </v-btn>
     </v-snackbar>
+
+    <router-link to="/">
+      <OpenSourceSVG id="openSourceSVG" />
+    </router-link>
+
     <v-card class="mx-auto signUpFormContainer" outlined>
       <h2 id="formTitle">Create Fancy Todo account.</h2>
       <p id="questionParagraph">
@@ -68,10 +73,14 @@
 <script lang="ts">
 import Vue from "vue";
 
+import OpenSourceSVG from "-!vue-svg-loader!@/assets/open-source.svg";
 import { colors } from "@/utils";
 
 export default Vue.extend({
   name: "SignUpForm",
+  components: {
+    OpenSourceSVG
+  },
   data: () => ({
     isLoading: false,
     userData: {
@@ -128,54 +137,62 @@ $defaultBlue: rgba(7, 121, 228, 1);
 
 .container {
   display: grid;
+  grid-template-rows: auto;
   height: auto;
   justify-content: center;
   align-content: center;
   align-items: center;
   place-items: center center;
-}
 
-.signUpFormContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  padding: 8vh 5vw;
-  box-shadow: 0 5px 10px $defaultGrey;
-
-  #formTitle {
-    text-align: left;
-    font-weight: bold;
+  #openSourceSVG {
+    height: 120px;
+    width: auto;
+    margin: 3vh 0;
   }
 
-  #questionParagraph {
-    text-align: left;
-    text-decoration: none;
-    align-self: flex-start;
-    margin-top: 1.5vh;
-    color: #888888;
+  .signUpFormContainer {
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    padding: 8vh 5vw;
+    box-shadow: 0 5px 10px $defaultGrey;
 
-    > * {
-      text-decoration: none;
-      color: $defaultBlue;
+    #formTitle {
+      text-align: left;
       font-weight: bold;
     }
-  }
 
-  #signUpForm {
-    margin-top: 4vh;
-    width: 100%;
+    #questionParagraph {
+      text-align: left;
+      text-decoration: none;
+      align-self: flex-start;
+      margin-top: 1.5vh;
+      color: #888888;
 
-    #signUpBtn {
-      margin-top: 3vh;
-      height: auto;
-      padding: 1.1vh 0;
-      width: 100% !important;
-      font-size: 1.2em;
-      line-height: 1;
-      background-color: $defaultBlue;
-      color: #fff;
+      > * {
+        text-decoration: none;
+        color: $defaultBlue;
+        font-weight: bold;
+      }
+    }
+
+    #signUpForm {
+      margin-top: 4vh;
+      width: 100%;
+
+      #signUpBtn {
+        margin-top: 3vh;
+        height: auto;
+        padding: 1.1vh 0;
+        width: 100% !important;
+        font-size: 1.2em;
+        line-height: 1;
+        background-color: $defaultBlue;
+        color: #fff;
+      }
     }
   }
 }

@@ -110,9 +110,9 @@ export default Vue.extend({
             .getBoundingClientRect().y
         )
       };
-      if (scrollPosition >= sectionScrollPositions.easyToUse) {
+      if (scrollPosition >= sectionScrollPositions.easyToUse - 200) {
         this.animateSections.easyToUse = true;
-      } else if (scrollPosition >= sectionScrollPositions.openSource) {
+      } else if (scrollPosition >= sectionScrollPositions.openSource - 200) {
         this.animateSections.openSource = true;
       }
     }
@@ -236,6 +236,7 @@ $defaultWhite: rgb(252, 248, 243);
     align-content: center;
     justify-content: center;
     margin: 15vh auto;
+    visibility: hidden;
 
     .easyToUseSVG {
       grid-column: 1 / 2;
@@ -247,6 +248,7 @@ $defaultWhite: rgb(252, 248, 243);
 
   .easyToUseSectionAnimation {
     animation: easyToUseIn 1s linear forwards;
+    visibility: visible;
   }
 
   @keyframes easyToUseIn {
