@@ -12,9 +12,19 @@
 
     <section class="easyToUseSection">
       <EasyToUseSVG class="easyToUseSVG" />
+      <div class="sectionBanner" id="easyToUseBanner">
+        <h1 class="sectionTitle">Easy to Use</h1>
+        <p class="sectionParagraph">Fancy Todo is design for ease of use.</p>
+      </div>
     </section>
     <section class="openSourceSection">
       <OpenSourceSVG class="openSourceSVG" />
+      <div class="sectionBanner" id="openSourceBanner">
+        <h1 class="sectionTitle">Open Source</h1>
+        <p class="sectionParagraph">
+          Software is just like s**, it's better when it's free.
+        </p>
+      </div>
     </section>
   </main>
 </template>
@@ -128,18 +138,32 @@ $halfOpacity: 0.5;
     }
   }
 
-  .mainSection::after {
-    margin-top: 10vh;
-  }
-
   .easyToUseSection {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    margin: 15vh auto;
+    animation: easyToUseIn 4s linear forwards;
 
     .easyToUseSVG {
-      height: 450px;
-      width: 100px;
+      grid-column: 1 / 2;
+      grid-row: 1;
+      height: 35vh;
+      width: 50vw;
+    }
+  }
+
+  @keyframes easyToUseIn {
+    0% {
+      opacity: 0;
+      transform: translateX(-200%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0%);
     }
   }
 
@@ -147,11 +171,59 @@ $halfOpacity: 0.5;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    margin: 15vh auto;
+    animation: openSourceIn 4s linear forwards;
 
     .openSourceSVG {
-      height: 450px;
-      width: 100px;
+      grid-column: 2 / 2;
+      grid-row: 1;
+      height: 35vh;
+      width: 50vw;
     }
+  }
+
+  @keyframes openSourceIn {
+    0% {
+      opacity: 0;
+      transform: translateX(200%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+  }
+
+  #easyToUseBanner {
+    border-right: 5px solid blueviolet;
+  }
+
+  #openSourceBanner {
+    border-left: 5px solid palevioletred;
+  }
+
+  .sectionTitle {
+    font-size: 40px;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .sectionParagraph {
+    font-size: 20px;
+    margin: 5vh 3vw;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .sectionBanner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    margin: auto 5vw;
   }
 }
 </style>
