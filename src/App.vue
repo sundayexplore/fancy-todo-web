@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header />
+    <Header v-if="!$store.state.isSignedIn" />
     <v-snackbar
       v-model="snackbar"
       :color="color"
@@ -77,6 +77,10 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
+* {
+  font-family: roboto, sans-serif;
+}
+
 .addTodoFormContainer {
   width: 300px;
   height: 60px;

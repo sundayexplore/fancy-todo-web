@@ -20,6 +20,7 @@
           label="First Name"
           required
           type="text"
+          autofocus
         />
         <v-text-field
           v-model="userData.lastName"
@@ -76,6 +77,12 @@ export default Vue.extend({
     color: "",
     snackbar: false
   }),
+  beforeMount() {
+    const { email } = this.$route.query;
+    if (email) {
+      this.userData.email = email + "";
+    }
+  },
   methods: {
     async signUp() {
       this.isLoading = true;

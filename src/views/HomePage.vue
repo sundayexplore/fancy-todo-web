@@ -1,23 +1,50 @@
 <template>
   <main class="homeContainer">
     <section class="mainSection">
-      <section class="titleSection">
-        <h1 class="mainTitle">Fancy Todo</h1>
-        <div class="buttons">
-          <router-link :to="userPath" id="userBtn">Get started</router-link>
-          <router-link to="/signin" id="learnMoreBtn">Learn more</router-link>
-        </div>
+      <section id="heroSection">
+        <h1 id="mainTitle">Fancy Todo</h1>
+        <h3 id="mainDescription">
+          From a bootcamp project, to fancily open source.
+        </h3>
       </section>
+      <form id="signUpPromoSection" @submit.prevent="handleSignUpPromo">
+        <v-text-field
+          class="emailTextField"
+          v-model="email"
+          placeholder="Email"
+          solo
+          type="email"
+          height="10vh"
+        ></v-text-field>
+        <button
+          id="signUpPromoBtn"
+          @submit.prevent="handleSignUpPromo"
+          @click="handleSignUpPromo"
+        >
+          Sign Up - It's Free!
+        </button>
+      </form>
     </section>
 
-    <section class="easyToUseSection">
+    <section
+      :class="{
+        easyToUseSection: true,
+        easyToUseSectionAnimation: animateSections.easyToUse
+      }"
+    >
       <EasyToUseSVG class="easyToUseSVG" />
       <div class="sectionBanner" id="easyToUseBanner">
         <h1 class="sectionTitle">Easy to Use</h1>
-        <p class="sectionParagraph">Fancy Todo is design for ease of use.</p>
+        <p class="sectionParagraph">Fancy Todo is designed for ease of use.</p>
       </div>
     </section>
-    <section class="openSourceSection">
+
+    <section
+      :class="{
+        openSourceSection: true,
+        openSourceSectionAnimation: animateSections.openSource
+      }"
+    >
       <OpenSourceSVG class="openSourceSVG" />
       <div class="sectionBanner" id="openSourceBanner">
         <h1 class="sectionTitle">Open Source</h1>
@@ -43,8 +70,58 @@ export default Vue.extend({
   },
   data() {
     return {
-      userPath: "/signup"
+      userPath: "/signup",
+      email: "",
+      animateSections: {
+        easyToUse: false,
+        openSource: false
+      }
     };
+  },
+  methods: {
+    handleSignUpPromo() {
+      if (this.email.length == 0) {
+        return this.$router.push({ name: "SignUp" });
+      }
+
+      return this.$router.push({
+        name: "SignUp",
+        query: { email: this.email }
+      });
+    },
+    animateSection(sectionName: string) {
+      console.log({ sectionName });
+      switch (sectionName) {
+        case "easyToUse":
+          return (this.animateSections.easyToUse = true);
+      }
+    },
+    handleScroll() {
+      const scrollPosition = window.scrollY;
+      const sectionScrollPositions = {
+        easyToUse: Math.floor(
+          document
+            .getElementsByClassName("easyToUseSection")[0]
+            .getBoundingClientRect().y
+        ),
+        openSource: Math.floor(
+          document
+            .getElementsByClassName("openSourceSection")[0]
+            .getBoundingClientRect().y
+        )
+      };
+      if (scrollPosition >= sectionScrollPositions.easyToUse) {
+        this.animateSections.easyToUse = true;
+      } else if (scrollPosition >= sectionScrollPositions.openSource) {
+        this.animateSections.openSource = true;
+      }
+    }
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
   }
 });
 </script>
@@ -52,17 +129,18 @@ export default Vue.extend({
 <style lang="scss" scoped>
 $fullOpacity: 1;
 $halfOpacity: 0.5;
+$defaultWhite: rgb(252, 248, 243);
 
 .homeContainer {
   .mainSection {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto;
-    height: 80vh;
+    height: 100vh;
     background-color: rgba(20, 40, 80, $fullOpacity);
     align-items: center;
 
-    .titleSection {
+    #heroSection {
       grid-column: 1;
       display: flex;
       flex-direction: column;
@@ -70,9 +148,15 @@ $halfOpacity: 0.5;
       align-content: center;
       align-items: center;
 
-      .mainTitle {
-        color: #ffbcbc;
-        font-weight: 500;
+      > * {
+        text-align: left;
+        padding-left: 10vw;
+      }
+
+      #mainTitle {
+        width: 50vw;
+        color: $defaultWhite;
+        font-weight: bold;
         font-size: 64px;
         line-height: 1;
         animation-name: mainTitleIn;
@@ -91,49 +175,55 @@ $halfOpacity: 0.5;
         }
       }
 
-      .buttons {
-        margin: 5vh;
-        display: flex;
-        justify-content: flex-start;
-        align-content: flex-start;
-        align-items: flex-start;
-        animation-name: buttonsIn;
-        animation-duration: 2s;
-        animation-direction: normal;
+      #mainDescription {
+        margin-top: 3vh;
+        width: 50vw;
+        color: $defaultWhite;
+        font-size: 32px;
+        font-weight: 400;
+        line-height: 1;
+        animation: mainDescriptionIn 1s ease;
+      }
 
-        #userBtn {
-          padding: 2vh 4vh;
-          font-size: 20px;
-          margin: 2vh;
-          text-decoration: none;
-          color: rgba(20, 40, 80, $fullOpacity);
-          background-color: #ffbcbc;
+      @keyframes mainDescriptionIn {
+        0% {
+          opacity: 0;
         }
+        100% {
+          opacity: 1;
+        }
+      }
+    }
 
-        #userBtn:hover {
-          background-color: #fff;
-        }
+    #signUpPromoSection {
+      grid-column: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: flex-start;
 
-        #learnMoreBtn {
-          padding: 2vh 4vh;
-          font-size: 20px;
-          margin: 2vh;
-          text-decoration: none;
-          color: #ffbcbc;
-        }
+      .emailTextField {
+        width: 45vw;
+        font-size: 1.5em;
+        line-height: 1.5;
+        font-weight: 550;
+      }
 
-        #learnMoreBtn:hover {
-          color: #fff;
-        }
+      #signUpPromoBtn {
+        background-color: #00bcd4;
+        border-radius: 4px;
+        color: $defaultWhite;
+        font-size: 1.4em;
+        line-height: 1.4;
+        font-weight: 550;
+        height: 44px;
+        padding: 0 2vw;
+        margin-top: -2vh;
+      }
 
-        @keyframes buttonsIn {
-          0% {
-            opacity: 0;
-          }
-          100% {
-            opacity: 1;
-          }
-        }
+      #signUpPromoBtn:hover {
+        background-color: #00909e;
       }
     }
   }
@@ -146,14 +236,17 @@ $halfOpacity: 0.5;
     align-content: center;
     justify-content: center;
     margin: 15vh auto;
-    animation: easyToUseIn 4s linear forwards;
 
     .easyToUseSVG {
       grid-column: 1 / 2;
       grid-row: 1;
-      height: 35vh;
+      height: 200px;
       width: 50vw;
     }
+  }
+
+  .easyToUseSectionAnimation {
+    animation: easyToUseIn 1s linear forwards;
   }
 
   @keyframes easyToUseIn {
@@ -175,14 +268,17 @@ $halfOpacity: 0.5;
     align-content: center;
     justify-content: center;
     margin: 15vh auto;
-    animation: openSourceIn 4s linear forwards;
 
     .openSourceSVG {
       grid-column: 2 / 2;
       grid-row: 1;
-      height: 35vh;
+      height: 200px;
       width: 50vw;
     }
+  }
+
+  .openSourceSectionAnimation {
+    animation: openSourceIn 1s linear forwards;
   }
 
   @keyframes openSourceIn {

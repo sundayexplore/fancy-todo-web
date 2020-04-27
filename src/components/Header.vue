@@ -1,5 +1,5 @@
 <template>
-  <header class="fixedTop">
+  <header :class="{ fixedTop: true, scroll: scrollPosition > 50 }">
     <nav class="navbar">
       <router-link to="/" class="iconLink">
         <OpenSourceSVG class="iconSVG" />
@@ -14,13 +14,6 @@
       </div>
     </nav>
   </header>
-  <!-- <div>
-    <v-app-bar color="deep-purple accent-4" dense dark>
-      <v-toolbar-title>Fancy Todo</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-btn outlined @click.prevent="redirect">{{ decision.text }}</v-btn>
-    </v-app-bar>
-  </div> -->
 </template>
 
 <script lang="ts">
@@ -39,7 +32,8 @@ export default Vue.extend({
         name: "SignIn",
         path: "/signin",
         text: "Sign In"
-      }
+      },
+      scrollPosition: 0
     };
   },
   methods: {
@@ -66,10 +60,17 @@ export default Vue.extend({
         this.decision.path = "/signin";
       }
       this.$router.push(this.decision.path);
+    },
+    updateScrollPosition() {
+      this.scrollPosition = window.scrollY;
     }
   },
   mounted() {
     this.decideUserStatus();
+    window.addEventListener("scroll", this.updateScrollPosition);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.updateScrollPosition);
   },
   watch: {
     $route() {
@@ -81,6 +82,7 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 $baseBgColor: rgba(20, 40, 80, 1);
+$transparentBgColor: rgba(0, 121, 191, 0);
 
 .fixedTop {
   position: fixed;
@@ -88,11 +90,15 @@ $baseBgColor: rgba(20, 40, 80, 1);
   right: 0;
   left: 0;
   z-index: 1030;
-  padding: 2vh 3vw;
 
   .navbar {
-    transition: background 1s ease 0s;
-    background-color: rgba(0, 121, 191, 0);
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    transition: background 2s ease 0s;
+    background-color: $transparentBgColor;
+    padding: 0 36px;
   }
 
   .iconLink {
@@ -101,11 +107,11 @@ $baseBgColor: rgba(20, 40, 80, 1);
     justify-content: center;
     align-content: center;
     align-items: center;
-    height: 15vh;
+    padding: 14px;
 
     .iconSVG {
-      height: 15vh;
-      width: 10vw;
+      height: 48px;
+      width: auto;
     }
   }
 
@@ -115,12 +121,11 @@ $baseBgColor: rgba(20, 40, 80, 1);
     justify-content: center;
     align-content: center;
     align-items: center;
-    height: 15vh;
 
     .customBtn {
-      padding: 2vh 1vw;
-      font-size: 1.2rem;
-      line-height: 1;
+      padding: 8px 16px;
+      font-size: 1.2em;
+      line-height: 1.2;
       text-decoration: none;
       color: #fff;
     }
@@ -135,5 +140,10 @@ $baseBgColor: rgba(20, 40, 80, 1);
       border-radius: 4px;
     }
   }
+}
+
+.scroll nav.navbar {
+  background-color: #27496d;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 </style>
