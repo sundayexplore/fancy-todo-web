@@ -90,7 +90,6 @@ export default Vue.extend({
       });
     },
     animateSection(sectionName: string) {
-      console.log({ sectionName });
       switch (sectionName) {
         case "easyToUse":
           return (this.animateSections.easyToUse = true);
