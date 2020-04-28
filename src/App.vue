@@ -21,18 +21,26 @@
       </v-btn>
     </v-snackbar>
     <router-view />
+    <Footer
+      v-if="
+        !$store.state.isSignedIn &&
+          $route.name != 'SignIn' &&
+          $route.name != 'SignUp'
+      "
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Header } from "@/components";
+import { Header, Footer } from "@/components";
 import { User, colors } from "@/utils";
 
 export default Vue.extend({
   name: "App",
   components: {
-    Header
+    Header,
+    Footer
   },
   data() {
     return {

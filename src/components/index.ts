@@ -1,5 +1,10 @@
 // GENERAL COMPONENTS
 export { default as Header } from "@/components/Header.vue";
+export { default as Footer } from "@/components/Footer.vue";
+
+// HOME PAGE COMPONENTS
+export { default as MainSection } from "@/components/home/MainSection.vue";
+export { default as WhySection } from "@/components/home/WhySection.vue";
 
 // USER COMPONENTS
 export { default as SignInForm } from "@/components/users/SignInForm.vue";

@@ -26,12 +26,18 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomePage
+    component: HomePage,
+    meta: {
+      title: "Home"
+    }
   },
   {
     path: "/about",
     name: "About",
-    component: AboutPage
+    component: AboutPage,
+    meta: {
+      title: "About"
+    }
   },
   {
     path: "/signin",
@@ -58,7 +64,7 @@ const routes = [
     props: true,
     meta: {
       requiresAuth: true,
-      title: "Dashboard"
+      title: (route: any) => route.params.username
     }
   }
 ];
@@ -86,6 +92,11 @@ router.beforeEach(async (to: any, from: any, next: any) => {
   } else {
     next();
   }
+});
+
+router.beforeEach((to: any, from: any, next: any) => {
+  document.title = `${to.meta.title} | Fancy Todo` || "Fancy Todo";
+  next();
 });
 
 export default router;
