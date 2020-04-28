@@ -2,13 +2,6 @@
   <v-container class="todoListContainer">
     <v-container class="actionPanel">
       <v-btn
-        :color="colors.addTodo"
-        small
-        @click.stop="showAddTodoModal = true"
-      >
-        Add Todo
-      </v-btn>
-      <v-btn
         v-if="canUpdateTodo"
         :color="colors.updateTodo"
         small
@@ -17,14 +10,11 @@
         Update Todo
       </v-btn>
 
-      <add-todo-modal
-        @dismiss="dismissAddTodoModal"
-        :showAddTodoModal="showAddTodoModal"
-      ></add-todo-modal>
       <update-todo-modal
         @dismiss="dismissUpdateTodoModal"
         :showUpdateTodoModal="showUpdateTodoModal"
         :todoId="currentTodoId"
+        data-app
       ></update-todo-modal>
     </v-container>
     <v-data-table
@@ -49,14 +39,12 @@ import Vue from "vue";
 import { mapState } from "vuex";
 import moment from "moment";
 
-import AddTodoModal from "./AddTodoModal.vue";
 import UpdateTodoModal from "./UpdateTodoModal.vue";
 import { Todo } from "@/utils";
 
 export default Vue.extend({
   name: "TodoList",
   components: {
-    AddTodoModal,
     UpdateTodoModal
   },
   data() {
@@ -115,9 +103,6 @@ export default Vue.extend({
     }
   },
   methods: {
-    dismissAddTodoModal() {
-      this.showAddTodoModal = false;
-    },
     dismissUpdateTodoModal() {
       this.selected = [];
       this.showUpdateTodoModal = false;

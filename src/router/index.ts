@@ -63,8 +63,7 @@ const routes = [
     component: Dashboard,
     props: true,
     meta: {
-      requiresAuth: true,
-      title: (route: any) => route.params.username
+      requiresAuth: true
     }
   }
 ];
@@ -95,8 +94,13 @@ router.beforeEach(async (to: any, from: any, next: any) => {
 });
 
 router.beforeEach((to: any, from: any, next: any) => {
-  document.title = `${to.meta.title} | Fancy Todo` || "Fancy Todo";
-  next();
+  if (to.matched.some((record: any) => record.meta.title)) {
+    document.title = `${to.meta.title} | Fancy Todo`;
+    next();
+  } else {
+    document.title = "Fancy Todo";
+    next();
+  }
 });
 
 export default router;
