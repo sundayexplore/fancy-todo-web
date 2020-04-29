@@ -21,4 +21,6 @@ export interface Todo {
   dueTime?: Moment | Date | string;
   "Due Date"?: Moment | Date | string;
   "Due Time"?: Moment | Date | string;
+  displayDueDate?: Moment | Date | string;
+  displayDueTime?: Moment | Date | string;
 }

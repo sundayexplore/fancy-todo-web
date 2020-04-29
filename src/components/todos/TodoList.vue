@@ -1,141 +1,175 @@
 <template>
   <v-container class="todoListContainer">
-    <v-container class="actionPanel">
-      <v-btn
-        v-if="canUpdateTodo"
-        :color="colors.updateTodo"
-        small
-        @click.stop="showUpdateTodoModal = true"
-      >
-        Update Todo
-      </v-btn>
-
-      <update-todo-modal
-        @dismiss="dismissUpdateTodoModal"
-        :showUpdateTodoModal="showUpdateTodoModal"
-        :todoId="currentTodoId"
-        data-app
-      ></update-todo-modal>
-    </v-container>
-    <v-data-table
-      v-model="selected"
-      :headers="headers"
-      :items="localTodos"
-      class="elevation-1 todoListTable"
-      show-select
-      group-by="Due Date"
-      item-key="_id"
-      show-group-by
+    <div
+      v-for="todoSet in mockTodos"
+      :key="todoSet.dueDate"
+      class="todoSetContainer"
     >
-      <template v-slot:no-data>
-        <p>No todos. Let's create one!</p>
-      </template>
-    </v-data-table>
+      <h2 class="todoSetTitle">
+        {{ moment(todoSet.dueDate).calendar() }}
+        <small class="todoSetSubtitle">{{
+          handleTodoSetSubtitle(todoSet.dueDate)
+        }}</small>
+      </h2>
+      <ul>
+        <TodoItem v-for="todo in todoSet.todos" :key="todo._id" :todo="todo" />
+      </ul>
+    </div>
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
-import moment from "moment";
+import moment, { Moment } from "moment";
 
-import UpdateTodoModal from "./UpdateTodoModal.vue";
+import TodoItem from "./TodoItem.vue";
+
 import { Todo } from "@/utils";
+
+interface TodoSet {
+  dueDate?: string | Date | Moment;
+  todos?: Array<Todo>;
+}
+
+moment.updateLocale("en", {
+  calendar: {
+    lastDay: "[Yesterday]",
+    sameDay: "[Today]",
+    nextDay: "[Tomorrow]",
+    lastWeek: "[Last] dddd",
+    nextWeek: "[Next] dddd",
+    sameElse: "LL"
+  }
+});
 
 export default Vue.extend({
   name: "TodoList",
   components: {
-    UpdateTodoModal
+    TodoItem
   },
   data() {
     return {
+      moment,
       showAddTodoModal: false,
       showUpdateTodoModal: false,
       canUpdateTodo: false,
       currentTodoId: "",
-      selected: [] as Array<Todo>,
-      localTodos: [] as Array<Todo>,
-      headers: [
+      localTodos: [] as Array<TodoSet>,
+      mockTodos: [
         {
-          text: "Todo",
-          align: "start",
-          sortable: true,
-          value: "Todo"
+          dueDate: moment().toISOString(),
+          todos: [
+            {
+              name: "Mock Todo",
+              displayDueTime: moment().format("LT")
+            },
+            {
+              name: "Mock Todo 2",
+              displayDueTime: moment().format("LT")
+            }
+          ]
         },
         {
-          text: "Due Date",
-          align: "center",
-          sortable: true,
-          value: "Due Date"
-        },
-        {
-          text: "Due Time",
-          align: "center",
-          sortable: true,
-          value: "Due Time"
+          dueDate: moment("20200403").toISOString(),
+          todos: [
+            {
+              name: "Mock Todo",
+              displayDueTime: moment().format("LT")
+            },
+            {
+              name: "Mock Todo 2",
+              displayDueTime: moment().format("LT")
+            }
+          ]
         }
-      ],
-      colors: {
-        addTodo: "#03A9F4",
-        updateTodo: "#607D8B",
-        doneTodo: "#8BC34A"
-      }
+      ]
     };
   },
   computed: mapState(["todos"]),
   watch: {
     todos(newTodos: Array<Todo>) {
-      this.localTodos = newTodos.map((todo: Todo) => {
-        todo["Todo"] = todo.name;
-        todo["Due Date"] = moment(todo.dueDate).format("LL");
-        todo["Due Time"] = moment(todo.dueDate).format("LT");
-        return todo;
+      let finalTodos: Array<TodoSet> = [];
+      let dates: Array<Date | string> = [];
+
+      newTodos.forEach((todo: Todo) => {
+        dates.push(todo.dueDate as string);
       });
-    },
-    selected(newSelected: Array<Todo>) {
-      if (newSelected.length == 1) {
-        this.canUpdateTodo = true;
-        this.currentTodoId = newSelected[0]._id;
-      } else {
-        this.canUpdateTodo = false;
-        this.currentTodoId = "";
-      }
+
+      dates = dates.filter((date, idx) => dates.indexOf(date) === idx);
+
+      dates.forEach((date: string | Date | Moment) => {
+        finalTodos.push({ dueDate: date });
+      });
+
+      finalTodos = finalTodos.map((todoSet: TodoSet) => {
+        const todos: Array<Todo> = [];
+        newTodos.forEach((todo: Todo) => {
+          if (
+            moment(todo.dueDate).format("LL") ==
+            moment(todoSet.dueDate).format("LL")
+          ) {
+            todoSet.todos!.push(todo);
+          }
+        });
+        todoSet.todos = todos;
+        return todoSet;
+      });
+
+      this.localTodos = finalTodos.map((todoSet: TodoSet) => {
+        todoSet.todos = todoSet.todos!.map((todo: Todo) => {
+          todo.displayDueDate = moment(todo.dueDate).format("LL");
+          todo.displayDueTime = moment(todo.dueDate).format("LT");
+          return todo;
+        });
+        return todoSet;
+      });
     }
   },
   methods: {
     dismissUpdateTodoModal() {
-      this.selected = [];
       this.showUpdateTodoModal = false;
+    },
+    handleTodoSetSubtitle(date: string) {
+      const calendarDate = moment(date).calendar();
+      const formattedDate = moment(date).format("LL");
+
+      if (calendarDate == formattedDate) {
+        return "";
+      }
+
+      return formattedDate;
     }
   }
 });
 </script>
 
 <style lang="scss" scoped>
+$defaultGrey: #888888;
+$defaultFontColor: hsla(0, 0%, 100%, 0.87);
+
 .todoListContainer {
-  display: grid !important;
-  grid-template-areas: "ActionPanel TodoListTable" !important;
-  grid-template-columns: 1fr 2fr !important;
-  grid-template-rows: auto !important;
-  justify-items: center !important;
-}
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-template-rows: auto;
+  justify-items: center;
 
-.actionPanel {
-  grid-area: ActionPanel;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  .todoSetContainer {
+    grid-column: 1;
+    width: 100%;
+    margin: 15px 0;
 
-  button {
-    margin: 2vh auto;
-    width: 15vw;
-    color: #ffffff;
-    font-weight: bold;
+    .todoSetTitle {
+      color: $defaultFontColor;
+      font-size: 20px;
+      padding: 5px 0;
+
+      .todoSetSubtitle {
+        font-size: 12px;
+        color: $defaultGrey;
+        padding: 0 10px;
+      }
+    }
   }
-}
-
-.todoListTable {
-  grid-area: TodoListTable;
-  width: 50vw;
 }
 </style>

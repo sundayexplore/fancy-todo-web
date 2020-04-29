@@ -15,3 +15,4 @@ export { default as UserHeader } from "@/components/users/UserHeader.vue";
 // TODO COMPONENTS
 export { default as TodoList } from "@/components/todos/TodoList.vue";
 export { default as AddTodoModal } from "@/components/todos/AddTodoModal.vue";
+export { default as TodoItem } from "@/components/todos/TodoItem.vue";
