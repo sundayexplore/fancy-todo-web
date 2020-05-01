@@ -25,5 +25,9 @@ module.exports = {
       .end()
       .use("vue-svg-loader")
       .loader("vue-svg-loader");
+  },
+
+  pwa: {
+    name: 'Fancy Todo'
   }
 };

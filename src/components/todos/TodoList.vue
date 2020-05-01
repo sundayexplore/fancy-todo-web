@@ -12,7 +12,9 @@
         }}</small>
       </h2>
       <ul>
-        <TodoItem v-for="todo in todoSet.todos" :key="todo._id" :todo="todo" />
+        <li v-for="todo in todoSet.todos" :key="todo._id" class="todoListItem">
+          <TodoItem :todo="todo" />
+        </li>
       </ul>
     </div>
   </v-container>
@@ -169,6 +171,10 @@ $defaultFontColor: hsla(0, 0%, 100%, 0.87);
         color: $defaultGrey;
         padding: 0 10px;
       }
+    }
+
+    .todoListItem {
+      list-style: none;
     }
   }
 }

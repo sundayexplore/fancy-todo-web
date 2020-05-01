@@ -1,7 +1,7 @@
 <template>
   <header id="userHeaderContainer">
     <nav id="headerMenu">
-      <OpenSourceSVG id="headerLogo" />
+      <BarsSVG id="navIcon" type="button" />
       <section id="userPanel">
         <PlusSVG
           type="button"
@@ -16,11 +16,12 @@
         />
       </section>
     </nav>
-    <AddTodoModal
-      @dismiss="showAddTodoModal = false"
-      :showAddTodoModal="showAddTodoModal"
-      data-app
-    />
+    <v-dialog v-model="showAddTodoModal" max-width="800px">
+      <AddTodoInlineForm
+        class="addTodoInlineModal"
+        @dismiss="dismissAddTodoModal"
+      />
+    </v-dialog>
     <v-menu
       v-model="showSettings"
       :position-x="settings.x"
@@ -39,15 +40,15 @@
 <script lang="ts">
 import Vue from "vue";
 
-import AddTodoModal from "../todos/AddTodoModal.vue";
+import AddTodoInlineForm from "../todos/AddTodoInlineForm.vue";
 
 export default Vue.extend({
   name: "UserHeader",
   components: {
-    OpenSourceSVG: () => import("-!vue-svg-loader!@/assets/open-source.svg"),
     SettingsSVG: () => import("-!vue-svg-loader!@/assets/users/settings.svg"),
     PlusSVG: () => import("-!vue-svg-loader!@/assets/todos/plus.svg"),
-    AddTodoModal
+    BarsSVG: () => import("-!vue-svg-loader!@/assets/bars.svg"),
+    AddTodoInlineForm
   },
   data() {
     return {
@@ -69,27 +70,32 @@ export default Vue.extend({
     handleShowSettings(e: MouseEvent) {
       e.preventDefault();
       this.showSettings = false;
-      this.settings.x = e.clientX;
-      this.settings.y = e.clientY;
+      this.settings.x = e.screenX;
+      this.settings.y = e.screenY - 72;
       this.$nextTick(() => {
         this.showSettings = true;
       });
+    },
+    dismissAddTodoModal() {
+      this.showAddTodoModal = false;
     }
   }
 });
 </script>
 
 <style lang="scss" scoped>
-$defaultDark: #222831;
+$defaultBlue: #3282b8;
 $defaultWhite: rgb(252, 248, 243);
-$defaultGrey: #84a9ac;
+$defaultGrey: #f1f1f6;
+$defaultDarker: #1f1f1f;
+$defaultDark: #393e46;
 
 #userHeaderContainer {
-  background-color: $defaultDark;
+  background-color: $defaultBlue;
   top: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 2px 6px 0 $defaultDark;
+  box-shadow: 0 2px 6px 0 $defaultBlue;
 
   #headerMenu {
     width: 100%;
@@ -97,11 +103,22 @@ $defaultGrey: #84a9ac;
     display: flex;
     justify-content: space-between;
     padding: 0 3vw;
+    align-items: center;
 
-    #headerLogo {
-      height: 25px;
+    #navIcon {
+      height: 30px;
       width: auto;
+      color: $defaultWhite;
+      transition: background 0.5s ease 0s;
+      padding: 6px;
+      border-radius: 4px;
     }
+
+    #navIcon:hover {
+      background: $defaultGrey;
+      color: $defaultBlue;
+    }
+
     #userPanel {
       display: flex;
       align-items: center;
@@ -121,8 +138,14 @@ $defaultGrey: #84a9ac;
 
       .panelIcon:hover {
         background: $defaultGrey;
+        color: $defaultBlue;
       }
     }
   }
+}
+
+.addTodoInlineModal {
+  background: $defaultDark;
+  padding: 16px 16px;
 }
 </style>

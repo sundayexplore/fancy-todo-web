@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-app>
     <Header
       v-if="
         !$store.state.isSignedIn &&
@@ -28,7 +28,7 @@
           $route.name != 'SignUp'
       "
     />
-  </div>
+  </v-app>
 </template>
 
 <script lang="ts">

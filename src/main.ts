@@ -1,6 +1,7 @@
 import Vue from "vue";
 import { AxiosInstance } from "axios";
 import "material-design-icons-iconfont/dist/material-design-icons.css";
+import { Plugin } from "vue-fragment";
 
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
@@ -21,6 +22,8 @@ declare module "vue/types/vue" {
     currentUser: User;
   }
 }
+
+Vue.use(Plugin);
 
 new Vue({
   store,
