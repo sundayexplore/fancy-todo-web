@@ -10,8 +10,8 @@
         <p
           :class="{
             todoDueTime: true,
-            todoOverDue: decideOverDue(),
-            todoUndone: decideUndone()
+            todoOverDue: isOverdue,
+            todoUndone: isUndone
           }"
         >
           {{ todo.displayDueTime }}
@@ -49,7 +49,9 @@ export default Vue.extend({
   data() {
     return {
       showRightOptions: false,
-      showUpdateForm: false
+      showUpdateForm: false,
+      isOverdue: false,
+      isUndone: false
     };
   },
   methods: {
@@ -62,16 +64,16 @@ export default Vue.extend({
     decideOverDue() {
       const timeNow = moment().format("LT");
       if (timeNow >= this.todo.displayDueTime) {
-        return true;
+        return (this.isOverdue = true);
       }
-      return false;
+      return (this.isOverdue = false);
     },
     decideUndone() {
       const timeNow = moment().format("LT");
       if (timeNow <= this.todo.displayDueTime) {
-        return true;
+        return (this.isUndone = true);
       }
-      return false;
+      return (this.isUndone = false);
     },
     handleUpdateForm() {
       this.showUpdateForm = true;
@@ -81,11 +83,13 @@ export default Vue.extend({
     }
   },
   beforeMount() {
-    const todoDueTime = document.getElementsByClassName("todoDueTime");
-
-    for (const key in todoDueTime) {
-      console.log(key);
-    }
+    setInterval(() => {
+      this.decideOverDue();
+      this.decideUndone();
+    }, 1000);
+  },
+  destroyed() {
+    clearInterval();
   }
 });
 </script>
@@ -99,9 +103,9 @@ $defaultRed: #fd5e53;
 .todoItemContainer {
   display: flex;
   grid-template-rows: auto;
-  padding: 5px 0;
+  padding: 8px 0 16px 0;
   border-bottom: 1px solid $defaultGrey;
-  margin: 5px 0;
+  margin: 8px 0 16px 0;
 
   .todoWrapper {
     flex-grow: 1;

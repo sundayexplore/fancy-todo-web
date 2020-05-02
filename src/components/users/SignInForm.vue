@@ -78,8 +78,7 @@ export default Vue.extend({
         localStorage.setItem("token", data.token);
         this.$store.dispatch("signIn", data.user);
         this.$router.push({
-          name: "Dashboard",
-          params: { username: data.user.username }
+          name: "Dashboard"
         });
         this.isLoading = false;
       } catch (err) {

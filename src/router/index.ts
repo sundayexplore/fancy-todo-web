@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import Vue from "vue";
 import VueRouter from "vue-router";
 
@@ -22,6 +24,20 @@ const beforeEnter = async (to: any, from: any, next: any) => {
   }
 };
 
+const beforeEnterGeneral = async (to: any, from: any, next: any) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      await userAPI.get("/check", { headers: { token } });
+      next({ name: "Dashboard" });
+    } catch (err) {
+      Store.commit("setGeneralError", err.response.data.message);
+    }
+  } else {
+    next();
+  }
+};
+
 const routes = [
   {
     path: "/",
@@ -29,7 +45,8 @@ const routes = [
     component: HomePage,
     meta: {
       title: "Home"
-    }
+    },
+    beforeEnter: beforeEnterGeneral
   },
   {
     path: "/about",
@@ -37,7 +54,8 @@ const routes = [
     component: AboutPage,
     meta: {
       title: "About"
-    }
+    },
+    beforeEnter: beforeEnterGeneral
   },
   {
     path: "/signin",
@@ -58,7 +76,7 @@ const routes = [
     beforeEnter
   },
   {
-    path: "/:username",
+    path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
     props: true,

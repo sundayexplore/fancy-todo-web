@@ -22,8 +22,7 @@ export default Vue.extend({
   computed: mapState(["currentUser"]),
   watch: {
     currentUser(currentUserData) {
-      const { username } = this.$route.params;
-      const { firstName, lastName } = currentUserData;
+      const { firstName, lastName, username } = currentUserData;
       document.title = `${username} (${firstName} ${lastName}) | Fancy Todo`;
     }
   }

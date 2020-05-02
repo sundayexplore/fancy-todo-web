@@ -11,7 +11,7 @@
           handleTodoSetSubtitle(todoSet.dueDate)
         }}</small>
       </h2>
-      <ul>
+      <ul class="todoList">
         <li v-for="todo in todoSet.todos" :key="todo._id" class="todoListItem">
           <TodoItem :todo="todo" />
         </li>
@@ -173,8 +173,9 @@ $defaultFontColor: hsla(0, 0%, 100%, 0.87);
       }
     }
 
-    .todoListItem {
-      list-style: none;
+    .todoList {
+      padding: 0;
+      list-style-type: none;
     }
   }
 }

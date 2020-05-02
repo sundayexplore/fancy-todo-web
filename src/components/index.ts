@@ -11,6 +11,7 @@ export { default as SignInForm } from "@/components/users/SignInForm.vue";
 export { default as SignUpForm } from "@/components/users/SignUpForm.vue";
 export { default as UserProfileCard } from "@/components/users/UserProfileCard.vue";
 export { default as UserHeader } from "@/components/users/UserHeader.vue";
+export { default as UserSettingsList } from "@/components/users/UserSettingsList.vue";
 
 // TODO COMPONENTS
 export { default as TodoList } from "@/components/todos/TodoList.vue";

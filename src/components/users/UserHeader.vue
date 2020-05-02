@@ -6,14 +6,16 @@
         <PlusSVG
           type="button"
           class="panelIcon"
-          @click.stop="showAddTodoModal = true"
+          @click.stop="showAddTodoModal = !showAddTodoModal"
         />
-        <SettingsSVG
-          type="button"
-          id="settingsBtn"
-          class="panelIcon"
-          @click="handleShowSettings"
-        />
+        <v-menu offset-y bottom dark>
+          <template v-slot:activator="{ on }">
+            <button id="settingsBtn" v-on="on">
+              <SettingsSVG class="panelIcon" />
+            </button>
+          </template>
+          <UserSettingsList :currentUser="currentUser" />
+        </v-menu>
       </section>
     </nav>
     <v-dialog v-model="showAddTodoModal" max-width="800px">
@@ -22,25 +24,15 @@
         @dismiss="dismissAddTodoModal"
       />
     </v-dialog>
-    <v-menu
-      v-model="showSettings"
-      :position-x="settings.x"
-      :position-y="settings.y"
-      @click:outside="showSettings = false"
-    >
-      <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index">
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
   </header>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState } from "vuex";
 
 import AddTodoInlineForm from "../todos/AddTodoInlineForm.vue";
+import UserSettingsList from "./UserSettingsList.vue";
 
 export default Vue.extend({
   name: "UserHeader",
@@ -48,36 +40,20 @@ export default Vue.extend({
     SettingsSVG: () => import("-!vue-svg-loader!@/assets/users/settings.svg"),
     PlusSVG: () => import("-!vue-svg-loader!@/assets/todos/plus.svg"),
     BarsSVG: () => import("-!vue-svg-loader!@/assets/bars.svg"),
-    AddTodoInlineForm
+    AddTodoInlineForm,
+    UserSettingsList
   },
   data() {
     return {
-      showAddTodoModal: false,
-      items: [
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me" },
-        { title: "Click Me 2" }
-      ],
-      showSettings: false,
-      settings: {
-        y: 0,
-        x: 0
-      }
+      showAddTodoModal: false
     };
   },
+  computed: {
+    ...mapState(["currentUser"])
+  },
   methods: {
-    handleShowSettings(e: MouseEvent) {
-      e.preventDefault();
-      this.showSettings = false;
-      this.settings.x = e.screenX;
-      this.settings.y = e.screenY - 72;
-      this.$nextTick(() => {
-        this.showSettings = true;
-      });
-    },
     dismissAddTodoModal() {
-      this.showAddTodoModal = false;
+      this.$data.showAddTodoModal = false;
     }
   }
 });
@@ -139,6 +115,10 @@ $defaultDark: #393e46;
       .panelIcon:hover {
         background: $defaultGrey;
         color: $defaultBlue;
+      }
+
+      #settingsBtn {
+        display: flex;
       }
     }
   }
