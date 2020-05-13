@@ -19,7 +19,9 @@ export default class Validate {
       return "Password must be at least 6 characters!";
     } else if (
       input.length >= 6 &&
-      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*)(+=._-`])([a-zA-Z0-9!@#$%^&*)(+=._-`]+)$/g.test(input)
+      !/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*)(+=._-`])([a-zA-Z0-9!@#$%^&*)(+=._-`]+)$/g.test(
+        input
+      )
     ) {
       return "Password must contain at least a Number, Special Character, and Upper-Case Letter!";
     }

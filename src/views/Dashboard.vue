@@ -34,7 +34,7 @@ export default Vue.extend({
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-template-rows: auto;
-  height: 100vh;
+  height: 100%;
   justify-items: center;
   background-color: $defaultDarker;
 }

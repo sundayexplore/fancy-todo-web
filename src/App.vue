@@ -2,7 +2,7 @@
   <v-app>
     <Header
       v-if="
-        !$store.state.isSignedIn &&
+        !$store.state.signedIn &&
           $route.name != 'SignIn' &&
           $route.name != 'SignUp'
       "
@@ -24,7 +24,7 @@
     <router-view />
     <Footer
       v-if="
-        !$store.state.isSignedIn &&
+        !$store.state.signedIn &&
           $route.name != 'SignIn' &&
           $route.name != 'SignUp'
       "
@@ -35,9 +35,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { mapState } from "vuex";
+import { AxiosResponse } from "axios";
 
 import { Header, Footer } from "@/components";
-import { User, colors } from "@/utils";
 
 export default Vue.extend({
   name: "App",
@@ -47,51 +47,64 @@ export default Vue.extend({
   },
   data() {
     return {
-      message: "",
-      color: "",
-      snackbar: false,
-      isLoading: false
+      loading: false
     };
   },
   methods: {
     async checkAll() {
-      this.isLoading = true;
-      try {;
-        const { data } = await this.$userAPI.get("/sync");
-        this.$store.dispatch("sync", data);
-      } catch (err) {
-        if (this.$route.path == "/dashboard") {
-          const errMessage: string = err.response.data.message;
-          this.setSnackbar(errMessage, colors.error);
-          this.$userAPI.post("/signout");
-          this.$store.dispatch("signOut");
-          this.$router.push("/");
+      if (localStorage.getItem("user")) {
+        this.loading = true;
+        try {
+          const { data } = await this.$userAPI.get("/sync");
+          this.$store.dispatch("sync", data);
+          this.loading = false;
+        } catch (err) {
+          if (err.response.status == 401) {
+            this.$userAPI
+              .post("/refresh")
+              .then(() => {
+                return this.$userAPI.get("/sync");
+              })
+              .then((res: AxiosResponse) => {
+                this.$store.dispatch("sync", res.data);
+                this.loading = false;
+              })
+              .catch(() => {
+                const errMessage =
+                  "You are not signed in, please sign in again to continue!";
+                this.$store.dispatch("setGeneralSnackbar", {
+                  event: "open",
+                  type: "info",
+                  message: errMessage
+                });
+                this.$userAPI
+                  .post("/signout")
+                  .then()
+                  .catch();
+                this.$store.dispatch("signOut");
+                this.$router.push("/signin");
+                this.loading = false;
+              });
+          } else if (err.response.status == 500) {
+            this.$store.dispatch("setGeneralSnackbar", {
+              event: "open",
+              message: err.response.data.message,
+              type: "error"
+            });
+            this.loading = false;
+          }
         }
-        this.isLoading = false;
       }
-    },
-    setSnackbar(message: string, color: string) {
-      this.message = message;
-      this.color = color;
-      this.snackbar = true;
     },
     handleCloseSnackbar() {
       this.$store.dispatch("setGeneralSnackbar", { event: "dismiss" });
     }
   },
   computed: {
-    ...mapState([
-      "generalSnackbar" 
-    ])
+    ...mapState(["generalSnackbar"])
   },
-  created() {
+  updated() {
     this.checkAll();
-  },
-  watch: {
-    generalSnackbar(val: any) {
-      const snackbarColor = val.type == "error" ? colors.error : colors.success;
-      this.setSnackbar(val.message, snackbarColor);
-    }
   }
 });
 </script>

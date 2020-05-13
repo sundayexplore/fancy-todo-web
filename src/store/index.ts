@@ -7,10 +7,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    todos: [] as Array<Todo>,
-    currentUser: null as User | any,
-    isSignedIn: false,
-    isLoading: false,
+    todos: ([] || localStorage.getItem("todos")) as Array<Todo>,
+    currentUser: (null || localStorage.getItem("user")) as User | null,
+    signedIn: false,
+    loading: false,
     generalSnackbar: {
       status: false,
       message: "",
@@ -26,24 +26,20 @@ export default new Vuex.Store({
       state.currentUser = user;
     },
     SIGN_IN(state) {
-      state.isSignedIn = true;
+      state.signedIn = true;
     },
     SIGN_OUT(state) {
-      state.isSignedIn = false;
+      state.signedIn = false;
       state.currentUser = null;
-      localStorage.clear();
     },
-    SET_LOADING_TRUE(state) {
-      state.isLoading = true;
-    },
-    SET_LOADING_FALSE(state) {
-      state.isLoading = false;
+    SET_LOADING(state, target: boolean) {
+      state.loading = target;
     },
     ADD_TODO(state, todo) {
       state.todos = state.todos.concat(todo);
     },
     UPDATE_TODO(state, todoIn: Todo) {
-      state.todos = state.todos.map(todo => {
+      state.todos = state.todos.map((todo: Todo) => {
         if (todo._id == todoIn._id) {
           todo = todoIn;
         }
@@ -51,7 +47,7 @@ export default new Vuex.Store({
       });
     },
     DELETE_TODO(state, todoId: string) {
-      state.todos = state.todos.filter(todo => {
+      state.todos = state.todos.filter((todo: Todo) => {
         return todo._id != todoId;
       });
     },
@@ -81,18 +77,13 @@ export default new Vuex.Store({
       const { user, todos } = syncData;
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("todos", JSON.stringify(todos));
-      commit("FETCH_ALL_TODOS", todos);
       commit("SIGN_IN");
+      commit("FETCH_ALL_TODOS", todos);
       commit("SET_CURRENT_USER", user);
     },
     signOut({ commit }) {
+      localStorage.clear();
       commit("SIGN_OUT");
-    },
-    setLoadingTrue({ commit }) {
-      commit("SET_LOADING_TRUE");
-    },
-    setLoadingFalse({ commit }) {
-      commit("SET_LOADING_FALSE");
     },
     addTodo({ commit }, todo: Todo) {
       commit("ADD_TODO", todo);
@@ -105,7 +96,12 @@ export default new Vuex.Store({
     },
     setGeneralSnackbar({ commit }, snackbarConfig: SetGeneralSnackbarConfig) {
       const { message, type, event }: SetGeneralSnackbarConfig = snackbarConfig;
-      const snackbarColor = type == "error" ? colors.error : colors.success;
+      const snackbarColor =
+        type == "success"
+          ? colors.success
+          : type == "info"
+          ? colors.info
+          : colors.error;
       switch (event) {
         case "open":
           commit("SET_SNACKBAR_MESSAGE", message);
@@ -113,7 +109,7 @@ export default new Vuex.Store({
           commit("SET_SNACKBAR_COLOR", snackbarColor);
           commit("SET_SNACKBAR_STATUS", true);
           break;
-      
+
         case "dismiss":
           commit("SET_SNACKBAR_MESSAGE", "");
           commit("SET_SNACKBAR_TYPE", "");

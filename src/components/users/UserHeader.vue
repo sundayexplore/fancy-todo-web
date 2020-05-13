@@ -127,7 +127,8 @@ export default Vue.extend({
     }
 
     #navIcon:hover {
-      background: $defaultGrey;
+      background: $defaultWhite;
+      opacity: 0.9;
       color: $defaultBlue;
     }
 
@@ -149,7 +150,8 @@ export default Vue.extend({
       }
 
       .panelIcon:hover {
-        background: $defaultGrey;
+        background: $defaultWhite;
+        opacity: 0.9;
         color: $defaultBlue;
       }
 
