@@ -52,10 +52,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$fullOpacity: 1;
-$halfOpacity: 0.5;
-$defaultWhite: rgb(252, 248, 243);
-
 .mainSection {
   display: grid;
   grid-template-columns: repeat(2, 1fr);

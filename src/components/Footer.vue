@@ -106,11 +106,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$fullOpacity: 1;
-$halfOpacity: 0.5;
-$defaultWhite: rgb(252, 248, 243);
-$defaultGrey: #c2c2c2;
-
 #footer {
   position: relative;
   bottom: 0;

@@ -98,11 +98,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$defaultGrey: #888888;
-$defaultFontColor: hsla(0, 0%, 100%, 0.87);
-$defaultGreen: #007944;
-$defaultRed: #ff0000;
-
 .updateTodoInlineWrapper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

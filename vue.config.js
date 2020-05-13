@@ -29,5 +29,13 @@ module.exports = {
 
   pwa: {
     name: 'Fancy Todo'
+  },
+
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: `@import "~@/variables.scss";`
+      }
+    }
   }
 };

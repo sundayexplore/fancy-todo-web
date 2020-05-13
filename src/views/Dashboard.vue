@@ -30,8 +30,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$defaultDarker: #1f1f1f;
-
 #dashboardContainer {
   display: grid;
   grid-template-columns: repeat(1, 1fr);

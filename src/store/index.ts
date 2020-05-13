@@ -1,21 +1,21 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { Todo, User } from "@/utils";
+import { Todo, User, SyncData, colors } from "@/utils";
 
 Vue.use(Vuex);
 
-const todos: Array<Todo> = [];
-
 export default new Vuex.Store({
   state: {
-    todos,
-    currentUser: null,
+    todos: [] as Array<Todo>,
+    currentUser: null as User | any,
     isSignedIn: false,
     isLoading: false,
-    generalError: {
-      snackbar: false,
-      message: ""
+    generalSnackbar: {
+      status: false,
+      message: "",
+      type: "",
+      color: ""
     }
   },
   mutations: {
@@ -24,7 +24,6 @@ export default new Vuex.Store({
     },
     SET_CURRENT_USER(state, user) {
       state.currentUser = user;
-      localStorage.setItem("currentUser", JSON.stringify(user));
     },
     SIGN_IN(state) {
       state.isSignedIn = true;
@@ -56,11 +55,17 @@ export default new Vuex.Store({
         return todo._id != todoId;
       });
     },
-    SET_ERROR_SNACKBAR(state, target: boolean) {
-      state.generalError.snackbar = target;
+    SET_SNACKBAR_STATUS(state, target: boolean) {
+      state.generalSnackbar.status = target;
     },
-    SET_ERROR_MESSAGE(state, errorMessage: string) {
-      state.generalError.message = errorMessage;
+    SET_SNACKBAR_MESSAGE(state, mssage: string) {
+      state.generalSnackbar.message = mssage;
+    },
+    SET_SNACKBAR_TYPE(state, target: "error" | "success" | "info") {
+      state.generalSnackbar.type = target;
+    },
+    SET_SNACKBAR_COLOR(state, target: string) {
+      state.generalSnackbar.color = target;
     }
   },
   actions: {
@@ -68,8 +73,17 @@ export default new Vuex.Store({
       commit("FETCH_ALL_TODOS", todos);
     },
     signIn({ commit }, currentUser: User) {
+      localStorage.setItem("user", JSON.stringify(currentUser));
       commit("SIGN_IN");
       commit("SET_CURRENT_USER", currentUser);
+    },
+    sync({ commit }, syncData: SyncData) {
+      const { user, todos } = syncData;
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("todos", JSON.stringify(todos));
+      commit("FETCH_ALL_TODOS", todos);
+      commit("SIGN_IN");
+      commit("SET_CURRENT_USER", user);
     },
     signOut({ commit }) {
       commit("SIGN_OUT");
@@ -89,15 +103,31 @@ export default new Vuex.Store({
     deleteTodo({ commit }, todoId: string) {
       commit("DELETE_TODO", todoId);
     },
-    setGeneralError({ commit }, message: string | undefined = "") {
-      if (message == undefined) {
-        commit("SET_ERROR_SNACKBAR", false);
-        commit("SET_ERROR_MESSAGE", "");
-      } else {
-        commit("SET_ERROR_SNACKBAR", true);
-        commit("SET_ERROR_MESSAGE", message);
+    setGeneralSnackbar({ commit }, snackbarConfig: SetGeneralSnackbarConfig) {
+      const { message, type, event }: SetGeneralSnackbarConfig = snackbarConfig;
+      const snackbarColor = type == "error" ? colors.error : colors.success;
+      switch (event) {
+        case "open":
+          commit("SET_SNACKBAR_MESSAGE", message);
+          commit("SET_SNACKBAR_TYPE", type);
+          commit("SET_SNACKBAR_COLOR", snackbarColor);
+          commit("SET_SNACKBAR_STATUS", true);
+          break;
+      
+        case "dismiss":
+          commit("SET_SNACKBAR_MESSAGE", "");
+          commit("SET_SNACKBAR_TYPE", "");
+          commit("SET_SNACKBAR_COLOR", "");
+          commit("SET_SNACKBAR_STATUS", false);
+          break;
       }
     }
   },
   modules: {}
 });
+
+export interface SetGeneralSnackbarConfig {
+  event: "open" | "dismiss";
+  type?: "error" | "success" | "info";
+  message?: string;
+}

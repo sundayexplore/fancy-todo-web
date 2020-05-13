@@ -8,15 +8,16 @@
       "
     />
     <v-snackbar
-      v-model="snackbar"
-      :color="color"
+      v-model="generalSnackbar.status"
+      :color="generalSnackbar.color"
       multi-line
       right
       :timeout="6000"
       top
+      @abort="handleCloseSnackbar"
     >
-      {{ message }}
-      <v-btn dark text @click="snackbar = false">
+      {{ generalSnackbar.message }}
+      <v-btn dark text @click="handleCloseSnackbar">
         Close
       </v-btn>
     </v-snackbar>
@@ -33,6 +34,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { mapState } from "vuex";
+
 import { Header, Footer } from "@/components";
 import { User, colors } from "@/utils";
 
@@ -53,39 +56,42 @@ export default Vue.extend({
   methods: {
     async checkAll() {
       this.isLoading = true;
-      const token: string = localStorage.getItem("token")!;
-      const currentUser: User = JSON.parse(
-        localStorage.getItem("currentUser")!
-      );
-
-      if (token && currentUser) {
-        try {
-          await this.$userAPI.get("/check", { headers: { token } });
-          const { data } = await this.$todoAPI.get(`/${currentUser.username}`, {
-            headers: { token }
-          });
-          this.$store.dispatch("signIn", currentUser);
-          this.$store.dispatch("fetchAllTodos", data.todos);
-        } catch (err) {
+      try {;
+        const { data } = await this.$userAPI.get("/sync");
+        this.$store.dispatch("sync", data);
+      } catch (err) {
+        if (this.$route.path == "/dashboard") {
           const errMessage: string = err.response.data.message;
-          if (errMessage != "User is not verified!") {
-            this.setSnackbar(errMessage, colors.error);
-          }
+          this.setSnackbar(errMessage, colors.error);
+          this.$userAPI.post("/signout");
+          this.$store.dispatch("signOut");
+          this.$router.push("/");
         }
+        this.isLoading = false;
       }
-      this.isLoading = false;
     },
     setSnackbar(message: string, color: string) {
       this.message = message;
       this.color = color;
       this.snackbar = true;
+    },
+    handleCloseSnackbar() {
+      this.$store.dispatch("setGeneralSnackbar", { event: "dismiss" });
     }
+  },
+  computed: {
+    ...mapState([
+      "generalSnackbar" 
+    ])
   },
   created() {
     this.checkAll();
   },
-  updated() {
-    this.checkAll();
+  watch: {
+    generalSnackbar(val: any) {
+      const snackbarColor = val.type == "error" ? colors.error : colors.success;
+      this.setSnackbar(val.message, snackbarColor);
+    }
   }
 });
 </script>

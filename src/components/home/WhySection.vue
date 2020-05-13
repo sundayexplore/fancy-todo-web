@@ -1,9 +1,9 @@
 <template>
   <section class="whySection">
     <section
+      data-aos="fade"
       :class="{
-        easyToUseSection: true,
-        easyToUseSectionAnimation: animateSections.easyToUse
+        easyToUseSection: true
       }"
     >
       <EasyToUseSVG class="easyToUseSVG" />
@@ -14,9 +14,9 @@
     </section>
 
     <section
+      data-aos="fade"
       :class="{
-        openSourceSection: true,
-        openSourceSectionAnimation: animateSections.openSource
+        openSourceSection: true
       }"
     >
       <OpenSourceSVG class="openSourceSVG" />
@@ -32,6 +32,8 @@
 
 <script lang="ts">
 import Vue from "vue";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default Vue.extend({
   name: "WhySection",
@@ -39,48 +41,13 @@ export default Vue.extend({
     EasyToUseSVG: () => import("-!vue-svg-loader!@/assets/easy-to-use.svg"),
     OpenSourceSVG: () => import("-!vue-svg-loader!@/assets/open-source.svg")
   },
-  data() {
-    return {
-      animateSections: {
-        easyToUse: false,
-        openSource: false
-      }
-    };
-  },
-  methods: {
-    animateSection(sectionName: string) {
-      switch (sectionName) {
-        case "easyToUse":
-          return (this.animateSections.easyToUse = true);
-      }
-    },
-    handleScroll() {
-      const scrollPos = window.scrollY;
-      const whySectionScrollPos = Math.floor(
-        document.getElementsByClassName("whySection")[0].getBoundingClientRect()
-          .y
-      );
-
-      if (scrollPos >= whySectionScrollPos) {
-        this.animateSections.easyToUse = true;
-        this.animateSections.openSource = true;
-      }
-    }
-  },
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  destroyed() {
-    window.removeEventListener("scroll", this.handleScroll);
+  created() {
+    AOS.init();
   }
 });
 </script>
 
 <style lang="scss" scoped>
-$fullOpacity: 1;
-$halfOpacity: 0.5;
-$defaultWhite: rgb(252, 248, 243);
-
 .whySection {
   height: 100vh;
   display: grid;
@@ -96,29 +63,12 @@ $defaultWhite: rgb(252, 248, 243);
     align-content: center;
     justify-content: center;
     margin: 10vh auto;
-    visibility: hidden;
 
     .easyToUseSVG {
       grid-column: 1 / 2;
       grid-row: 1;
       height: 200px;
       width: 50vw;
-    }
-  }
-
-  .easyToUseSectionAnimation {
-    animation: easyToUseIn 1s linear forwards;
-    visibility: visible;
-  }
-
-  @keyframes easyToUseIn {
-    0% {
-      opacity: 0;
-      transform: translateX(-200%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0%);
     }
   }
 
@@ -137,21 +87,6 @@ $defaultWhite: rgb(252, 248, 243);
       grid-row: 1;
       height: 200px;
       width: 50vw;
-    }
-  }
-
-  .openSourceSectionAnimation {
-    animation: openSourceIn 1s linear forwards;
-  }
-
-  @keyframes openSourceIn {
-    0% {
-      opacity: 0;
-      transform: translateX(200%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0%);
     }
   }
 

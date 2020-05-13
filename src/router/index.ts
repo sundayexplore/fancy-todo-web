@@ -11,29 +11,23 @@ import { userAPI } from "@/utils";
 Vue.use(VueRouter);
 
 const beforeEnter = async (to: any, from: any, next: any) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    try {
-      await userAPI.get("/check", { headers: { token } });
-      next({ path: from.path });
-    } catch (err) {
-      Store.commit("setGeneralError", err.response.data.message);
-    }
-  } else {
+  try {
+    const { data } = await userAPI.get("/sync");
+    Store.dispatch("sync", data);
+    next({ path: from.path });
+  } catch (err) {
+    Store.dispatch("setGeneralError", err.response.data.message);
     next();
   }
 };
 
 const beforeEnterGeneral = async (to: any, from: any, next: any) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    try {
-      await userAPI.get("/check", { headers: { token } });
-      next({ name: "Dashboard" });
-    } catch (err) {
-      Store.commit("setGeneralError", err.response.data.message);
-    }
-  } else {
+  try {
+    const { data } = await userAPI.get("/sync");
+    Store.dispatch("sync", data);
+    next({ name: "Dashboard" });
+  } catch (err) {
+    Store.dispatch("setGeneralError", err.response.data.message);
     next();
   }
 };
@@ -93,17 +87,13 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to: any, from: any, next: any) => {
-  const token = localStorage.getItem("token");
   if (to.matched.some((record: any) => record.meta.requiresAuth)) {
-    if (token) {
-      try {
-        await userAPI.get("/check", { headers: { token } });
-        next();
-      } catch (err) {
-        Store.commit("setGeneralError", err.response.data.message);
-        next({ name: "SignIn" });
-      }
-    } else {
+    try {
+      const { data } = await userAPI.get("/sync");
+      Store.dispatch("sync", data);
+      next();
+    } catch (err) {
+      Store.dispatch("setGeneralError", err.response.data.message);
       next({ name: "SignIn" });
     }
   } else {

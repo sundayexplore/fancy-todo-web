@@ -109,7 +109,6 @@ export default Vue.extend({
         };
         await this.$userAPI.post("/signup", this.userData);
         const { data } = await this.$userAPI.post("/signin", signInData);
-        localStorage.setItem("token", data.token);
         this.$store.dispatch("signIn", data.user);
         this.$router.push({
           name: "Dashboard"
@@ -130,9 +129,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$defaultGrey: #c2c2c2;
-$defaultBlue: rgba(7, 121, 228, 1);
-
 .container {
   display: grid;
   grid-template-rows: auto;

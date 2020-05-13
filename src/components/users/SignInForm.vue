@@ -26,23 +26,37 @@
           Sign Up!
         </router-link>
       </p>
-      <v-form ref="form" @submit.prevent="signIn" id="signInForm">
+      <v-form
+        ref="form"
+        @submit.prevent="signIn"
+        id="signInForm"
+        lazy-validation
+      >
         <v-text-field
           v-model="userData.userIdentifier"
           label="Email or username"
           required
+          :rules="userIdentifierRules"
           type="text"
           color="rgba(7, 121, 228, 1)"
           autofocus
+          class="textField"
         />
         <v-text-field
           v-model="userData.password"
           label="Password"
           required
+          :rules="passwordRules"
           type="password"
           color="rgba(7, 121, 228, 1)"
+          class="textField"
         />
-        <v-btn outlined type="submit" @click.prevent="signIn" id="signInBtn"
+        <v-btn
+          outlined
+          type="submit"
+          @submit.prevent="signIn"
+          @click.prevent="signIn"
+          id="signInBtn"
           >Sign In</v-btn
         >
       </v-form>
@@ -53,7 +67,7 @@
 <script lang="ts">
 import Vue from "vue";
 
-import { colors } from "@/utils";
+import { colors, Validate } from "@/utils";
 
 export default Vue.extend({
   name: "SignInForm",
@@ -68,14 +82,16 @@ export default Vue.extend({
     },
     message: "",
     snackbar: false,
-    color: ""
+    color: "",
+    valid: true,
+    userIdentifierRules: [(v: string) => Validate.userIdentifier(v)],
+    passwordRules: [(v: string) => Validate.password(v)]
   }),
   methods: {
     async signIn() {
       this.isLoading = true;
       try {
         const { data } = await this.$userAPI.post("/signin", this.userData);
-        localStorage.setItem("token", data.token);
         this.$store.dispatch("signIn", data.user);
         this.$router.push({
           name: "Dashboard"
@@ -95,10 +111,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-$defaultGrey: #c2c2c2;
-$defaultBlue: rgba(7, 121, 228, 1);
-
+<style lang="scss">
 .container {
   display: grid;
   grid-template-rows: auto;
@@ -121,8 +134,10 @@ $defaultBlue: rgba(7, 121, 228, 1);
     justify-content: center;
     align-content: center;
     align-items: center;
-    padding: 8vh 5vw;
-    box-shadow: 0 5px 10px $defaultGrey;
+    padding: 5ch;
+    box-shadow: $defaultBoxShadow;
+    max-width: 45ch;
+    width: 45ch;
 
     #formTitle {
       text-align: left;
@@ -134,7 +149,6 @@ $defaultBlue: rgba(7, 121, 228, 1);
       text-align: left;
       text-decoration: none;
       align-self: flex-start;
-      margin-top: 1.5vh;
       color: #888888;
 
       > * {
@@ -145,8 +159,11 @@ $defaultBlue: rgba(7, 121, 228, 1);
     }
 
     #signInForm {
-      margin-top: 4vh;
       width: 100%;
+
+      .textField {
+        margin: 1.8ch 0;
+      }
 
       #signInBtn {
         margin-top: 3vh;
@@ -160,5 +177,13 @@ $defaultBlue: rgba(7, 121, 228, 1);
       }
     }
   }
+}
+
+.v-messages__message {
+  line-height: 1.5;
+}
+
+.v-application p {
+  margin-bottom: 0;
 }
 </style>

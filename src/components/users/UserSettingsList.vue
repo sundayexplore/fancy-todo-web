@@ -13,7 +13,7 @@
       <SettingsSVG class="settingsMenuSVG" />
       <span class="settingsMenuItem">Settings</span>
     </v-list-item>
-    <v-list-item class="settingsMenuListItem">
+    <v-list-item class="settingsMenuListItem" @click="handleSignOut">
       <SignOutSVG class="settingsMenuSVG" />
       <span class="settingsMenuItem">Sign Out</span>
     </v-list-item>
@@ -40,6 +40,16 @@ export default Vue.extend({
     initialName() {
       const { firstName, lastName } = this.currentUser;
       return `${firstName[0]}${lastName[0]}`;
+    }
+  },
+  methods: {
+    async handleSignOut() {
+      try {
+        const { data } = await this.$userAPI.post("/signout");
+        this.$emit("success", data.message);
+      } catch (err) {
+        this.$emit("error", err.response.message);
+      }
     }
   }
 });

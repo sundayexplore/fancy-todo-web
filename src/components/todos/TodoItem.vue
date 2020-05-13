@@ -95,11 +95,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$defaultGrey: #888888;
-$defaultFontColor: hsla(0, 0%, 100%, 0.87);
-$defaultGreen: #8cba51;
-$defaultRed: #fd5e53;
-
 .todoItemContainer {
   display: flex;
   grid-template-rows: auto;

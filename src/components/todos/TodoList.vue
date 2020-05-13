@@ -147,9 +147,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$defaultGrey: #888888;
-$defaultFontColor: hsla(0, 0%, 100%, 0.87);
-
 .todoListContainer {
   display: grid;
   grid-template-columns: repeat(1, 1fr);

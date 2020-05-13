@@ -79,9 +79,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-$baseBgColor: rgba(20, 40, 80, 1);
-$transparentBgColor: rgba(0, 121, 191, 0);
-
 .fixedTop {
   position: fixed;
   top: 0;
@@ -94,7 +91,7 @@ $transparentBgColor: rgba(0, 121, 191, 0);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    transition: background 2s ease 0s;
+    transition: background 1s ease 0s;
     background-color: $transparentBgColor;
     padding: 0 36px;
   }

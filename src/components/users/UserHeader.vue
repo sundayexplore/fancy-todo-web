@@ -14,7 +14,11 @@
               <SettingsSVG class="panelIcon" />
             </button>
           </template>
-          <UserSettingsList :currentUser="currentUser" />
+          <UserSettingsList
+            @success="handleSettingsListSuccess"
+            @error="handleSettingsListError"
+            :currentUser="currentUser"
+          />
         </v-menu>
       </section>
     </nav>
@@ -34,6 +38,8 @@ import { mapState } from "vuex";
 import AddTodoInlineForm from "../todos/AddTodoInlineForm.vue";
 import UserSettingsList from "./UserSettingsList.vue";
 
+import { colors } from "@/utils";
+
 export default Vue.extend({
   name: "UserHeader",
   components: {
@@ -45,7 +51,12 @@ export default Vue.extend({
   },
   data() {
     return {
-      showAddTodoModal: false
+      showAddTodoModal: false,
+      snackbar: {
+        status: false,
+        message: "",
+        color: ""
+      }
     };
   },
   computed: {
@@ -54,18 +65,43 @@ export default Vue.extend({
   methods: {
     dismissAddTodoModal() {
       this.$data.showAddTodoModal = false;
+    },
+    setSnackbar(type: "success" | "error", message: string) {
+      switch (type) {
+        case "success":
+          this.snackbar.status = true;
+          this.snackbar.message = message;
+          this.snackbar.color = colors.success;
+          break;
+
+        case "error":
+          this.snackbar.status = true;
+          this.snackbar.message = message;
+          this.snackbar.color = colors.error;
+          break;
+      }
+    },
+    handleSettingsListSuccess(message: string) {
+      this.$store.dispatch("setGeneralSnackbar", {
+        event: "open",
+        type: "success",
+        message
+      });
+      this.$router.push("/signin");
+    },
+    handleSettingsListError(message: string) {
+      this.$store.dispatch("setGeneralSnackbar", {
+        event: "open",
+        type: "error",
+        message
+      });
+      // this.$router.push("/signin");
     }
   }
 });
 </script>
 
 <style lang="scss" scoped>
-$defaultBlue: #3282b8;
-$defaultWhite: rgb(252, 248, 243);
-$defaultGrey: #f1f1f6;
-$defaultDarker: #1f1f1f;
-$defaultDark: #393e46;
-
 #userHeaderContainer {
   background-color: $defaultBlue;
   top: 0;
