@@ -24,7 +24,7 @@
     <router-view />
     <Footer
       v-if="
-        !$store.state.signedIn &&
+        !$store.state.swignedIn &&
           $route.name != 'SignIn' &&
           $route.name != 'SignUp'
       "
