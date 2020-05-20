@@ -1,7 +1,7 @@
-import React, { useState, FormEvent } from 'react';
-import { FontSizes, getTheme, TextField, PrimaryButton } from '@fluentui/react';
+import React, { useState, FormEvent, MouseEvent } from 'react';
+import { FontSizes, TextField, PrimaryButton } from '@fluentui/react';
 import { Card, CardSection } from '@uifabric/react-cards';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { Container, CustomHead } from '@/components';
 import { Validate } from '@/utils';
@@ -45,7 +45,9 @@ export default function SignIn(params: ISignInParams) {
   };
 
   const handleFormSubmit = async (
-    e: FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
+    e:
+      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
+      | MouseEvent<any>
   ) => {
     e.preventDefault();
     const passed = 'passed';
@@ -77,6 +79,7 @@ export default function SignIn(params: ISignInParams) {
       <Container>
         <Card className={classes.cardContainer}>
           <CardSection className={classes.cardFormSection}>
+            <h2 className={classes.formTitle}>Sign In</h2>
             <form onSubmit={handleFormSubmit} className={classes.signInForm}>
               <TextField
                 ariaLabel="Username or password"
@@ -104,6 +107,7 @@ export default function SignIn(params: ISignInParams) {
                 className={classes.signInButton}
                 type="submit"
                 onSubmit={handleFormSubmit}
+                onClick={handleFormSubmit}
               >
                 Sign In
               </PrimaryButton>
@@ -115,30 +119,39 @@ export default function SignIn(params: ISignInParams) {
   );
 }
 
-const theme = getTheme();
-const useStyles = makeStyles({
-  cardContainer: {
-    padding: '5ch 3ch'
-  },
-  cardFormSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%'
-  },
-  signInForm: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    '& > *': {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    cardContainer: {
+      padding: '3ch'
+    },
+    cardFormSection: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
       width: '100%'
+    },
+    signInForm: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      '& > *': {
+        width: '100%',
+        margin: '1ch 0'
+      }
+    },
+    formTitle: {
+      textAlign: 'left',
+      lineHeight: 1,
+      fontSize: FontSizes.xLargePlus,
+      margin: 0,
+      width: '100%'
+    },
+    signInButton: {
+      marginTop: '1ch'
     }
-  },
-  signInButton: {
-    marginTop: '2ch'
-  }
-});
+  })
+);
