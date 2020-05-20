@@ -27,14 +27,16 @@ export default function Container(props: IContainerProps) {
         alignItems:
           align == 'start' ? 'flex-start' : align == 'end' ? 'flex-end' : align,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        minHeight: '100vh'
       },
       containerGrid: {
         display: 'grid',
         justifyItems: justify,
         alignContent: align,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        minHeight: '100vh'
       }
     })
   )();

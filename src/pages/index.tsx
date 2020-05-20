@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-export default function App() {
+export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
@@ -13,9 +13,7 @@ export default function App() {
 
   const render = () => {
     if (user) {
-      return (
-        <div>LOOOOOOOGGEDD IN!</div>
-      );
+      router.push('/dashboard');
     } else {
       return (
         <div>
