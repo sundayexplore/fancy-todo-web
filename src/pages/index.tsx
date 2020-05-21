@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-export default function Home() {
+import { AppLayout } from '../components';
+
+export interface IHomeProps {}
+
+export default function Home(props: IHomeProps) {
   const router = useRouter();
   const [user, setUser] = useState(null);
 
@@ -16,9 +20,9 @@ export default function Home() {
       router.push('/dashboard');
     } else {
       return (
-        <div>
-          THIS IS HOME PAGE!
-        </div>
+        <AppLayout>
+          <h1>this is home</h1>
+        </AppLayout>
       );
     }
   };
