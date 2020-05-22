@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import { Header } from '@/components';
+import { Header, Footer } from '@/components';
 
 export interface IAppLayoutProps {
   children: ReactNode;
@@ -17,6 +17,7 @@ export default function AppLayout(props: IAppLayoutProps) {
       <main className={classes.mainContainer}>
         {children}
       </main>
+      <Footer />
     </>
   );
 };

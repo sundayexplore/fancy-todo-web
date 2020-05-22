@@ -51,12 +51,13 @@ export default function MainBanner(props: IMainBannerProps) {
         </div>
         <form onSubmit={handleSubmit} className={classes.getStartedForm}>
           <TextField
+            className={classes.getStartedTextField}
             value={getStartedData.email}
             onChange={(e, val) => handleTextChange('email', val)}
             placeholder="Email"
-            className={classes.getStartedTextField}
           />
           <PrimaryButton
+            className={classes.getStartedBtn}
             type="submit"
             onSubmit={handleSubmit}
             onClick={handleSubmit}
@@ -114,14 +115,34 @@ const useStyles = makeStyles(() =>
       width: '100%',
       '& > .ms-TextField-wrapper div': {
         height: '6ch',
+        borderColor: theme.palette.blueLight,
+        '&::after': {
+          borderColor: theme.palette.blueLight
+        },
       },
       '& > .ms-TextField-wrapper div input': {
-        fontSize: '1.2em',
+        fontSize: '1.5em',
         lineHeight: 1,
         '&::placeholder': {
-          fontSize: '1em',
+          fontSize: 'inherit',
           lineHeight: 1
         }
+      }
+    },
+    getStartedBtn: {
+      background: theme.palette.blueLight,
+      borderColor: theme.palette.blueLight,
+      opacity: 0.7,
+      fontSize: '1.5em',
+      lineHeight: 1.5,
+      padding: '2ch 3ch',
+      letterSpacing: 1.8,
+      textTransform: 'uppercase',
+      transition: 'opacity 1s ease',
+      '&:hover': {
+        opacity: 1,
+        background: theme.palette.blueLight,
+        borderColor: theme.palette.blueLight
       }
     },
     captionDiv: {
