@@ -30,6 +30,9 @@ export default function MainBanner(props: IMainBannerProps) {
   ) => {
     e.preventDefault();
     if (getStartedData.email.length) {
+      router.push({ pathname: '/signup', query: { email: getStartedData.email } });
+    } else {
+      router.push('/signup');
     }
   };
 
@@ -39,17 +42,19 @@ export default function MainBanner(props: IMainBannerProps) {
         <ProgressBanner />
       </section>
       <section className={classes.rightSection}>
-        <div>
+        <div className={classes.captionDiv}>
           <h1>Fancy Todo</h1>
           <p>
             Enable you to organize and prioritize your projects in a fun,
             flexible, and rewarding way.
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={classes.getStartedForm}>
           <TextField
             value={getStartedData.email}
             onChange={(e, val) => handleTextChange('email', val)}
+            placeholder="Email"
+            className={classes.getStartedTextField}
           />
           <PrimaryButton
             type="submit"
@@ -91,7 +96,51 @@ const useStyles = makeStyles(() =>
       gridTemplateColumns: 'repeat(1, 1fr)',
       gridTemplateRows: 'repeat(2, 1fr)',
       justifyItems: 'center',
-      alignContent: 'center'
+      alignContent: 'center',
+      padding: '5ch'
+    },
+    getStartedForm: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      '& > *': {
+        margin: '1ch 0'
+      }
+    },
+    getStartedTextField: {
+      width: '100%',
+      '& > .ms-TextField-wrapper div': {
+        height: '6ch',
+      },
+      '& > .ms-TextField-wrapper div input': {
+        fontSize: '1.2em',
+        lineHeight: 1,
+        '&::placeholder': {
+          fontSize: '1em',
+          lineHeight: 1
+        }
+      }
+    },
+    captionDiv: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      '& > h1': {
+        margin: 0,
+        padding: 0,
+        fontSize: '4em'
+      },
+      '& > p': {
+        margin: 0,
+        padding: '1ch 0',
+        fontSize: '1.5em'
+      }
     }
   })
 );

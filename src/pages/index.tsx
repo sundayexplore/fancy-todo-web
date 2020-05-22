@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import AOS from 'aos';
 
 import { AppLayout } from '../components';
 import { MainBanner } from '@/components/home';
@@ -11,6 +12,8 @@ export default function Home(props: IHomeProps) {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    AOS.init();
+
     if (localStorage.user) {
       setUser(localStorage.user);
     }
