@@ -41,6 +41,9 @@ export default function Header(props: IHeaderProps) {
           <Link href="/features" customActiveClassName={classes.navLinkActive}>
             <div className={classes.navLink}>Features</div>
           </Link>
+          <Link href="/about" customActiveClassName={classes.navLinkActive}>
+            <div className={classes.navLink}>About</div>
+          </Link>
           <Link
             href="/developers"
             customActiveClassName={classes.navLinkActive}
@@ -75,9 +78,6 @@ export default function Header(props: IHeaderProps) {
               {/* API Docs, etc. */}
             </Callout>
           )}
-          <Link href="/about" customActiveClassName={classes.navLinkActive}>
-            <div className={classes.navLink}>About</div>
-          </Link>
         </nav>
       </section>
       <section className={classes.rightSection}>

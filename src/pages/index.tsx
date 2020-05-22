@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Provider } from 'react-redux';
 import { useRouter } from 'next/router';
 import AOS from 'aos';
 
-import { AppLayout } from '../components';
+import store from '@/stores';
+import { AppLayout } from '@/components';
 import { MainBanner } from '@/components/home';
 
 export interface IHomeProps {}
@@ -31,5 +33,9 @@ export default function Home(props: IHomeProps) {
     }
   };
 
-  return render();
+  return (
+    <Provider store={store}>
+      {render()}
+    </Provider>
+  );
 };

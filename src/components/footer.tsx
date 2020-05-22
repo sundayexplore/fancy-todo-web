@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getTheme } from '@fluentui/react';
+import { getTheme, FontSizes } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Link } from '@/components';
@@ -12,32 +12,42 @@ export interface IFooterProps {}
 export default function Footer(props: IFooterProps) {
   const classes = useStyles();
   const [socialLinks, setSocialLinks] = useState({
-    docker: '',
+    docker: 'https://hub.docker.com/u/rafiandria23',
     github: 'https://github.com/sunday-projects',
-    linkedIn: 'https://linkedin.com/in/rafiandria23'
+    linkedIn: 'https://linkedin.com/in/rafiandria23',
+    projectClientWebGitHubRepo: 'https://github.com/sunday-projects/fancy-todo-web',
+    projectApiGitHubRepo: 'https://github.com/sunday-projects/fancy-todo-api',
+    projectApiDockerHubRepo: 'https://hub.docker.com/r/rafiandria23/fancy-todo-api'
+  });
+  const [localLinks, setLocalLinks] = useState({
+    apiDocs: '/developers/api-docs',
+    about: '/about',
+    features: '/features'
   });
 
   return (
     <footer className={classes.footerWrapper}>
-      <section>
-      </section>
-      <section>
+      <section className={classes.footerDevelopersSection}>
         <h4>Developers</h4>
         <nav>
-          <Link href="/developers/api-docs">
+          <Link href={localLinks.apiDocs}>
             <div className={classes.footerNavLink}>API Documentation</div>
           </Link>
         </nav>
       </section>
-      <section>
+      <section className={classes.footerProjectSection}>
         <h4>Project</h4>
         <nav>
-          <Link href="/about">
+          <Link href={localLinks.about}>
             <div className={classes.footerNavLink}>About</div>
+          </Link>
+          <Link href={localLinks.features}>
+            <div className={classes.footerNavLink}>Features</div>
           </Link>
         </nav>
       </section>
-      <section>
+      <section className={classes.footerCopyrightSection}>
+        <span>Copyright &copy; {new Date().getFullYear()} Sunday Explore &mdash; an Open Source Organization. All rights reserved.</span>
       </section>
       <section className={classes.socialIconsSection}>
         <nav>
@@ -69,8 +79,9 @@ const useStyles = makeStyles(() => createStyles({
     gridTemplateRows: 'repeat(2, 1fr)',
     justifyItems: 'center',
     alignContent: 'center',
+    gridRowGap: '8ch',
     padding: '4ch 8ch',
-    zIndex: 333,
+    zIndex: 222,
     background: theme.palette.neutralLighter,
     '& > section': {
       width: '100%',
@@ -78,7 +89,8 @@ const useStyles = makeStyles(() => createStyles({
     },
     '& > section h4': {
       margin: 0,
-      marginBottom: '1ch'
+      marginBottom: '1ch',
+      color: theme.palette.neutralPrimary
     },
     '& > section nav': {
       width: 'fit-content'
@@ -95,10 +107,20 @@ const useStyles = makeStyles(() => createStyles({
       width: 'auto'
     }
   },
+  footerDevelopersSection: {
+    gridColumn: 2,
+    gridRow: 1
+  },
+  footerProjectSection: {
+    gridColumn: 3,
+    gridRow: 1
+  },
   footerNavLink: {
     cursor: 'pointer',
+    color: theme.palette.neutralSecondary,
     '&:hover': {
-      textDecoration: 'underline'
+      textDecoration: 'underline',
+      color: theme.palette.neutralPrimary
     }
   },
   socialIconsSection: {
@@ -106,7 +128,9 @@ const useStyles = makeStyles(() => createStyles({
     gridRow: 2,
     width: '100%',
     height: '100%',
-    paddingTop: '2ch',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     '& > nav': {
       display: 'flex',
       alignItems: 'center',
@@ -124,6 +148,17 @@ const useStyles = makeStyles(() => createStyles({
           color: theme.palette.neutralPrimaryAlt
         }
       }
+    }
+  },
+  footerCopyrightSection: {
+    gridColumn: '1 / span 2',
+    gridRow: 2,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    '& > span': {
+      fontSize: FontSizes.medium,
+      color: theme.palette.neutralPrimary
     }
   }
 }));
