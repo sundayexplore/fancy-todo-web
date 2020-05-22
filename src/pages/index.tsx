@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
 import { AppLayout } from '../components';
+import { MainBanner } from '@/components/home';
 
 export interface IHomeProps {}
 
@@ -21,7 +22,7 @@ export default function Home(props: IHomeProps) {
     } else {
       return (
         <AppLayout>
-          <h1>this is home</h1>
+          <MainBanner />
         </AppLayout>
       );
     }

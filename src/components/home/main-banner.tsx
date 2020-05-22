@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { getTheme, TextField } from '@fluentui/react';
+import React, { useState, FormEvent, MouseEvent } from 'react';
+import { useRouter } from 'next/router';
+import { getTheme, TextField, PrimaryButton } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import ProgressBanner from '@/assets/svgs/home/progress-banner.svg';
@@ -8,7 +9,8 @@ export interface IMainBannerProps {}
 
 export default function MainBanner(props: IMainBannerProps) {
   const {} = props;
-  const styles = useStyles();
+  const router = useRouter();
+  const classes = useStyles();
   const [getStartedData, setGetStartedData] = useState({
     email: ''
   });
@@ -21,12 +23,22 @@ export default function MainBanner(props: IMainBannerProps) {
     }
   };
 
+  const handleSubmit = (
+    e:
+      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
+      | MouseEvent<HTMLButtonElement | any>
+  ) => {
+    e.preventDefault();
+    if (getStartedData.email.length) {
+    }
+  };
+
   return (
-    <section id={styles.mainBannerWrapper}>
-      <section className={styles.leftSection}>
+    <section className={classes.mainBannerWrapper}>
+      <section className={classes.leftSection}>
         <ProgressBanner />
       </section>
-      <section className={styles.rightSection}>
+      <section className={classes.rightSection}>
         <div>
           <h1>Fancy Todo</h1>
           <p>
@@ -34,12 +46,19 @@ export default function MainBanner(props: IMainBannerProps) {
             flexible, and rewarding way.
           </p>
         </div>
-        <div>
+        <form onSubmit={handleSubmit}>
           <TextField
             value={getStartedData.email}
             onChange={(e, val) => handleTextChange('email', val)}
           />
-        </div>
+          <PrimaryButton
+            type="submit"
+            onSubmit={handleSubmit}
+            onClick={handleSubmit}
+          >
+            Get Started!
+          </PrimaryButton>
+        </form>
       </section>
     </section>
   );
@@ -58,14 +77,21 @@ const useStyles = makeStyles(() =>
       height: '100%',
       display: 'flex',
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
+      padding: '0 5ch',
+      '& > svg': {
+        width: '100%',
+        height: '100%'
+      }
     },
     rightSection: {
       width: '100%',
       height: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
+      display: 'grid',
+      gridTemplateColumns: 'repeat(1, 1fr)',
+      gridTemplateRows: 'repeat(2, 1fr)',
+      justifyItems: 'center',
+      alignContent: 'center'
     }
   })
 );

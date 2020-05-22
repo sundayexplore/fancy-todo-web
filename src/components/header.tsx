@@ -15,8 +15,8 @@ export default function Header(props: IHeaderProps) {
   });
 
   const handleHeaderScrollAnimation = () => {
-    const screenY = window.screenY;
-    if (screenY > 50) {
+    const scrollY = window.scrollY;
+    if (scrollY > 50) {
       setHeaderScroll(true);
     } else {
       setHeaderScroll(false);
@@ -115,10 +115,11 @@ const useStyles = makeStyles(() =>
       alignContent: 'center',
       gridTemplateColumns: 'repeat(2, 1fr)',
       padding: '1ch 8ch',
-      transition: 'box-shadow 1s ease'
+      transition: 'box-shadow 1s ease, background 1s ease'
     },
     headerScroll: {
-      boxShadow: '3px 3px 3px 3px transparent'
+      boxShadow: `0px 0px 10px ${theme.palette.neutralDark}`,
+      background: theme.palette.white
     },
     leftSection: {
       gridColumn: 1,
