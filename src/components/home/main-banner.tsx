@@ -76,7 +76,8 @@ const useStyles = makeStyles(() =>
     mainBannerWrapper: {
       width: '100%',
       display: 'grid',
-      gridTemplateColumns: 'repeat(2, 1fr)'
+      gridTemplateColumns: 'repeat(2, 1fr)',
+      minHeight: '100vh'
     },
     leftSection: {
       width: '100%',
@@ -87,7 +88,17 @@ const useStyles = makeStyles(() =>
       padding: '0 5ch',
       '& > svg': {
         width: '100%',
-        height: '100%'
+        height: '100%',
+        animation: `$mainBannerSVG 1s ease-in`
+      }
+    },
+    '@keyframes mainBannerSVG': {
+      '0%': {
+        transform: 'translateX(-100%)'
+      },
+      '100%': {
+        opacity: 1,
+        transform: 'translate(0%)'
       }
     },
     rightSection: {
@@ -155,12 +166,33 @@ const useStyles = makeStyles(() =>
       '& > h1': {
         margin: 0,
         padding: 0,
-        fontSize: '4em'
+        fontSize: '4em',
+        animation: '$heroTitle 2s ease-in'
       },
       '& > p': {
         margin: 0,
         padding: '1ch 0',
-        fontSize: '1.5em'
+        fontSize: '1.5em',
+        animation: '$heroDesc 2s ease-in'
+      }
+    },
+    '@keyframes heroTitle': {
+      '0%': {
+        opacity: 0
+      },
+      '100%': {
+        opacity: 1
+      }
+    },
+    '@keyframes heroDesc': {
+      '0%': {
+        opacity: 0
+      },
+      '50%': {
+        opacity: 0
+      },
+      '100%': {
+        opacity: 1
       }
     }
   })

@@ -8,6 +8,7 @@ export interface ITodo {
   _id: string | any;
   name: string;
   dueDate: string | Date;
+  completed: boolean;
 }
 
 export interface IUser {

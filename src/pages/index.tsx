@@ -5,7 +5,7 @@ import AOS from 'aos';
 
 import store from '@/stores';
 import { AppLayout } from '@/components';
-import { MainBanner } from '@/components/home';
+import { MainBanner, DemoBanner } from '@/components/home';
 
 export interface IHomeProps {}
 
@@ -28,6 +28,7 @@ export default function Home(props: IHomeProps) {
       return (
         <AppLayout>
           <MainBanner />
+          <DemoBanner />
         </AppLayout>
       );
     }
