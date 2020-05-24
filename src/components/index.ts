@@ -4,3 +4,4 @@ export { default as CustomHead } from './custom-head';
 export { default as AppLayout } from './app-layout';
 export { default as Link } from './link';
 export { default as Footer } from './footer';
+export { default as wrapRender } from './wrap-render';
