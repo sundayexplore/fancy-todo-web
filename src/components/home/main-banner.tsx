@@ -77,7 +77,8 @@ const useStyles = makeStyles(() =>
       width: '100%',
       display: 'grid',
       gridTemplateColumns: 'repeat(2, 1fr)',
-      minHeight: '100vh'
+      minHeight: '100vh',
+      marginTop: '0 !important'
     },
     leftSection: {
       width: '100%',

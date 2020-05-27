@@ -1,22 +1,29 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { getTheme } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
+
+import { DemoTodoList } from '@/components/demo';
 
 export interface IDemoBannerProps {}
 
 export default function DemoBanner(props: IDemoBannerProps) {
   const classes = useStyles();
-  const dispatch = useDispatch();
 
   return (
-    <section className={classes.demoBannerWrapper}></section>
+    <section className={classes.demoBannerWrapper}>
+      <DemoTodoList />
+    </section>
   );
 };
 
 const theme = getTheme();
 const useStyles = makeStyles(() => createStyles({
   demoBannerWrapper: {
-    width: '100%'
+    width: '100%',
+    minHeight: '100vh',
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    justifyItems: 'center',
+    alignContent: 'center'
   }
 }));

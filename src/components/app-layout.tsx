@@ -25,6 +25,9 @@ export default function AppLayout(props: IAppLayoutProps) {
 const useStyles = makeStyles(() => createStyles({
   mainContainer: {
     marginTop: '8ch',
-    paddingTop: '2ch'
+    paddingTop: '2ch',
+    '& > section': {
+      margin: '10ch 0'
+    }
   }
 }));

@@ -9,10 +9,11 @@ import { demoCompleteTodo, demoUncompleteTodo } from '@/actions/demo';
 
 export interface IDemoTodoItem {
   todo: ITodo;
+  storybook?: boolean;
 }
 
 export default function DemoTodoItem(props: IDemoTodoItem) {
-  const { todo } = props;
+  const { todo, storybook } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -21,23 +22,35 @@ export default function DemoTodoItem(props: IDemoTodoItem) {
     e?: FormEvent<HTMLElement | HTMLInputElement>,
     checked?: boolean
   ) => {
-    switch (checked) {
-      case false:
-        dispatch(demoUncompleteTodo(todo));
-        break;
-
-      default:
-        dispatch(demoCompleteTodo(todo));
-        break;
+    if (storybook) {
+      switch (checked) {
+        case false:
+          todo.completed = false;
+          break;
+  
+        default:
+          todo.completed = true;
+          break;
+      }
+    } else {
+      switch (checked) {
+        case false:
+          dispatch(demoUncompleteTodo(todo));
+          break;
+  
+        default:
+          dispatch(demoCompleteTodo(todo));
+          break;
+      }
     }
   };
 
   return (
     <Stack.Item className={classes.demoTodoItem}>
-      <Checkbox className={classes.todoCheckbox} checked={todo.completed} onChange={onCheckboxChange} />
+      <Checkbox className={classes.todoCheckbox} checked={true} onChange={onCheckboxChange} />
       <div className={classes.todoDetails}>
         <div className={classes.todoName}>{todo.name}</div>
-        <div className={classes.todoDate}>{moment(todo.dueDate).format('LT')}</div>
+        <div className={classes.todoDate}>{moment(todo.dueDate).format('LLLL')}</div>
       </div>
       <FontIcon iconName="EditNote" className={classes.editIcon} />
     </Stack.Item>

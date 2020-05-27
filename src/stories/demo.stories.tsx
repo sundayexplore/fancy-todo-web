@@ -21,4 +21,4 @@ export const TodoList = () => wrapRender(<DemoTodoList />);
 
 export const TodoListHeader = () => wrapRender(<DemoTodoListHeader />);
 
-export const TodoItem = () => wrapRender(<DemoTodoItem todo={mockTodo} />);
+export const TodoItem = () => wrapRender(<DemoTodoItem todo={mockTodo} storybook />);

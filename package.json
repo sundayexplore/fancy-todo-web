@@ -2,6 +2,18 @@
   "name": "fancy-todo-web",
   "version": "1.2.0",
   "private": true,
+  "readme": "./README.md",
+  "license": "MIT",
+  "author": {
+    "name": "Sunday Explore Developers",
+    "url": "https://github.com/sunday-projects"
+  },
+  "contributors": [
+    {
+      "name": "Adam Rafiandri",
+      "url": "https://github.com/rafiandria23"
+    }
+  ],
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -12,6 +24,7 @@
   "dependencies": {
     "@fluentui/react": "^7.115.0",
     "@material-ui/core": "^4.9.14",
+    "@uifabric/icons": "^7.3.45",
     "@uifabric/react-cards": "^0.109.84",
     "aos": "^2.3.4",
     "axios": "^0.19.2",
@@ -42,6 +55,5 @@
     "babel-loader": "^8.1.0",
     "ts-loader": "^7.0.4",
     "typescript": "~3.7.5"
-  },
-  "readme": "./README.md"
+  }
 }
