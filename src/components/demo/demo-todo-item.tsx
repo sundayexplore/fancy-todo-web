@@ -1,8 +1,8 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent } from 'react';
 import { useDispatch } from 'react-redux';
 import { getTheme, Stack, Checkbox, FontIcon } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core';
-import moment from 'moment';
+// import moment from 'moment';
 
 import { ITodo } from '@/types';
 import { demoCompleteTodo, demoUncompleteTodo } from '@/actions/demo';
@@ -16,7 +16,6 @@ export default function DemoTodoItem(props: IDemoTodoItem) {
   const { todo, storybook } = props;
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const onCheckboxChange = (
     e?: FormEvent<HTMLElement | HTMLInputElement>,
@@ -50,7 +49,8 @@ export default function DemoTodoItem(props: IDemoTodoItem) {
       <Checkbox className={classes.todoCheckbox} checked={true} onChange={onCheckboxChange} />
       <div className={classes.todoDetails}>
         <div className={classes.todoName}>{todo.name}</div>
-        <div className={classes.todoDate}>{moment(todo.dueDate).format('LLLL')}</div>
+        <div className={classes.todoDate}>{todo.dueDate}</div>
+        <div className={classes.todoDate}>{todo.dueTime}</div>
       </div>
       <FontIcon iconName="EditNote" className={classes.editIcon} />
     </Stack.Item>

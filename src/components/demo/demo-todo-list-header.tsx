@@ -20,7 +20,7 @@ export default function DemoTodoListHeader(props: IDemoTodoListHeaderProps) {
             className={classes.addIcon}
             iconProps={{ iconName: 'Add' }}
             title="Add Todo"
-            ariaLabel="Add Todo"
+            ariaLabel="Demo Add Todo"
           />
         </TooltipHost>
       </section>

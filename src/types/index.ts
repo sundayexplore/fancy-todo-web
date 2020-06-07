@@ -7,7 +7,11 @@
 export interface ITodo {
   _id: string | any;
   name: string;
-  dueDate: string | Date;
+  due: string | Date;
+  dueDate: string;
+  dueTime: string;
+  priority: number;
+  position: number;
   completed: boolean;
 }
 

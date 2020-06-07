@@ -11,7 +11,9 @@ export default function DemoBanner(props: IDemoBannerProps) {
 
   return (
     <section className={classes.demoBannerWrapper}>
-      <DemoTodoList />
+      <div className={classes.demoTodoListOuterWrapper}>
+        <DemoTodoList />
+      </div>
     </section>
   );
 };
@@ -25,5 +27,11 @@ const useStyles = makeStyles(() => createStyles({
     gridTemplateColumns: 'repeat(3, 1fr)',
     justifyItems: 'center',
     alignContent: 'center'
+  },
+  demoTodoListOuterWrapper: {
+    gridColumn: 2,
+    height: '100%',
+    width: '100%',
+    padding: '5ch 0'
   }
 }));

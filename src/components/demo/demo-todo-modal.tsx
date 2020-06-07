@@ -1,9 +1,11 @@
 import React from 'react';
 
+import { ITodo } from '@/types';
 import { DemoTodoForm } from '@/components/demo';
 
 export interface IDemoTodoModal {
-  type: 'add' | 'update' | 'delete';
+  type: 'add' | 'update' | 'delete' | string;
+  todo: ITodo;
 }
 
 export default function DemoTodoModal(props: IDemoTodoModal) {
