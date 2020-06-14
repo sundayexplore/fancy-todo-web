@@ -5,13 +5,13 @@
  */
 
 export interface ITodo {
-  _id: string | any;
+  _id?: string | any;
   name: string;
-  due: string | Date;
-  dueDate: string;
-  dueTime: string;
+  due: string | Date | null;
+  dueDate: string | Date | null;
+  dueTime: string | Date | null;
   priority: number;
-  position: number;
+  position: number | null;
   completed: boolean;
 }
 

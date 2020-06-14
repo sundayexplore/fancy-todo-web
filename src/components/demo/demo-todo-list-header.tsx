@@ -37,7 +37,7 @@ const useStyles = makeStyles(() =>
       display: 'grid',
       gridTemplateColumns: 'repeat(2, 1fr)',
       padding: '1ch 1.5ch',
-      borderRadius: '8px 8px 0 0'
+      // borderRadius: '8px 8px 0 0'
     },
     leftSection: {
       gridColumn: 1,
