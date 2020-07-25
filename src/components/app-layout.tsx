@@ -1,7 +1,8 @@
 import React, { ReactNode } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, MuiThemeProvider } from '@material-ui/core/styles';
 
 import { Header, Footer } from '@/components';
+import { muiTheme } from '@/styles';
 
 export interface IAppLayoutProps {
   children: ReactNode;
@@ -12,13 +13,13 @@ export default function AppLayout(props: IAppLayoutProps) {
   const classes = useStyles();
 
   return (
-    <>
+    <MuiThemeProvider theme={muiTheme}>
       <Header />
       <main className={classes.mainContainer}>
         {children}
       </main>
       <Footer />
-    </>
+    </MuiThemeProvider>
   );
 };
 

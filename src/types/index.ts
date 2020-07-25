@@ -27,16 +27,41 @@ export interface IOAuthUser {
   email: string;
 }
 
+export interface ISignInData {
+  userIdentifier: string;
+  password: string;
+}
+
+export interface ISignUpData {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface ISignInValidations {
+  userIdentifier: string;
+  password: string;
+  [key: string]: string;
+}
+
+export interface ISignUpValidations {
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  password: string;
+  [key: string]: string;
+}
+
 
 /**
  * 
  * Redux State Interfaces
  * 
  */
-
-export interface IDemoReducer {
-  todos: ITodo[];
-}
 
 export interface IRootState {
   demo: IDemoReducer;
@@ -45,4 +70,16 @@ export interface IRootState {
 export interface IAction {
   type: string;
   payload: any;
+}
+
+export interface IUserReducer {
+  currentUser: IUser | IOAuthUser;
+}
+
+export interface ITodoReducer {
+  todos: ITodo[];
+}
+
+export interface IDemoReducer {
+  todos: ITodo[];
 }

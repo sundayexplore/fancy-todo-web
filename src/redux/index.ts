@@ -1,10 +1,12 @@
 import { combineReducers, createStore } from 'redux';
 
-import { demoReducer } from '@/reducers';
+import { userReducer, todoReducer } from './reducers';
 
 const reducers = combineReducers({
-  demo: demoReducer
+  user: userReducer,
+  todo: todoReducer,
 });
+
 const store = createStore(reducers);
 
 export default store;

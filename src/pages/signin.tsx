@@ -1,128 +1,102 @@
-import React, { useState, FormEvent, MouseEvent } from 'react';
-import { FontSizes, TextField, PrimaryButton } from '@fluentui/react';
-import { Card, CardSection } from '@uifabric/react-cards';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import React, { useState, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import { useRouter } from 'next/router';
+import { useDispatch } from 'react-redux';
+import {
+  TextField,
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+} from '@material-ui/core';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Container, CustomHead } from '@/components';
-import { Validate } from '@/utils';
+import { userAPI } from '@/utils';
+
+// Redux Actions
+import { setUser } from '@/redux/actions/user-actions';
 
 export interface ISignInParams {}
 
-export interface ISignInData {
-  userIdentifier: string;
-  password: string;
-}
-
-export interface IValidations {
-  [key: string]: string;
-}
-
-export default function SignIn(params: ISignInParams) {
-  const {} = params;
+export default function SignIn({}: ISignInParams) {
   const classes = useStyles();
-  const [errMessages, setErrMessages] = useState({
-    userIdentifier: '',
-    password: ''
-  });
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [signInData, setSignInData] = useState({
     userIdentifier: '',
-    password: ''
+    password: '',
   });
 
   const handleOnChange = (
-    type: 'userIdentifier' | 'password',
-    target: string | any
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    switch (type) {
-      case 'userIdentifier':
-        setSignInData({ ...signInData, userIdentifier: target });
-        break;
-
-      case 'password':
-        setSignInData({ ...signInData, password: target });
-        break;
-    }
+    setSignInData(
+      e.target.validity.valid
+        ? { ...signInData, [e.target.name]: e.target.value }
+        : { ...signInData },
+    );
   };
 
-  const handleFormSubmit = async (
+  const handleSignIn = async (
     e:
       | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
-      | MouseEvent<any>
+      | MouseEvent<any>,
   ) => {
     e.preventDefault();
-    const passed = 'passed';
-    const validations: IValidations = {
-      userIdentifier:
-        Validate.userIdentifier(signInData.userIdentifier) || passed,
-      password: Validate.password(signInData.password) || passed
-    };
-    if (
-      Object.values(validations).every((status: string) => status == passed)
-    ) {
-      console.log({ signInData });
-    } else {
-      const prevErrMessages: any = { ...errMessages };
-      for (const key in validations) {
-        if (validations[key] != passed) {
-          prevErrMessages[key] = validations[key];
-        } else {
-          prevErrMessages[key] = '';
-        }
-      }
-      setErrMessages(prevErrMessages);
+    const { userIdentifier, password } = signInData;
+
+    try {
+      const { data } = await userAPI.post('/signin', {
+        userIdentifier,
+        password,
+      });
+      console.log({ data });
+      dispatch(setUser(data.user));
+      router.push('/app');
+    } catch (err) {
+      console.log({ err });
     }
   };
 
   return (
     <>
-      <CustomHead title="Sign In" />
+      <CustomHead title='Sign In' />
       <Container>
-        <Card className={classes.cardContainer}>
-          <CardSection className={classes.cardFormSection}>
-            <h2 className={classes.formTitle}>Sign In</h2>
-            <form onSubmit={handleFormSubmit} className={classes.signInForm}>
+        <Card>
+          <CardHeader>
+            <Typography>Welcome back!</Typography>
+          </CardHeader>
+          <CardContent>
+            <form
+              onSubmit={handleSignIn}
+              noValidate={false}
+              autoComplete={`on`}
+            >
               <TextField
-                ariaLabel="Username or password"
-                autoAdjustHeight
-                autoComplete="on"
-                autoFocus
-                label="Username or password"
+                name={`userIdentifier`}
+                required
                 value={signInData.userIdentifier}
-                required
-                errorMessage={errMessages.userIdentifier}
-                onChange={(e, val) => handleOnChange('userIdentifier', val)}
+                onChange={handleOnChange}
               />
               <TextField
-                ariaLabel="Password"
-                autoAdjustHeight
-                autoComplete="on"
-                type="password"
-                label="Password"
-                value={signInData.password}
+                name={`password`}
                 required
-                errorMessage={errMessages.password}
-                onChange={(e, val) => handleOnChange('password', val)}
+                type={`password`}
+                value={signInData.password}
+                onChange={handleOnChange}
               />
-              <PrimaryButton
-                className={classes.signInButton}
-                type="submit"
-                onSubmit={handleFormSubmit}
-                onClick={handleFormSubmit}
-              >
-                Sign In
-              </PrimaryButton>
             </form>
-          </CardSection>
+          </CardContent>
         </Card>
       </Container>
     </>
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     cardContainer: {
-      padding: '3ch'
+      padding: '3ch',
     },
     cardFormSection: {
       display: 'flex',
@@ -130,7 +104,7 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      width: '100%'
+      width: '100%',
     },
     signInForm: {
       width: '100%',
@@ -140,18 +114,17 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       '& > *': {
         width: '100%',
-        margin: '1ch 0'
-      }
+        margin: '1ch 0',
+      },
     },
     formTitle: {
       textAlign: 'left',
       lineHeight: 1,
-      fontSize: FontSizes.xLargePlus,
       margin: 0,
-      width: '100%'
+      width: '100%',
     },
     signInButton: {
-      marginTop: '1ch'
-    }
-  })
+      marginTop: '1ch',
+    },
+  }),
 );
