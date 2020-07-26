@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
-import { Layout } from '@/components';
+import { AppLayout, TodoList } from '@/components';
 import { userAPI } from '@/utils';
 
 // Redux Actions
@@ -17,12 +17,15 @@ export default function App() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const syncUser = useCallback(async () => {
+    setLoading(true);
     try {
       const { data } = await userAPI.get('/sync');
       localStorage.setItem('user', JSON.stringify(data.user));
       dispatch(setUser(data.user));
       dispatch(setTodos(data.todos));
+      setLoading(false);
     } catch (err) {
+      setLoading(false);
       // handle here
     }
   }, []);
@@ -31,11 +34,7 @@ export default function App() {
     syncUser();
   }, []);
 
-  return (
-    <Layout>
-      <div>THIS IS DASHBOARD!</div>
-    </Layout>
-  );
+  return <AppLayout>{loading ? <div>LOADING</div> : <TodoList />}</AppLayout>;
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({}));

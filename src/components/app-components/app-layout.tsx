@@ -4,16 +4,16 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import AppHeader from './app-header';
 
 export interface IAppLayoutProps {
-  appChildren: ReactNode;
+  children: ReactNode;
 }
 
-export default function AppLayout({ appChildren }: IAppLayoutProps) {
+export default function AppLayout({ children }: IAppLayoutProps) {
   const classes = useStyles();
   
   return (
     <>
       <AppHeader />
-      {appChildren}
+      {children}
     </>
   )
 }
