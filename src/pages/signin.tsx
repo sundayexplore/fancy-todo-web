@@ -30,11 +30,7 @@ export default function SignIn({}: ISignInParams) {
   const handleOnChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setSignInData(
-      e.target.validity.valid
-        ? { ...signInData, [e.target.name]: e.target.value }
-        : { ...signInData },
-    );
+    setSignInData({ ...signInData, [e.target.name]: e.target.value });
   };
 
   const handleSignIn = async (
@@ -63,9 +59,9 @@ export default function SignIn({}: ISignInParams) {
       <CustomHead title='Sign In' />
       <Container>
         <Card>
-          <CardHeader>
-            <Typography>Welcome back!</Typography>
-          </CardHeader>
+          <div>
+            <Typography variant={`h4`}>Welcome back!</Typography>
+          </div>
           <CardContent>
             <form
               onSubmit={handleSignIn}
@@ -73,12 +69,14 @@ export default function SignIn({}: ISignInParams) {
               autoComplete={`on`}
             >
               <TextField
+                label={`Username or Email`}
                 name={`userIdentifier`}
                 required
                 value={signInData.userIdentifier}
                 onChange={handleOnChange}
               />
               <TextField
+                label={`Password`}
                 name={`password`}
                 required
                 type={`password`}

@@ -1,11 +1,7 @@
 import React, { useEffect } from 'react';
-import { Provider as ReduxProvider } from 'react-redux';
 import { useRouter } from 'next/router';
-import AOS from 'aos';
 
-import reduxStore from '@/redux';
-import { AppLayout } from '@/components';
-// import { MainBanner, DemoBanner } from '@/components/home';
+import { Layout } from '@/components';
 
 export interface IHomeProps {}
 
@@ -13,15 +9,14 @@ export default function Home({}: IHomeProps) {
   const router = useRouter();
 
   useEffect(() => {
-    AOS.init();
-    router.push('/signin');
+    if (localStorage.getItem('user')) {
+      router.push('/app');
+    }
   }, []);
 
   return (
-    <ReduxProvider store={reduxStore}>
-      <AppLayout>
+      <Layout>
         <h1>THIS IS HOME</h1>
-      </AppLayout>
-    </ReduxProvider>
+      </Layout>
   );
 };

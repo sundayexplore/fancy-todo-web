@@ -64,6 +64,8 @@ export interface ISignUpValidations {
  */
 
 export interface IRootState {
+  user: IUserReducer;
+  todo: ITodoReducer;
   demo: IDemoReducer;
 }
 
@@ -73,7 +75,7 @@ export interface IAction {
 }
 
 export interface IUserReducer {
-  currentUser: IUser | IOAuthUser;
+  currentUser: IUser | IOAuthUser | null;
 }
 
 export interface ITodoReducer {

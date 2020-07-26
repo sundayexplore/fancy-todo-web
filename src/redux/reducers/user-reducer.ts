@@ -1,14 +1,20 @@
 import { IUserReducer, IUser, IAction } from '@/types';
 
 const initialState: IUserReducer = {
-  currentUser: {} as IUser
+  currentUser: null,
 };
 
-export default function userReducer(state = initialState, action: IAction): IUserReducer {
+export default function userReducer(
+  state = initialState,
+  action: IAction,
+): IUserReducer {
   switch (action.type) {
     case 'SET_USER':
-      return { ...state, ...action.payload.user };
-  
+      return {
+        ...state,
+        currentUser: { ...state.currentUser, ...action.payload.user },
+      };
+
     default:
       return state;
   }

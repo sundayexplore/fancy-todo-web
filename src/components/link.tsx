@@ -6,7 +6,6 @@ import React, {
 } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { getTheme } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 export interface ILinkProps {
@@ -30,11 +29,10 @@ export default function Link(props: ILinkProps) {
   );
 }
 
-const theme = getTheme();
 const useStyles = makeStyles(() =>
   createStyles({
     selected: {
-      color: theme.palette.neutralDark
+      // color: theme.palette.neutralDark
     }
   })
 );

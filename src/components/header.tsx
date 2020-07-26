@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getTheme, Callout } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Link } from '@/components';
@@ -7,7 +6,7 @@ import Logo from '@/assets/svgs/open-source.svg';
 
 export interface IHeaderProps {}
 
-export default function Header(props: IHeaderProps) {
+export default function Header({}: IHeaderProps) {
   const classes = useStyles();
   const [headerScroll, setHeaderScroll] = useState(false);
   const [showCallouts, setShowCallouts] = useState({
@@ -61,23 +60,6 @@ export default function Header(props: IHeaderProps) {
               Developers
             </div>
           </Link>
-          {showCallouts.developers && (
-            <Callout
-              gapSpace={0}
-              target="#developersHeaderNavLink"
-              onDismiss={() =>
-                setShowCallouts({ ...showCallouts, developers: false })
-              }
-              onMouseEnter={() =>
-                setShowCallouts({ ...showCallouts, developers: true })
-              }
-              onMouseLeave={() =>
-                setShowCallouts({ ...showCallouts, developers: false })
-              }
-            >
-              {/* API Docs, etc. */}
-            </Callout>
-          )}
         </nav>
       </section>
       <section className={classes.rightSection}>
@@ -99,7 +81,6 @@ export default function Header(props: IHeaderProps) {
   );
 }
 
-const theme = getTheme();
 const useStyles = makeStyles(() =>
   createStyles({
     headerContainer: {
@@ -118,8 +99,8 @@ const useStyles = makeStyles(() =>
       transition: 'box-shadow 1s ease, background 1s ease'
     },
     headerScroll: {
-      boxShadow: `0px 0px 10px ${theme.palette.neutralDark}`,
-      background: theme.palette.white
+      // boxShadow: `0px 0px 10px ${theme.palette.neutralDark}`,
+      // background: theme.palette.white
     },
     leftSection: {
       gridColumn: 1,
@@ -158,7 +139,7 @@ const useStyles = makeStyles(() =>
       alignItems: 'center'
     },
     navLink: {
-      color: theme.palette.neutralSecondary,
+      // color: theme.palette.neutralSecondary,
       width: 'auto',
       height: '100%',
       cursor: 'pointer',
@@ -168,20 +149,20 @@ const useStyles = makeStyles(() =>
       padding: '0 1ch',
       borderBottom: `3px solid transparent`,
       '&:hover': {
-        color: theme.palette.neutralDark,
-        background: theme.palette.neutralLighterAlt,
-        borderBottom: `3px solid ${theme.palette.blueLight}`
+        // color: theme.palette.neutralDark,
+        // background: theme.palette.neutralLighterAlt,
+        // borderBottom: `3px solid ${theme.palette.blueLight}`
       }
     },
     navLinkActive: {
-      color: theme.palette.neutralDark,
-      background: theme.palette.neutralLight,
-      borderBottom: `3px solid ${theme.palette.blueLight}`
+      // color: theme.palette.neutralDark,
+      // background: theme.palette.neutralLight,
+      // borderBottom: `3px solid ${theme.palette.blueLight}`
     },
     signUpBtn: {
-      color: theme.palette.blueLight,
+      // color: theme.palette.blueLight,
       '&:hover': {
-        color: theme.palette.blueLight
+        // color: theme.palette.blueLight
       }
     },
     calloutNav: {

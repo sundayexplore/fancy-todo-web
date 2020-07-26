@@ -1,2 +1,2 @@
 // Material-UI Theme
-export { default as muiTheme } from './mui-themeheme';
+export { default as muiTheme } from './mui-theme';

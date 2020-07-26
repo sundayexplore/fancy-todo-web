@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { getTheme, FontSizes } from '@fluentui/react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import { Link } from '@/components';
@@ -9,7 +8,7 @@ import LinkedInLogo from '@/assets/svgs/linked-in.svg';
 
 export interface IFooterProps {}
 
-export default function Footer(props: IFooterProps) {
+export default function Footer({}: IFooterProps) {
   const classes = useStyles();
   const [socialLinks, setSocialLinks] = useState({
     docker: 'https://hub.docker.com/u/rafiandria23',
@@ -66,7 +65,6 @@ export default function Footer(props: IFooterProps) {
   );
 };
 
-const theme = getTheme();
 const useStyles = makeStyles(() => createStyles({
   footerWrapper: {
     width: '100%',
@@ -82,7 +80,7 @@ const useStyles = makeStyles(() => createStyles({
     gridRowGap: '8ch',
     padding: '4ch 8ch',
     zIndex: 222,
-    background: theme.palette.neutralLighter,
+    // background: theme.palette.neutralLighter,
     '& > section': {
       width: '100%',
       height: '100%'
@@ -90,7 +88,7 @@ const useStyles = makeStyles(() => createStyles({
     '& > section h4': {
       margin: 0,
       marginBottom: '1ch',
-      color: theme.palette.neutralPrimary
+      // color: theme.palette.neutralPrimary
     },
     '& > section nav': {
       width: 'fit-content'
@@ -117,10 +115,10 @@ const useStyles = makeStyles(() => createStyles({
   },
   footerNavLink: {
     cursor: 'pointer',
-    color: theme.palette.neutralSecondary,
+    // color: theme.palette.neutralSecondary,
     '&:hover': {
       textDecoration: 'underline',
-      color: theme.palette.neutralPrimary
+      // color: theme.palette.neutralPrimary
     }
   },
   socialIconsSection: {
@@ -142,10 +140,10 @@ const useStyles = makeStyles(() => createStyles({
       '& > a > svg': {
         height: '5ch',
         width: 'auto',
-        color: theme.palette.neutralSecondary,
+        // color: theme.palette.neutralSecondary,
         transition: 'color 1s ease',
         '&:hover': {
-          color: theme.palette.neutralPrimaryAlt
+          // color: theme.palette.neutralPrimaryAlt
         }
       }
     }
@@ -157,8 +155,8 @@ const useStyles = makeStyles(() => createStyles({
     justifyContent: 'flex-start',
     alignItems: 'center',
     '& > span': {
-      fontSize: FontSizes.medium,
-      color: theme.palette.neutralPrimary
+      // fontSize: FontSizes.medium,
+      // color: theme.palette.neutralPrimary
     }
   }
 }));
