@@ -1,14 +1,14 @@
-import React, { useState, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import React, { useState, useEffect, FormEvent, MouseEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import {
   TextField,
   Card,
-  CardHeader,
   CardContent,
   Typography,
+  Button,
 } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { Container, CustomHead } from '@/components';
 import { userAPI } from '@/utils';
@@ -16,9 +16,9 @@ import { userAPI } from '@/utils';
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
 
-export interface ISignInParams {}
+export interface ISignInProps {}
 
-export default function SignIn({}: ISignInParams) {
+export default function SignIn({}: ISignInProps) {
   const classes = useStyles();
   const router = useRouter();
   const dispatch = useDispatch();
@@ -26,6 +26,12 @@ export default function SignIn({}: ISignInParams) {
     userIdentifier: '',
     password: '',
   });
+
+  useEffect(() => {
+    if (localStorage.getItem('user')) {
+      router.push('/app');
+    }
+  }, []);
 
   const handleOnChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -35,8 +41,14 @@ export default function SignIn({}: ISignInParams) {
 
   const handleSignIn = async (
     e:
-      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
-      | MouseEvent<any>,
+      | FormEvent<
+          | HTMLFormElement
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | HTMLButtonElement
+          | HTMLAnchorElement
+        >
+      | MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
   ) => {
     e.preventDefault();
     const { userIdentifier, password } = signInData;
@@ -46,7 +58,7 @@ export default function SignIn({}: ISignInParams) {
         userIdentifier,
         password,
       });
-      console.log({ data });
+      localStorage.setItem('user', JSON.stringify(data.user));
       dispatch(setUser(data.user));
       router.push('/app');
     } catch (err) {
@@ -58,12 +70,13 @@ export default function SignIn({}: ISignInParams) {
     <>
       <CustomHead title='Sign In' />
       <Container>
-        <Card>
+        <Card classes={{ root: classes.signInCard }}>
           <div>
             <Typography variant={`h4`}>Welcome back!</Typography>
           </div>
-          <CardContent>
+          <CardContent classes={{ root: classes.signInCardContent }}>
             <form
+              className={classes.signInForm}
               onSubmit={handleSignIn}
               noValidate={false}
               autoComplete={`on`}
@@ -83,6 +96,17 @@ export default function SignIn({}: ISignInParams) {
                 value={signInData.password}
                 onChange={handleOnChange}
               />
+              <Button
+                component={`button`}
+                type={`submit`}
+                onClick={handleSignIn}
+                onSubmit={handleSignIn}
+                disableElevation
+                variant={`contained`}
+                color={`primary`}
+              >
+                Sign In
+              </Button>
             </form>
           </CardContent>
         </Card>
@@ -91,12 +115,12 @@ export default function SignIn({}: ISignInParams) {
   );
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    cardContainer: {
-      padding: '3ch',
+    signInCard: {
+      padding: theme.spacing(4),
     },
-    cardFormSection: {
+    signInCardContent: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -112,17 +136,8 @@ const useStyles = makeStyles(() =>
       alignItems: 'center',
       '& > *': {
         width: '100%',
-        margin: '1ch 0',
+        margin: theme.spacing(2),
       },
-    },
-    formTitle: {
-      textAlign: 'left',
-      lineHeight: 1,
-      margin: 0,
-      width: '100%',
-    },
-    signInButton: {
-      marginTop: '1ch',
     },
   }),
 );

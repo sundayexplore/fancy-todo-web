@@ -13,9 +13,9 @@ export default function AppLayout(props: IAppLayoutProps) {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <main className={classes.mainContainer}>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

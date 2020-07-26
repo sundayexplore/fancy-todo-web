@@ -1,14 +1,17 @@
 import { ITodoReducer, IAction, ITodo } from '@/types';
 
 const initialState: ITodoReducer = {
-  todos: [] as ITodo[]
+  todos: [] as ITodo[],
 };
 
-export default function todoReducer(state = initialState, action: IAction): ITodoReducer {
+export default function todoReducer(
+  state = initialState,
+  action: IAction,
+): ITodoReducer {
   switch (action.type) {
     case 'SET_TODOS':
-      return { ...state, ...action.payload.todos };
-  
+      return { ...state, todos: [...action.payload.todos] };
+
     default:
       return state;
   }
