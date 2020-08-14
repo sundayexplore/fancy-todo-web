@@ -98,6 +98,7 @@ export default function SignIn({}: ISignInProps) {
                 onChange={handleOnChange}
               />
               <Button
+                component={`a`}
                 color={`primary`}
                 variant={`contained`}
                 type={`submit`}
@@ -116,10 +117,10 @@ export default function SignIn({}: ISignInProps) {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    signInCard: {
-      padding: theme.spacing(4),
+    cardContainer: {
+      padding: '3ch',
     },
-    signInCardContent: {
+    cardFormSection: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
@@ -135,8 +136,20 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       '& > *': {
         width: '100%',
-        margin: theme.spacing(2),
+        margin: '1ch 0',
       },
+      '& > div > *': {
+        margin: '1ch'
+      }
+    },
+    formTitle: {
+      textAlign: 'left',
+      lineHeight: 1,
+      margin: 0,
+      width: '100%',
+    },
+    signInButton: {
+      marginTop: '1ch',
     },
   }),
 );

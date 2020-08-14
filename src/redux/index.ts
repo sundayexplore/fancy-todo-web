@@ -1,10 +1,17 @@
 import { combineReducers, createStore } from 'redux';
 
-import { userReducer, todoReducer } from './reducers';
+import {
+  userReducer,
+  todoReducer,
+  currentReducer,
+  errorReducer,
+} from './reducers';
 
 const reducers = combineReducers({
   user: userReducer,
   todo: todoReducer,
+  current: currentReducer,
+  error: errorReducer,
 });
 
 const store = createStore(reducers, enableReduxDevTools());

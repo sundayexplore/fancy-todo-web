@@ -140,6 +140,7 @@ export default function SignUp({}: ISignUpParams) {
               </div>
 
               <Button
+              component={`a`}
                 variant={`contained`}
                 color={`primary`}
                 type={`submit`}
@@ -189,7 +190,7 @@ const useStyles = makeStyles(() =>
       margin: 0,
       width: '100%',
     },
-    signInButton: {
+    signUpButton: {
       marginTop: '1ch',
     },
   }),

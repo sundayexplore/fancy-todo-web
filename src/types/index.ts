@@ -67,6 +67,8 @@ export interface IRootState {
   user: IUserReducer;
   todo: ITodoReducer;
   demo: IDemoReducer;
+  current: ICurrentReducer;
+  error: IErrorReducer;
 }
 
 export interface IAction {
@@ -84,4 +86,12 @@ export interface ITodoReducer {
 
 export interface IDemoReducer {
   todos: ITodo[];
+}
+
+export interface ICurrentReducer {
+  selectedTodoCategory: string;
+}
+
+export interface IErrorReducer {
+  general: string;
 }
