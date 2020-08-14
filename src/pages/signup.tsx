@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import {
   TextField,
   Card,
-  CardHeader,
   CardContent,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
@@ -44,8 +44,13 @@ export default function SignUp({}: ISignUpParams) {
 
   const handleSignUp = async (
     e:
-      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
-      | MouseEvent<any>,
+      | FormEvent<
+          | HTMLFormElement
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | HTMLAnchorElement
+        >
+      | MouseEvent<HTMLAnchorElement>,
   ) => {
     e.preventDefault();
     const { firstName, lastName, username, email, password } = signUpData;
@@ -58,11 +63,13 @@ export default function SignUp({}: ISignUpParams) {
         email,
         password,
       });
-      console.log({ data });
       dispatch(setUser(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/app');
     } catch (err) {
-      console.log({ err });
+      if (err.response) {
+        console.log({ errResponse: err.response });
+      }
     }
   };
 
@@ -70,12 +77,13 @@ export default function SignUp({}: ISignUpParams) {
     <>
       <CustomHead title='Sign In' />
       <Container>
-        <Card>
-          <CardHeader>
-            <Typography>Sign Up</Typography>
-          </CardHeader>
-          <CardContent>
+        <Card classes={{ root: classes.cardContainer }}>
+          <div className={classes.formTitle}>
+            <Typography variant={`h4`}>Let's get started!</Typography>
+          </div>
+          <CardContent classes={{ root: classes.cardFormSection }}>
             <form
+              className={classes.signUpForm}
               onSubmit={handleSignUp}
               noValidate={false}
               autoComplete={`on`}
@@ -130,6 +138,16 @@ export default function SignUp({}: ISignUpParams) {
                   onChange={handleOnChange}
                 />
               </div>
+
+              <Button
+                variant={`contained`}
+                color={`primary`}
+                type={`submit`}
+                onSubmit={handleSignUp}
+                onClick={handleSignUp}
+              >
+                Sign Up
+              </Button>
             </form>
           </CardContent>
         </Card>
@@ -151,7 +169,7 @@ const useStyles = makeStyles(() =>
       height: '100%',
       width: '100%',
     },
-    signInForm: {
+    signUpForm: {
       width: '100%',
       display: 'flex',
       flexDirection: 'column',
@@ -161,6 +179,9 @@ const useStyles = makeStyles(() =>
         width: '100%',
         margin: '1ch 0',
       },
+      '& > div > *': {
+        margin: '1ch'
+      }
     },
     formTitle: {
       textAlign: 'left',

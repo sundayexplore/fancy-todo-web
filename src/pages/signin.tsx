@@ -45,10 +45,9 @@ export default function SignIn({}: ISignInProps) {
           | HTMLFormElement
           | HTMLInputElement
           | HTMLTextAreaElement
-          | HTMLButtonElement
           | HTMLAnchorElement
         >
-      | MouseEvent<HTMLAnchorElement | HTMLButtonElement>,
+      | MouseEvent<HTMLAnchorElement>,
   ) => {
     e.preventDefault();
     const { userIdentifier, password } = signInData;
@@ -58,11 +57,13 @@ export default function SignIn({}: ISignInProps) {
         userIdentifier,
         password,
       });
-      localStorage.setItem('user', JSON.stringify(data.user));
       dispatch(setUser(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/app');
     } catch (err) {
-      console.log({ err });
+      if (err.response) {
+        console.log({ errResponse: err.response });
+      }
     }
   };
 
@@ -70,11 +71,11 @@ export default function SignIn({}: ISignInProps) {
     <>
       <CustomHead title='Sign In' />
       <Container>
-        <Card classes={{ root: classes.signInCard }}>
-          <div>
+        <Card classes={{ root: classes.cardContainer }}>
+          <div className={classes.formTitle}>
             <Typography variant={`h4`}>Welcome back!</Typography>
           </div>
-          <CardContent classes={{ root: classes.signInCardContent }}>
+          <CardContent classes={{ root: classes.cardFormSection }}>
             <form
               className={classes.signInForm}
               onSubmit={handleSignIn}
@@ -97,13 +98,11 @@ export default function SignIn({}: ISignInProps) {
                 onChange={handleOnChange}
               />
               <Button
-                component={`button`}
-                type={`submit`}
-                onClick={handleSignIn}
-                onSubmit={handleSignIn}
-                disableElevation
-                variant={`contained`}
                 color={`primary`}
+                variant={`contained`}
+                type={`submit`}
+                onSubmit={handleSignIn}
+                onClick={handleSignIn}
               >
                 Sign In
               </Button>

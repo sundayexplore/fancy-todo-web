@@ -10,31 +10,16 @@ import { userAPI } from '@/utils';
 import { setUser } from '@/redux/actions/user-actions';
 import { setTodos } from '@/redux/actions/todo-actions';
 
-export default function App() {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+import { AppHeader } from '@/components/app-components';
 
-  const syncUser = useCallback(async () => {
-    setLoading(true);
-    try {
-      const { data } = await userAPI.get('/sync');
-      localStorage.setItem('user', JSON.stringify(data.user));
-      dispatch(setUser(data.user));
-      dispatch(setTodos(data.todos));
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      // handle here
-    }
-  }, []);
+export interface IAppProps {}
 
-  useEffect(() => {
-    syncUser();
-  }, []);
-
-  return <AppLayout>{loading ? <div>LOADING</div> : <TodoList />}</AppLayout>;
+export default function App({}: IAppProps) {
+  return (
+    <>
+      <AppHeader />
+    </>
+  );
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({}));
