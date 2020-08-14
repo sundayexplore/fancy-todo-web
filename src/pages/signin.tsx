@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux';
 import {
   TextField,
   Card,
-  CardHeader,
   CardContent,
   Typography,
+  Button,
 } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 
@@ -35,8 +35,13 @@ export default function SignIn({}: ISignInParams) {
 
   const handleSignIn = async (
     e:
-      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
-      | MouseEvent<any>,
+      | FormEvent<
+          | HTMLFormElement
+          | HTMLInputElement
+          | HTMLTextAreaElement
+          | HTMLAnchorElement
+        >
+      | MouseEvent<HTMLAnchorElement>,
   ) => {
     e.preventDefault();
     const { userIdentifier, password } = signInData;
@@ -46,11 +51,13 @@ export default function SignIn({}: ISignInParams) {
         userIdentifier,
         password,
       });
-      console.log({ data });
       dispatch(setUser(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
       router.push('/app');
     } catch (err) {
-      console.log({ err });
+      if (err.response) {
+        console.log({ errResponse: err.response });
+      }
     }
   };
 
@@ -58,12 +65,13 @@ export default function SignIn({}: ISignInParams) {
     <>
       <CustomHead title='Sign In' />
       <Container>
-        <Card>
-          <div>
+        <Card classes={{ root: classes.cardContainer }}>
+          <div className={classes.formTitle}>
             <Typography variant={`h4`}>Welcome back!</Typography>
           </div>
-          <CardContent>
+          <CardContent classes={{ root: classes.cardFormSection }}>
             <form
+              className={classes.signInForm}
               onSubmit={handleSignIn}
               noValidate={false}
               autoComplete={`on`}
@@ -83,6 +91,15 @@ export default function SignIn({}: ISignInParams) {
                 value={signInData.password}
                 onChange={handleOnChange}
               />
+              <Button
+                color={`primary`}
+                variant={`contained`}
+                type={`submit`}
+                onSubmit={handleSignIn}
+                onClick={handleSignIn}
+              >
+                Sign In
+              </Button>
             </form>
           </CardContent>
         </Card>

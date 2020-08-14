@@ -1,5 +1,13 @@
 import React from 'react';
 
-export default function App() {
-  return <div>THIS IS DASHBOARD!</div>;
+import { AppHeader } from '@/components/app-components';
+
+export interface IAppProps {}
+
+export default function App({}: IAppProps) {
+  return (
+    <>
+      <AppHeader />
+    </>
+  );
 }
