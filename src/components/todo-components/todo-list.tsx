@@ -10,21 +10,24 @@ export interface ITodoListProps {}
 
 export default function TodoList({}: ITodoListProps) {
   const classes = useStyles();
+  const { selectedTodoCategory } = useSelector((state: IRootState) => state.current);
   const { todos } = useSelector((state: IRootState) => state.todo);
 
   return (
-    <Grid container classes={{ container: classes.todoList }}>
-      {todos.map((todo) => (
-        <Grid item key={todo._id}>
-          <TodoCard todo={todo} />
-        </Grid>
-      ))}
-    </Grid>
+    <>
+      <Grid container classes={{ container: classes.todoListWrapper }}>
+        {todos.map((todo) => (
+          <Grid item key={todo._id}>
+            <TodoCard todo={todo} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
   );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    todoList: {},
+    todoListWrapper: {},
   }),
 );
