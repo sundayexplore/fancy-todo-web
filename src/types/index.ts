@@ -48,12 +48,12 @@ export interface ISignInValidations {
 }
 
 export interface ISignUpValidations {
-  firstName: string;
-  lastName: string;
-  email: string;
-  username: string;
-  password: string;
-  [key: string]: string;
+  firstName: string | null;
+  email: string | null;
+  username: string | null;
+  password: string | null;
+  confirmPassword: string | null;
+  [key: string]: string | null;
 }
 
 

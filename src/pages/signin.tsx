@@ -1,14 +1,26 @@
-import React, { useState, useEffect, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  FormEvent,
+  MouseEvent,
+  ChangeEvent,
+} from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   TextField,
   Card,
   CardContent,
   Typography,
   Button,
+  InputAdornment,
+  IconButton,
 } from '@material-ui/core';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import {
+  VisibilityOff as VisibilityOffIcon,
+  Visibility as VisibilityIcon,
+} from '@material-ui/icons';
 
 import { Container, CustomHead } from '@/components';
 import { userAPI } from '@/utils';
@@ -16,16 +28,17 @@ import { userAPI } from '@/utils';
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
 
-export interface ISignInProps {}
+export interface ISignInPageProps {}
 
-export default function SignIn({}: ISignInProps) {
-  const classes = useStyles();
+export default function SignIn({}: ISignInPageProps) {
+  const classes = useStyles({});
   const router = useRouter();
   const dispatch = useDispatch();
   const [signInData, setSignInData] = useState({
     userIdentifier: '',
     password: '',
   });
+  const [showInputPassword, setShowInputPassword] = useState<boolean>(false);
 
   useEffect(() => {
     if (localStorage.getItem('user')) {
@@ -72,9 +85,9 @@ export default function SignIn({}: ISignInProps) {
       <CustomHead title='Sign In' />
       <Container>
         <Card classes={{ root: classes.cardContainer }}>
-          <div className={classes.formTitle}>
-            <Typography variant={`h4`}>Welcome back!</Typography>
-          </div>
+          <Typography variant={`h4`} gutterBottom>
+            Welcome back!
+          </Typography>
           <CardContent classes={{ root: classes.cardFormSection }}>
             <form
               className={classes.signInForm}
@@ -93,11 +106,28 @@ export default function SignIn({}: ISignInProps) {
                 label={`Password`}
                 name={`password`}
                 required
-                type={`password`}
+                type={showInputPassword ? `text` : `password`}
                 value={signInData.password}
                 onChange={handleOnChange}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position={`end`}>
+                      <IconButton
+                        onClick={() => setShowInputPassword(!showInputPassword)}
+                        onMouseDown={(e) => e.preventDefault()}
+                      >
+                        {showInputPassword ? (
+                          <VisibilityIcon />
+                        ) : (
+                          <VisibilityOffIcon />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
               <Button
+                classes={{ root: classes.signInButton }}
                 component={`a`}
                 color={`primary`}
                 variant={`contained`}
@@ -115,18 +145,16 @@ export default function SignIn({}: ISignInProps) {
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
   createStyles({
     cardContainer: {
-      padding: '3ch',
+      padding: theme.spacing(6),
     },
     cardFormSection: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
-      height: '100%',
-      width: '100%',
     },
     signInForm: {
       width: '100%',
@@ -135,21 +163,13 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       '& > *': {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
         width: '100%',
-        margin: '1ch 0',
       },
-      '& > div > *': {
-        margin: '1ch'
-      }
-    },
-    formTitle: {
-      textAlign: 'left',
-      lineHeight: 1,
-      margin: 0,
-      width: '100%',
     },
     signInButton: {
-      marginTop: '1ch',
+      marginTop: '3ch',
     },
   }),
 );

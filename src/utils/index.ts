@@ -1,4 +1,4 @@
-export { default as Validate } from './validate';
+export { default as CustomValidator } from './custom-validator';
 export { default as colors } from './colors';
 
 // APIs

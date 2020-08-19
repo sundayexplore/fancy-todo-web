@@ -12,9 +12,9 @@ export default function Container({
   display = 'flex',
   justify = 'center',
   align = 'center',
-  children
+  children,
 }: IContainerProps) {
-  const classes = useStyles();
+  const classes = useStyles({ justify, align });
 
   return (
     <main
@@ -27,17 +27,17 @@ export default function Container({
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles<Theme, IContainerProps>(() =>
   createStyles({
     containerFlex: {
       display: 'flex',
-      justifyContent:
+      justifyContent: ({ justify }) =>
         justify == 'start'
           ? 'flex-start'
           : justify == 'end'
           ? 'flex-end'
           : justify,
-      alignItems:
+      alignItems: ({ align }) =>
         align == 'start' ? 'flex-start' : align == 'end' ? 'flex-end' : align,
       width: '100%',
       height: '100%',
@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     containerGrid: {
       display: 'grid',
-      justifyItems: justify,
-      alignContent: align,
+      justifyItems: ({ justify }) => justify,
+      alignContent: ({ align }) => align,
       width: '100%',
       height: '100%',
       minHeight: '100vh',
