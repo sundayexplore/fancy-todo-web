@@ -12,14 +12,14 @@ export default function CheckAuth({ children }: ICheckAuthProps) {
 
   useEffect(() => {
     if (localStorage.getItem('user')) {
-      router.replace('/app').then(() => setLoading(false));
+      setLoading(false)
+      router.replace('/app');
     }
   }, []);
 
   return loading ? (
     <>
       <LinearProgress />
-      <h1></h1>
     </>
   ) : children as ReactElement<any>;
 }
