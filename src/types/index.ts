@@ -95,3 +95,39 @@ export interface ICurrentReducer {
 export interface IErrorReducer {
   general: string;
 }
+
+
+/**
+ * 
+ * Material UI Component Option Interfaces
+ * 
+ */
+
+export interface IAlertOptions {
+  severity: 'error' | 'warning' | 'info' | 'success';
+  message: string;
+  open: boolean;
+}
+
+
+/**
+ * 
+ * API Interfaces
+ * 
+ */
+
+export interface IValidationFromAPI {
+  name: string;
+  message: string;
+}
+
+
+/**
+ * 
+ * Utils Interfaces
+ * 
+ */
+
+export interface ICustomValidator {
+  [method: string]: any;
+}

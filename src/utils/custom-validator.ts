@@ -1,5 +1,7 @@
-export default class CustomValidator {
-  static firstName(input: string) {
+import { ICustomValidator } from '@/types';
+
+export default class CustomValidator implements ICustomValidator {
+  public static firstName(input: string) {
     if (!input) {
       return 'First Name cannot be empty!';
     }
@@ -7,7 +9,7 @@ export default class CustomValidator {
     return null;
   }
 
-  static username(input: string) {
+  public static username(input: string) {
     if (!input) {
       return 'Username cannot be empty!';
     } else if (!(input && input.length >= 6)) {
@@ -19,7 +21,7 @@ export default class CustomValidator {
     return null;
   }
 
-  static email(input: string) {
+  public static email(input: string) {
     if (!input) {
       return 'Email cannot be empty!';
     } else if (input && !/.+@.+\..+/.test(input)) {
@@ -29,7 +31,7 @@ export default class CustomValidator {
     return null;
   }
 
-  static userIdentifier(input: string) {
+  public static userIdentifier(input: string) {
     if (!input) {
       return 'Username or email is required!';
     } else if (
@@ -44,7 +46,7 @@ export default class CustomValidator {
     return null;
   }
 
-  static password(input: string) {
+  public static password(input: string) {
     if (!input) {
       return 'Password is required!';
     } else if (input.length < 6) {
@@ -61,7 +63,7 @@ export default class CustomValidator {
     return null;
   }
 
-  static confirmPassword(password: string, confirmTarget: string) {
+  public static confirmPassword(password: string, confirmTarget: string) {
     if (password !== confirmTarget || !password || !confirmTarget) {
       return 'Password does not match!';
     }

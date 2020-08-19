@@ -1,4 +1,10 @@
-import React, { useState, FormEvent, MouseEvent, ChangeEvent } from 'react';
+import React, {
+  useState,
+  useEffect,
+  FormEvent,
+  MouseEvent,
+  ChangeEvent,
+} from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
@@ -10,7 +16,10 @@ import {
   Button,
   Theme,
   IconButton,
+  Snackbar,
+  CircularProgress,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   VisibilityOff as VisibilityOffIcon,
   Visibility as VisibilityIcon,
@@ -18,7 +27,13 @@ import {
 
 import { Container, CustomHead } from '@/components';
 import { userAPI, CustomValidator } from '@/utils';
-import { ISignUpData, ISignUpValidations } from '@/types';
+import {
+  ISignUpData,
+  ISignUpValidations,
+  IAlertOptions,
+  IValidationFromAPI,
+  ICustomValidator,
+} from '@/types';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
@@ -45,6 +60,12 @@ export default function SignUp({}: ISignUpPageProps) {
     confirmPassword: null,
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [alertOptions, setAlertOptions] = useState<IAlertOptions>({
+    severity: 'info',
+    message: '',
+    open: false,
+  });
+  const [loading, setLoading] = useState<boolean>(true);
 
   const checkSignUpErrors = () => {
     const {
@@ -84,6 +105,25 @@ export default function SignUp({}: ISignUpPageProps) {
   const handleOnChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    if (e.target.name !== `lastName`) {
+      setSignUpErrors({
+        ...signUpErrors,
+        [e.target.name]: (CustomValidator as ICustomValidator)[e.target.name](
+          e.target.value,
+        ),
+      });
+    }
+
+    if (e.target.name === `confirmPassword`) {
+      setSignUpErrors({
+        ...signUpErrors,
+        confirmPassword: CustomValidator.confirmPassword(
+          signUpData.password,
+          e.target.value,
+        ),
+      });
+    }
+
     setSignUpData({ ...signUpData, [e.target.name]: e.target.value });
   };
 
@@ -97,6 +137,7 @@ export default function SignUp({}: ISignUpPageProps) {
         >
       | MouseEvent<HTMLAnchorElement>,
   ) => {
+    setLoading(true);
     e.preventDefault();
     const { firstName, lastName, username, email, password } = signUpData;
     try {
@@ -108,15 +149,52 @@ export default function SignUp({}: ISignUpPageProps) {
           email,
           password,
         });
+        setLoading(false);
         dispatch(setUser(data.user));
         localStorage.setItem('user', JSON.stringify(data.user));
+        setAlertOptions({
+          severity: 'success',
+          message: data.message,
+          open: true,
+        });
         router.push('/app');
       } else {
+        setLoading(false);
         // throw something to the snackbar
       }
     } catch (err) {
       if (err.response) {
-        console.log({ errResponse: err.response });
+        switch (err.response.status) {
+          case 400:
+            const signUpErrorsFromAPI: ISignUpValidations = {} as ISignUpValidations;
+            setAlertOptions({
+              ...alertOptions,
+              severity: 'error',
+              message: err.response.data.message,
+              open: true,
+            });
+            err.response.data.messages.forEach(
+              (signUpError: IValidationFromAPI) => {
+                signUpErrorsFromAPI[signUpError.name] = signUpError.message;
+              },
+            );
+            setSignUpErrors({
+              ...signUpErrors,
+              ...signUpErrorsFromAPI,
+            });
+            break;
+
+          default:
+            setAlertOptions({
+              ...alertOptions,
+              severity: 'error',
+              message: err.response.data.message,
+              open: true,
+            });
+            break;
+        }
+
+        setLoading(false);
       }
     }
   };
@@ -148,12 +226,14 @@ export default function SignUp({}: ISignUpPageProps) {
                     signUpErrors.firstName.length > 0
                   }
                   helperText={signUpErrors.firstName}
+                  disabled={loading}
                 />
                 <TextField
                   name={`lastName`}
                   label={`Last Name`}
                   value={signUpData.lastName}
                   onChange={handleOnChange}
+                  disabled={loading}
                 />
               </div>
               <div className={classes.textFieldGroupVertical}>
@@ -173,6 +253,7 @@ export default function SignUp({}: ISignUpPageProps) {
                       ? signUpErrors.username
                       : `Must be at least 6 characters.`
                   }
+                  disabled={loading}
                 />
                 <TextField
                   name={`email`}
@@ -185,6 +266,7 @@ export default function SignUp({}: ISignUpPageProps) {
                     signUpErrors.email !== null && signUpErrors.email.length > 0
                   }
                   helperText={signUpErrors.email}
+                  disabled={loading}
                 />
               </div>
               <div className={classes.textFieldGroupHorizontal}>
@@ -205,6 +287,7 @@ export default function SignUp({}: ISignUpPageProps) {
                       ? signUpErrors.password
                       : `Must contain number, special character, and upper-case letter.`
                   }
+                  disabled={loading}
                 />
                 <TextField
                   name={`confirmPassword`}
@@ -218,6 +301,7 @@ export default function SignUp({}: ISignUpPageProps) {
                     signUpErrors.confirmPassword.length > 0
                   }
                   helperText={signUpErrors.confirmPassword}
+                  disabled={loading}
                 />
 
                 <IconButton
@@ -236,13 +320,27 @@ export default function SignUp({}: ISignUpPageProps) {
                 type={`submit`}
                 onSubmit={handleSignUp}
                 onClick={handleSignUp}
+                disabled={loading}
               >
-                Sign Up
+                {loading ? <CircularProgress /> : `Sign Up`}
               </Button>
             </form>
           </CardContent>
         </Card>
       </Container>
+      <Snackbar
+        open={alertOptions.open}
+        onClose={() => setAlertOptions({ ...alertOptions, open: false })}
+      >
+        <Alert
+          severity={alertOptions.severity}
+          onClose={() => setAlertOptions({ ...alertOptions, open: false })}
+          variant={`filled`}
+          elevation={6}
+        >
+          {alertOptions.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
@@ -294,8 +392,8 @@ const useStyles = makeStyles<Theme, ISignUpPageProps>((theme) =>
         paddingRight: theme.spacing(3),
       },
       '& > .MuiIconButton-root': {
-        alignSelf: 'center'
-      }
+        alignSelf: 'center',
+      },
     },
     textFieldGroupVertical: {
       width: '100%',
