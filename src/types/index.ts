@@ -42,9 +42,9 @@ export interface ISignUpData {
 }
 
 export interface ISignInValidations {
-  userIdentifier: string;
-  password: string;
-  [key: string]: string;
+  userIdentifier: string | null;
+  password: string | null;
+  [key: string]: string | null;
 }
 
 export interface ISignUpValidations {
