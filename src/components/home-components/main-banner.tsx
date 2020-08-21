@@ -1,14 +1,14 @@
-import React, { useState, FormEvent, MouseEvent } from 'react';
-import { useRouter } from 'next/router';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import React, { useState } from 'react';
+// import { useRouter } from 'next/router';
+// import { makeStyles, createStyles } from '@material-ui/core/styles';
 
-import ProgressBanner from '@/assets/svgs/home/progress-banner.svg';
+// import ProgressBanner from '@/assets/svgs/home/progress-banner.svg';
 
 export interface IMainBannerProps {}
 
 export default function MainBanner(props: IMainBannerProps) {
   const {} = props;
-  const router = useRouter();
+  // const router = useRouter();
   // const classes = useStyles();
   const [getStartedData, setGetStartedData] = useState({
     email: ''
@@ -22,18 +22,18 @@ export default function MainBanner(props: IMainBannerProps) {
     }
   };
 
-  const handleSubmit = (
-    e:
-      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
-      | MouseEvent<HTMLButtonElement | any>
-  ) => {
-    e.preventDefault();
-    if (getStartedData.email.length) {
-      router.push({ pathname: '/signup', query: { email: getStartedData.email } });
-    } else {
-      router.push('/signup');
-    }
-  };
+  // const handleSubmit = (
+  //   e:
+  //     | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
+  //     | MouseEvent<HTMLButtonElement | any>
+  // ) => {
+  //   e.preventDefault();
+  //   if (getStartedData.email.length) {
+  //     router.push({ pathname: '/signup', query: { email: getStartedData.email } });
+  //   } else {
+  //     router.push('/signup');
+  //   }
+  // };
 
   return (
     <section>

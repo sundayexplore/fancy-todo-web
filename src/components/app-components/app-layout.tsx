@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+// import { makeStyles, createStyles } from '@material-ui/core/styles';
 
 import AppHeader from './app-header';
 
@@ -8,7 +8,7 @@ export interface IAppLayoutProps {
 }
 
 export default function AppLayout({ children }: IAppLayoutProps) {
-  const classes = useStyles();
+  // const classes = useStyles();
   
   return (
     <>
@@ -18,4 +18,4 @@ export default function AppLayout({ children }: IAppLayoutProps) {
   )
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
+// const useStyles = makeStyles(() => createStyles({}));

@@ -3,7 +3,6 @@ import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
-import { LinearProgress } from '@material-ui/core';
 import AOS from 'aos';
 
 import { Loading } from '@/components';
