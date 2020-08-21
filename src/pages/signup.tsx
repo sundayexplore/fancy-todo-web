@@ -12,6 +12,7 @@ import {
   TextField,
   Card,
   CardContent,
+  CardActions,
   Typography,
   Button,
   Theme,
@@ -65,7 +66,7 @@ export default function SignUp({}: ISignUpPageProps) {
     message: '',
     open: false,
   });
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const checkSignUpErrors = () => {
     const {
@@ -157,7 +158,7 @@ export default function SignUp({}: ISignUpPageProps) {
           message: data.message,
           open: true,
         });
-        router.push('/app');
+        await router.push('/app');
       } else {
         setLoading(false);
         // throw something to the snackbar
@@ -204,9 +205,7 @@ export default function SignUp({}: ISignUpPageProps) {
       <CustomHead title='Sign Up' />
       <Container>
         <Card classes={{ root: classes.cardContainer }}>
-          <div className={classes.formTitle}>
-            <Typography variant={`h4`}>Let's get started!</Typography>
-          </div>
+          <Typography variant={`h4`} gutterBottom>Let's get started!</Typography>
           <CardContent classes={{ root: classes.cardFormSection }}>
             <form
               className={classes.signUpForm}
@@ -307,6 +306,7 @@ export default function SignUp({}: ISignUpPageProps) {
                 <IconButton
                   onClick={() => setShowPassword(!showPassword)}
                   onMouseDown={(e) => e.preventDefault()}
+                  disabled={loading}
                 >
                   {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
                 </IconButton>
@@ -318,7 +318,6 @@ export default function SignUp({}: ISignUpPageProps) {
                 variant={`contained`}
                 color={`primary`}
                 type={`submit`}
-                onSubmit={handleSignUp}
                 onClick={handleSignUp}
                 disabled={loading}
               >
@@ -326,6 +325,11 @@ export default function SignUp({}: ISignUpPageProps) {
               </Button>
             </form>
           </CardContent>
+          <CardActions>
+            <Button color={`primary`} onClick={() => router.push('/signin')}>
+              Sign in instead
+            </Button>
+          </CardActions>
         </Card>
       </Container>
       <Snackbar
@@ -348,7 +352,7 @@ export default function SignUp({}: ISignUpPageProps) {
 const useStyles = makeStyles<Theme, ISignUpPageProps>((theme) =>
   createStyles({
     cardContainer: {
-      padding: '3ch',
+      padding: theme.spacing(4),
     },
     cardFormSection: {
       display: 'flex',
@@ -383,12 +387,17 @@ const useStyles = makeStyles<Theme, ISignUpPageProps>((theme) =>
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-between',
+      alignItems: 'stretch',
       '& > .MuiTextField-root': {
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
         flexGrow: 1,
+        width: 250,
       },
       '& > .MuiTextField-root:first-child': {
+        [theme.breakpoints.down('xs')]: {
+          paddingRight: 0,
+        },
         paddingRight: theme.spacing(3),
       },
       '& > .MuiIconButton-root': {

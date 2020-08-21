@@ -1,4 +1,4 @@
-import React, { ReactNode, ReactChildren } from 'react';
+import React, { ReactNode } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 export interface IContainerProps {

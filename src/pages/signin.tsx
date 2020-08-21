@@ -12,21 +12,28 @@ import {
   TextField,
   Card,
   CardContent,
+  CardActions,
   Typography,
   Button,
   InputAdornment,
   IconButton,
+  Snackbar,
+  CircularProgress
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import {
   VisibilityOff as VisibilityOffIcon,
   Visibility as VisibilityIcon,
 } from '@material-ui/icons';
 
 import { Container, CustomHead } from '@/components';
-import { userAPI } from '@/utils';
+import { userAPI, CustomValidator } from '@/utils';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
+
+// Types
+import { IAlertOptions, ISignInValidations, ICustomValidator, IValidationFromAPI } from '@/types';
 
 export interface ISignInPageProps {}
 
@@ -38,17 +45,54 @@ export default function SignIn({}: ISignInPageProps) {
     userIdentifier: '',
     password: '',
   });
+  const [signInErrors, setSignInErrors] = useState<ISignInValidations>({
+    userIdentifier: null,
+    password: null,
+  });
   const [showInputPassword, setShowInputPassword] = useState<boolean>(false);
+  const [alertOptions, setAlertOptions] = useState<IAlertOptions>({
+    severity: 'info',
+    message: '',
+    open: false,
+  });
+  const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (localStorage.getItem('user')) {
-      router.push('/app');
+  const checkSignInErrors = () => {
+    const {
+      userIdentifier,
+      password,
+    } = signInData;
+    const checkedSignInErrors: ISignInValidations = {
+      userIdentifier: CustomValidator.userIdentifier(userIdentifier),
+      password: CustomValidator.password(password),
+    };
+
+    setSignInErrors({
+      ...signInErrors,
+      ...checkedSignInErrors,
+    });
+
+    if (
+      Object.values(checkedSignInErrors).every(
+        (checkedSignInError) => checkedSignInError === null,
+      )
+    ) {
+      return true;
     }
-  }, []);
+
+    return false;
+  };
 
   const handleOnChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
+    setSignInErrors({
+      ...signInErrors,
+      [e.target.name]: (CustomValidator as ICustomValidator)[e.target.name](
+        e.target.value
+      ),
+    });
+
     setSignInData({ ...signInData, [e.target.name]: e.target.value });
   };
 
@@ -62,20 +106,66 @@ export default function SignIn({}: ISignInPageProps) {
         >
       | MouseEvent<HTMLAnchorElement>,
   ) => {
+    setLoading(true);
     e.preventDefault();
     const { userIdentifier, password } = signInData;
 
     try {
-      const { data } = await userAPI.post('/signin', {
-        userIdentifier,
-        password,
-      });
-      dispatch(setUser(data.user));
-      localStorage.setItem('user', JSON.stringify(data.user));
-      router.push('/app');
+      if (checkSignInErrors()) {
+        const { data } = await userAPI.post('/signin', {
+          userIdentifier,
+          password,
+        });
+        setLoading(false);
+        dispatch(setUser(data.user));
+        localStorage.setItem('user', JSON.stringify(data.user));
+        setAlertOptions({
+          severity: 'success',
+          message: data.message,
+          open: true,
+        });
+        await router.push('/app');
+      } else {
+        setLoading(false);
+        // handle here
+      }
     } catch (err) {
       if (err.response) {
-        console.log({ errResponse: err.response });
+        switch (err.response.status) {
+          case 400:
+            if (err.response.data.messages) {
+              const signInErrorsFromAPI: ISignInValidations = {} as ISignInValidations;
+              err.response.data.messages.forEach(
+                (signInError: IValidationFromAPI) => {
+                  signInErrorsFromAPI[signInError.name] = signInError.message;
+                },
+              );
+              setSignInErrors({
+                ...signInErrors,
+                ...signInErrorsFromAPI,
+              });
+            }
+
+            setAlertOptions({
+              ...alertOptions,
+              severity: 'error',
+              message: err.response.data.message,
+              open: true,
+            });
+            
+            break;
+
+          default:
+            setAlertOptions({
+              ...alertOptions,
+              severity: 'error',
+              message: err.response.data.message,
+              open: true,
+            });
+            break;
+        }
+
+        setLoading(false);
       }
     }
   };
@@ -101,6 +191,12 @@ export default function SignIn({}: ISignInPageProps) {
                 required
                 value={signInData.userIdentifier}
                 onChange={handleOnChange}
+                error={
+                  signInErrors.userIdentifier !== null &&
+                  signInErrors.userIdentifier.length > 0
+                }
+                helperText={signInErrors.userIdentifier}
+                disabled={loading}
               />
               <TextField
                 label={`Password`}
@@ -109,12 +205,18 @@ export default function SignIn({}: ISignInPageProps) {
                 type={showInputPassword ? `text` : `password`}
                 value={signInData.password}
                 onChange={handleOnChange}
+                error={
+                  signInErrors.password !== null &&
+                  signInErrors.password.length > 0
+                }
+                helperText={signInErrors.password}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position={`end`}>
                       <IconButton
                         onClick={() => setShowInputPassword(!showInputPassword)}
                         onMouseDown={(e) => e.preventDefault()}
+                        disabled={loading}
                       >
                         {showInputPassword ? (
                           <VisibilityIcon />
@@ -125,6 +227,7 @@ export default function SignIn({}: ISignInPageProps) {
                     </InputAdornment>
                   ),
                 }}
+                disabled={loading}
               />
               <Button
                 classes={{ root: classes.signInButton }}
@@ -132,15 +235,33 @@ export default function SignIn({}: ISignInPageProps) {
                 color={`primary`}
                 variant={`contained`}
                 type={`submit`}
-                onSubmit={handleSignIn}
                 onClick={handleSignIn}
+                disabled={loading}
               >
-                Sign In
+                {loading ? <CircularProgress /> : `Sign In`}
               </Button>
             </form>
           </CardContent>
+          <CardActions>
+            <Button color={`primary`} onClick={() => router.push('/signup')}>
+              Create account
+            </Button>
+          </CardActions>
         </Card>
       </Container>
+      <Snackbar
+        open={alertOptions.open}
+        onClose={() => setAlertOptions({ ...alertOptions, open: false })}
+      >
+        <Alert
+          severity={alertOptions.severity}
+          onClose={() => setAlertOptions({ ...alertOptions, open: false })}
+          variant={`filled`}
+          elevation={6}
+        >
+          {alertOptions.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
@@ -148,7 +269,7 @@ export default function SignIn({}: ISignInPageProps) {
 const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
   createStyles({
     cardContainer: {
-      padding: theme.spacing(6),
+      padding: theme.spacing(4),
     },
     cardFormSection: {
       display: 'flex',
@@ -163,13 +284,17 @@ const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       '& > *': {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
         width: '100%',
       },
+      '& > .MuiTextField-root': {
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
+        width: 250,
+        flexGrow: 1
+      }
     },
     signInButton: {
-      marginTop: '3ch',
+      marginTop: theme.spacing(3),
     },
   }),
 );
