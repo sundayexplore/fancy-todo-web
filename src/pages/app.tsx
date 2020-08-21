@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import React from 'react';
+// import { useDispatch } from 'react-redux';
+// import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
-import { AppLayout, TodoList } from '@/components';
-import { userAPI } from '@/utils';
+// import { AppLayout, TodoList } from '@/components';
+// import { userAPI } from '@/utils';
 
 // Redux Actions
-import { setUser } from '@/redux/actions/user-actions';
-import { setTodos } from '@/redux/actions/todo-actions';
+// import { setUser } from '@/redux/actions/user-actions';
+// import { setTodos } from '@/redux/actions/todo-actions';
 
 import { AppHeader } from '@/components/app-components';
 
@@ -22,4 +22,4 @@ export default function App({}: IAppProps) {
   );
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
+// const useStyles = makeStyles(() => createStyles({}));

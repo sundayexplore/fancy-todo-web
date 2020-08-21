@@ -10,7 +10,7 @@ export interface IFooterProps {}
 
 export default function Footer({}: IFooterProps) {
   const classes = useStyles();
-  const [socialLinks, setSocialLinks] = useState({
+  const [socialLinks] = useState({
     docker: 'https://hub.docker.com/u/rafiandria23',
     github: 'https://github.com/sunday-projects',
     linkedIn: 'https://linkedin.com/in/rafiandria23',
@@ -18,7 +18,7 @@ export default function Footer({}: IFooterProps) {
     projectApiGitHubRepo: 'https://github.com/sunday-projects/fancy-todo-api',
     projectApiDockerHubRepo: 'https://hub.docker.com/r/rafiandria23/fancy-todo-api'
   });
-  const [localLinks, setLocalLinks] = useState({
+  const [localLinks] = useState({
     apiDocs: '/developers/api-docs',
     about: '/about',
     features: '/features'
