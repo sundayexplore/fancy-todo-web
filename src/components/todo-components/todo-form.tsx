@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { IconButton, TextField, Card, CardContent, Typography } from '@material-ui/core';
+import React from 'react';
+// import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Card, CardContent, Typography } from '@material-ui/core';
 
 
 import { ITodo } from '@/types';
@@ -11,25 +11,25 @@ export interface ITodoFormProps {
 }
 
 export default function TodoForm({ type, todo }: ITodoFormProps) {
-  const classes = useStyles();
-  const [addTodoData, setAddTodoData] = useState<ITodo>({
-    name: '',
-    due: '',
-    dueDate: '',
-    dueTime: '',
-    priority: 0,
-    position: null,
-    completed: false
-  });
-  const [updateTodoData, setUpdateTodoData] = useState<ITodo>({
-    name: todo?.name || '',
-    due: todo?.due || '',
-    dueDate: todo?.dueDate || '',
-    dueTime: todo?.dueTime || '',
-    priority: todo?.priority || 0,
-    position: todo?.position || null,
-    completed: todo?.completed || false
-  });
+  // const classes = useStyles();
+  // const [addTodoData, setAddTodoData] = useState<ITodo>({
+  //   name: '',
+  //   due: '',
+  //   dueDate: '',
+  //   dueTime: '',
+  //   priority: 0,
+  //   position: null,
+  //   completed: false
+  // });
+  // const [updateTodoData, setUpdateTodoData] = useState<ITodo>({
+  //   name: todo?.name || '',
+  //   due: todo?.due || '',
+  //   dueDate: todo?.dueDate || '',
+  //   dueTime: todo?.dueTime || '',
+  //   priority: todo?.priority || 0,
+  //   position: todo?.position || null,
+  //   completed: todo?.completed || false
+  // });
   
   const renderAddTodoForm = () => (
     <Card>
@@ -56,4 +56,4 @@ export default function TodoForm({ type, todo }: ITodoFormProps) {
   return type === 'update' && todo ? renderUpdateTodoForm() : renderAddTodoForm();
 }
 
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
+// const useStyles = makeStyles(() => createStyles({}));

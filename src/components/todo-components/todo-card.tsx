@@ -1,14 +1,14 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, CardActions } from '@material-ui/core';
 
-import { ITodo } from '@/types';
+// import { ITodo } from '@/types';
 
 export interface ITodoCardProps {
-  todo: ITodo;
+  // todo: ITodo;
 }
 
-export default function TodoCard({ todo }: ITodoCardProps) {
+export default function TodoCard({ }: ITodoCardProps) {
   const classes = useStyles();
 
   return (
@@ -19,7 +19,7 @@ export default function TodoCard({ todo }: ITodoCardProps) {
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     todoCard: {},
     todoCardContent: {},

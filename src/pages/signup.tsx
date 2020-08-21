@@ -134,9 +134,8 @@ export default function SignUp({}: ISignUpPageProps) {
           | HTMLFormElement
           | HTMLInputElement
           | HTMLTextAreaElement
-          | HTMLAnchorElement
         >
-      | MouseEvent<HTMLAnchorElement>,
+      | MouseEvent<HTMLButtonElement>,
   ) => {
     setLoading(true);
     e.preventDefault();
@@ -150,7 +149,6 @@ export default function SignUp({}: ISignUpPageProps) {
           email,
           password,
         });
-        setLoading(false);
         dispatch(setUser(data.user));
         localStorage.setItem('user', JSON.stringify(data.user));
         setAlertOptions({
@@ -159,6 +157,7 @@ export default function SignUp({}: ISignUpPageProps) {
           open: true,
         });
         await router.push('/app');
+        setLoading(false);
       } else {
         setLoading(false);
         // throw something to the snackbar
@@ -314,7 +313,6 @@ export default function SignUp({}: ISignUpPageProps) {
 
               <Button
                 classes={{ root: classes.signUpButton }}
-                component={`a`}
                 variant={`contained`}
                 color={`primary`}
                 type={`submit`}
