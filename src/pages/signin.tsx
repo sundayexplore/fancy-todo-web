@@ -18,7 +18,7 @@ import {
   InputAdornment,
   IconButton,
   Snackbar,
-  CircularProgress
+  CircularProgress,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import {
@@ -33,7 +33,12 @@ import { userAPI, CustomValidator } from '@/utils';
 import { setUser } from '@/redux/actions/user-actions';
 
 // Types
-import { IAlertOptions, ISignInValidations, ICustomValidator, IValidationFromAPI } from '@/types';
+import {
+  IAlertOptions,
+  ISignInValidations,
+  ICustomValidator,
+  IValidationFromAPI,
+} from '@/types';
 
 export interface ISignInPageProps {}
 
@@ -58,10 +63,7 @@ export default function SignIn({}: ISignInPageProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const checkSignInErrors = () => {
-    const {
-      userIdentifier,
-      password,
-    } = signInData;
+    const { userIdentifier, password } = signInData;
     const checkedSignInErrors: ISignInValidations = {
       userIdentifier: CustomValidator.userIdentifier(userIdentifier),
       password: CustomValidator.password(password),
@@ -89,7 +91,7 @@ export default function SignIn({}: ISignInPageProps) {
     setSignInErrors({
       ...signInErrors,
       [e.target.name]: (CustomValidator as ICustomValidator)[e.target.name](
-        e.target.value
+        e.target.value,
       ),
     });
 
@@ -98,13 +100,8 @@ export default function SignIn({}: ISignInPageProps) {
 
   const handleSignIn = async (
     e:
-      | FormEvent<
-          | HTMLFormElement
-          | HTMLInputElement
-          | HTMLTextAreaElement
-          | HTMLAnchorElement
-        >
-      | MouseEvent<HTMLAnchorElement>,
+      | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
+      | MouseEvent<HTMLButtonElement>,
   ) => {
     setLoading(true);
     e.preventDefault();
@@ -116,7 +113,6 @@ export default function SignIn({}: ISignInPageProps) {
           userIdentifier,
           password,
         });
-        setLoading(false);
         dispatch(setUser(data.user));
         localStorage.setItem('user', JSON.stringify(data.user));
         setAlertOptions({
@@ -125,6 +121,7 @@ export default function SignIn({}: ISignInPageProps) {
           open: true,
         });
         await router.push('/app');
+        setLoading(false);
       } else {
         setLoading(false);
         // handle here
@@ -152,7 +149,7 @@ export default function SignIn({}: ISignInPageProps) {
               message: err.response.data.message,
               open: true,
             });
-            
+
             break;
 
           default:
@@ -182,8 +179,8 @@ export default function SignIn({}: ISignInPageProps) {
             <form
               className={classes.signInForm}
               onSubmit={handleSignIn}
-              noValidate={false}
-              autoComplete={`on`}
+              // noValidate={false}
+              // autoComplete={`on`}
             >
               <TextField
                 label={`Username or Email`}
@@ -231,7 +228,6 @@ export default function SignIn({}: ISignInPageProps) {
               />
               <Button
                 classes={{ root: classes.signInButton }}
-                component={`a`}
                 color={`primary`}
                 variant={`contained`}
                 type={`submit`}
@@ -290,8 +286,8 @@ const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
         marginTop: theme.spacing(1),
         marginBottom: theme.spacing(1),
         width: 250,
-        flexGrow: 1
-      }
+        flexGrow: 1,
+      },
     },
     signInButton: {
       marginTop: theme.spacing(3),

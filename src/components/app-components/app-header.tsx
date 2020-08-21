@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   AppBar,
@@ -25,6 +26,9 @@ import clsx from 'clsx';
 // Redux Actions
 import { setSelectedTodoCategory } from '@/redux/actions/current-actions';
 
+// Utils
+import { userAPI } from '@/utils';
+
 // Types
 import { IRootState } from '@/types';
 
@@ -33,6 +37,7 @@ export interface IAppHeaderProps {}
 export default function AppHeader({}: IAppHeaderProps) {
   const classes = useStyles();
   const theme = useTheme();
+  const router = useRouter();
   const dispatch = useDispatch();
   const { selectedTodoCategory } = useSelector(
     (state: IRootState) => state.current,
@@ -44,6 +49,16 @@ export default function AppHeader({}: IAppHeaderProps) {
 
   const handleTodoCategoryChange = (category: 'today') =>
     dispatch(setSelectedTodoCategory(category));
+
+  const handleSignOut = async () => {
+    try {
+      const { } = await userAPI.post('/signout');
+      localStorage.clear();
+      await router.push('/signin');
+    } catch (err) {
+      // handle here
+    }
+  }
 
   return (
     <header className={classes.appHeaderWrapper}>
@@ -65,6 +80,7 @@ export default function AppHeader({}: IAppHeaderProps) {
           <Typography variant={`h6`} className={classes.headerTitle}>
             Fancy Todo
           </Typography>
+          <Button color={`inherit`} onClick={handleSignOut}>Sign Out</Button>
         </Toolbar>
       </AppBar>
       <Drawer

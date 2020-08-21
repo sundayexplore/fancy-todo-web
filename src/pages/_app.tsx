@@ -23,7 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
       if (localStorage.getItem('user')) {
         await router.replace('/app');
       }
-    } else if (router.pathname === '/app') {
+    } else if (router.pathname === '/app' && !localStorage.getItem('user')) {
       await router.push('/signin');
     }
 
