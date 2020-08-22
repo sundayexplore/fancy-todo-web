@@ -2,7 +2,7 @@
   "functions": {
     "source": ".",
     "predeploy": [
-      "yarn --prefix \"$PROJECT_DIR\"",
+      "yarn --prefix \"$PROJECT_DIR\" install",
       "yarn --prefix \"$PROJECT_DIR\" build"
     ]
   },
