@@ -1,6 +1,10 @@
 {
   "functions": {
-    "predeploy": "npm --prefix \"$RESOURCE_DIR\" run build"
+    "source": ".",
+    "predeploy": [
+      "yarn --prefix \"$PROJECT_DIR\"",
+      "yarn --prefix \"$PROJECT_DIR\" build"
+    ]
   },
   "hosting": {
     "public": "public",
@@ -12,7 +16,7 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "function": "nextjsFunc"
       }
     ]
   }
