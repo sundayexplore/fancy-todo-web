@@ -5,7 +5,7 @@
       "yarn install",
       "yarn build"
     ],
-    "runtime": "nodejs10"
+    "runtime": "nodejs8"
   },
   "hosting": {
     "public": "public",
