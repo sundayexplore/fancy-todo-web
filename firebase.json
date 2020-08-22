@@ -4,7 +4,8 @@
     "predeploy": [
       "yarn install",
       "yarn build"
-    ]
+    ],
+    "runtime": "nodejs10"
   },
   "hosting": {
     "public": "public",
