@@ -1,9 +1,6 @@
 {
   "name": "fancy-todo-web",
   "version": "1.2.0",
-  "engines": {
-    "node": "12"
-  },
   "main": "firebase-functions.js",
   "private": true,
   "readme": "./README.md",
