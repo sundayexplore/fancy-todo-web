@@ -14,6 +14,6 @@ const nextjsServer = next({
 
 const nextjsHandle = nextjsServer.getRequestHandler();
 
-exports.nextjsFunc = https.onRequest((req, res) =>
+exports.fancyTodoWeb = https.onRequest((req, res) =>
   nextjsServer.prepare().then(() => nextjsHandle(req, res)),
 );

@@ -5,7 +5,7 @@
       "yarn install",
       "yarn build"
     ],
-    "runtime": "nodejs8"
+    "runtime": "nodejs12"
   },
   "hosting": {
     "public": "public",
@@ -17,7 +17,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "nextjsFunc"
+        "function": "fancyTodoWeb"
       }
     ]
   }
