@@ -1,7 +1,6 @@
 {
   "name": "fancy-todo-web",
   "version": "1.2.0",
-  "main": "firebase-functions.js",
   "private": true,
   "readme": "./README.md",
   "license": "MIT",
@@ -18,11 +17,9 @@
   "scripts": {
     "dev": "next -p 8080",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p $PORT",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "deploy": "firebase deploy --only functions,hosting",
-    "logs": "firebase functions:log"
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.14",
@@ -31,8 +28,6 @@
     "aos": "^2.3.4",
     "axios": "^0.19.2",
     "clsx": "^1.1.1",
-    "firebase-admin": "^9.1.1",
-    "firebase-functions": "^3.11.0",
     "moment": "^2.26.0",
     "next": "^9.4.1",
     "react": "^16.13.1",
