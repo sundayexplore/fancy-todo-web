@@ -183,6 +183,7 @@ export default function SignIn({}: ISignInPageProps) {
               // autoComplete={`on`}
             >
               <TextField
+                autoComplete={`username`}
                 label={`Username or Email`}
                 name={`userIdentifier`}
                 required
@@ -196,6 +197,7 @@ export default function SignIn({}: ISignInPageProps) {
                 disabled={loading}
               />
               <TextField
+                autoComplete={`current-password`}
                 label={`Password`}
                 name={`password`}
                 required

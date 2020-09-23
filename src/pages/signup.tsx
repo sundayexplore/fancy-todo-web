@@ -236,6 +236,7 @@ export default function SignUp({}: ISignUpPageProps) {
               </div>
               <div className={classes.textFieldGroupVertical}>
                 <TextField
+                  autoComplete={`username`}
                   name={`username`}
                   required
                   label={`Username`}
@@ -254,6 +255,7 @@ export default function SignUp({}: ISignUpPageProps) {
                   disabled={loading}
                 />
                 <TextField
+                  autoComplete={`email`}
                   name={`email`}
                   required
                   type={`email`}
@@ -269,6 +271,7 @@ export default function SignUp({}: ISignUpPageProps) {
               </div>
               <div className={classes.textFieldGroupHorizontal}>
                 <TextField
+                  autoComplete={`new-password`}
                   name={`password`}
                   required
                   type={showPassword ? `text` : `password`}
@@ -288,6 +291,7 @@ export default function SignUp({}: ISignUpPageProps) {
                   disabled={loading}
                 />
                 <TextField
+                  autoComplete={`new-password`}
                   name={`confirmPassword`}
                   required
                   type={showPassword ? `text` : `password`}
