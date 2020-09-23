@@ -15,7 +15,7 @@
     }
   ],
   "scripts": {
-    "dev": "next -p 8080",
+    "dev": "next -p 8000",
     "build": "next build",
     "start": "next start -p $WEB_PORT",
     "storybook": "start-storybook -p 6006",
