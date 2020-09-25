@@ -58,6 +58,13 @@ export default function App({}: IAppProps) {
             dispatch(setError(err.response.data.message));
             break;
         }
+      } else if (err.message) {
+        setLoading(false);
+        dispatch(setError(err.message));
+      } else {
+        setLoading(false);
+        dispatch(setError(`Unknown error has occurred!`));
+        // Report bugs action (soon)
       }
     }
   }, []);

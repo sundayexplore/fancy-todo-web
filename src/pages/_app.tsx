@@ -24,7 +24,11 @@ export default function App({ Component, pageProps }: AppProps) {
     if (router.pathname === '/signup' || router.pathname === '/signin') {
       if (cookies['XSRF-TOKEN'] && cookies['XSRF-TOKEN'].length > 0) {
         await router.replace('/app');
+      } else {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
 
     return () => {
