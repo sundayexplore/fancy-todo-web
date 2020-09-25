@@ -1,7 +1,7 @@
 import { ICustomValidator } from '@/types';
 
 export default class CustomValidator implements ICustomValidator {
-  public static firstName(input: string) {
+  public static firstName(input: string): string | null {
     if (!input) {
       return 'First Name cannot be empty!';
     }
@@ -9,7 +9,7 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static username(input: string) {
+  public static username(input: string): string | null {
     if (!input) {
       return 'Username cannot be empty!';
     } else if (!(input && input.length >= 6)) {
@@ -21,7 +21,7 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static email(input: string) {
+  public static email(input: string): string | null {
     if (!input) {
       return 'Email cannot be empty!';
     } else if (input && !/.+@.+\..+/.test(input)) {
@@ -31,7 +31,7 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static userIdentifier(input: string) {
+  public static userIdentifier(input: string): string | null {
     if (!input) {
       return 'Username or email is required!';
     } else if (
@@ -46,7 +46,7 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static password(input: string) {
+  public static password(input: string): string | null {
     if (!input) {
       return 'Password is required!';
     } else if (input.length < 6) {
@@ -63,9 +63,17 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static confirmPassword(password: string, confirmTarget: string) {
+  public static confirmPassword(password: string, confirmTarget: string): string | null {
     if (password !== confirmTarget || !password || !confirmTarget) {
       return 'Password does not match!';
+    }
+
+    return null;
+  }
+
+  public static todoName(input: string): string | null {
+    if (!input) {
+      return 'Todo Name cannot be empty!';
     }
 
     return null;

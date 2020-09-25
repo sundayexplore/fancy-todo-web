@@ -1,15 +1,17 @@
+import { Moment } from 'moment';
+
 /**
- * 
+ *
  * Model Interfaces
- * 
+ *
  */
 
 export interface ITodo {
   _id?: string | any;
   name: string;
-  due: string | Date | null;
-  dueDate: string | Date | null;
-  dueTime: string | Date | null;
+  due: string | Date | Moment | null;
+  dueDate: string | Date | Moment | null;
+  dueTime: string | Date | Moment | null;
   priority: number;
   position: number | null;
   completed: boolean;
@@ -19,11 +21,6 @@ export interface IUser {
   firstName: string;
   lastName: string;
   username: string;
-  email: string;
-}
-
-export interface IOAuthUser {
-  fullName: string;
   email: string;
 }
 
@@ -41,6 +38,12 @@ export interface ISignUpData {
   confirmPassword: string;
 }
 
+/**
+ *
+ * Validatoion Interfaces
+ *
+ */
+
 export interface ISignInValidations {
   userIdentifier: string | null;
   password: string | null;
@@ -56,11 +59,14 @@ export interface ISignUpValidations {
   [key: string]: string | null;
 }
 
+export interface ITodoValidations {
+  name: string | null;
+}
 
 /**
- * 
+ *
  * Redux State Interfaces
- * 
+ *
  */
 
 export interface IRootState {
@@ -68,16 +74,16 @@ export interface IRootState {
   todo: ITodoReducer;
   demo: IDemoReducer;
   current: ICurrentReducer;
-  error: IErrorReducer;
+  snackbar: ISnackbarReducer;
 }
 
 export interface IAction {
   type: string;
-  payload: any;
+  payload?: any;
 }
 
 export interface IUserReducer {
-  currentUser: IUser | IOAuthUser | null;
+  currentUser: IUser;
 }
 
 export interface ITodoReducer {
@@ -92,28 +98,29 @@ export interface ICurrentReducer {
   selectedTodoCategory: string;
 }
 
-export interface IErrorReducer {
-  general: string;
+export interface ISnackbarReducer {
+  info: string | null;
+  warning: string | null;
+  error: string | null;
+  success: string | null;
 }
 
-
 /**
- * 
+ *
  * Material UI Component Option Interfaces
- * 
+ *
  */
 
-export interface IAlertOptions {
-  severity: 'error' | 'warning' | 'info' | 'success';
-  message: string;
+export interface ISnackbarOptions {
+  severity?: 'error' | 'warning' | 'info' | 'success';
+  message: string | null;
   open: boolean;
 }
 
-
 /**
- * 
+ *
  * API Interfaces
- * 
+ *
  */
 
 export interface IValidationFromAPI {
@@ -121,11 +128,10 @@ export interface IValidationFromAPI {
   message: string;
 }
 
-
 /**
- * 
+ *
  * Utils Interfaces
- * 
+ *
  */
 
 export interface ICustomValidator {

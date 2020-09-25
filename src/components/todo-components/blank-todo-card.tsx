@@ -1,43 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { ButtonBase, Card, CardContent } from '@material-ui/core';
+import {
+  ButtonBase,
+  Card,
+  CardContent,
+  Typography,
+  Divider,
+} from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
+import { grey } from '@material-ui/core/colors';
+
+import TodoCard from './todo-card';
 
 export interface IBlankTodoCardProps {}
 
 export default function BlankTodoCard({}: IBlankTodoCardProps) {
   const classes = useStyles();
+  const [showAddTodoCard, setShowAddTodoCard] = useState<boolean>(false);
+
+  const handleShowAddTodoCard = (): void => {
+    setShowAddTodoCard(true);
+  };
+
+  const handleCancelAddTodo = (): void => {
+    setShowAddTodoCard(false);
+  };
+
+  const handleCompleteAddTodo = (): void => {
+    setShowAddTodoCard(false);
+  };
 
   return (
-    <ButtonBase>
-      <Card classes={{ root: classes.todoCard }} elevation={0}>
-        <CardContent classes={{ root: classes.todoCardContent }}>
-          <AddIcon classes={{ root: classes.addIcon }} />
-        </CardContent>
-      </Card>
-    </ButtonBase>
+    <>
+      {showAddTodoCard ? (
+        <TodoCard
+          mode={`add`}
+          onCancel={handleCancelAddTodo}
+          onComplete={handleCompleteAddTodo}
+        />
+      ) : (
+        <ButtonBase onClick={handleShowAddTodoCard}>
+          <Card classes={{ root: classes.blankCard }} elevation={0}>
+            <CardContent classes={{ root: classes.blankCardContent }}>
+              <AddIcon classes={{ root: classes.addIcon }} />
+              <Typography
+                classes={{ root: classes.addTypography }}
+                variant={`h5`}
+                align={`center`}
+              >
+                Add Todo
+              </Typography>
+            </CardContent>
+          </Card>
+        </ButtonBase>
+      )}
+    </>
   );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    todoCard: {
-      borderColor: theme.palette.grey[500],
+    blankCard: {
+      width: 200,
+      height: 200,
+      display: 'flex',
+      borderColor: grey[500],
       padding: theme.spacing(1),
       borderStyle: 'dashed',
       cursor: 'pointer',
       '&:hover': {},
     },
-    todoCardContent: {
+    blankCardContent: {
+      width: '100%',
       display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
       padding: theme.spacing(1),
       '&:last-child': {
         paddingBottom: theme.spacing(1),
       },
     },
     addIcon: {
-      fontSize: 40,
-      fontColor: theme.palette.grey[500],
+      color: grey[500],
+      width: 80,
+      height: 80,
+    },
+    addTypography: {
+      color: grey[500],
     },
   }),
 );

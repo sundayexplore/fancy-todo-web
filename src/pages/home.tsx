@@ -6,8 +6,8 @@ export interface IHomeProps {}
 
 export default function Home({}: IHomeProps) {
   return (
-      <Layout>
-        <h1>THIS IS HOME</h1>
-      </Layout>
+    <Layout title={`Home`}>
+      <h1>THIS IS HOME</h1>
+    </Layout>
   );
-};
+}

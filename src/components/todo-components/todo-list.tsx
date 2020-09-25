@@ -15,12 +15,19 @@ export default function TodoList({}: ITodoListProps) {
   const { todos } = useSelector((state: IRootState) => state.todo);
 
   return (
-    <Grid container classes={{ container: classes.todoListWrapper }}>
-      {todos.map((todo) => (
-        <Grid item key={todo._id}>
-          <TodoCard todo={todo} />
-        </Grid>
-      ))}
+    <Grid
+      container
+      classes={{ container: classes.todoListWrapper }}
+      spacing={5}
+      wrap={`wrap`}
+    >
+      {todos
+        .filter((todo) => todo.completed === false)
+        .map((todo) => (
+          <Grid item key={todo._id}>
+            <TodoCard todo={todo} mode={`show`} />
+          </Grid>
+        ))}
 
       <Grid item>
         <BlankTodoCard />

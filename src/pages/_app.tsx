@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import AOS from 'aos';
+import { useCookies } from 'react-cookie';
 
 import { Loading } from '@/components';
 
@@ -15,19 +16,20 @@ import '@/styles/global.scss';
 import { muiTheme } from '@/styles';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [cookies] = useCookies(['XSRF-TOKEN']);
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(true);
 
   const checkAuthWithUseCallback = useCallback(async () => {
     if (router.pathname === '/signup' || router.pathname === '/signin') {
-      if (localStorage.getItem('user')) {
+      if (cookies['XSRF-TOKEN'] && cookies['XSRF-TOKEN'].length > 0) {
         await router.replace('/app');
       }
-    } else if (router.pathname === '/app' && !localStorage.getItem('user')) {
-      await router.push('/signin');
     }
 
-    setLoading(false);
+    return () => {
+      setLoading(false);
+    };
   }, []);
 
   useEffect(() => {

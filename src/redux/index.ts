@@ -4,14 +4,14 @@ import {
   userReducer,
   todoReducer,
   currentReducer,
-  errorReducer,
+  snackbarReducer,
 } from './reducers';
 
 const reducers = combineReducers({
   user: userReducer,
   todo: todoReducer,
   current: currentReducer,
-  error: errorReducer,
+  snackbar: snackbarReducer,
 });
 
 const store = createStore(reducers, enableReduxDevTools());

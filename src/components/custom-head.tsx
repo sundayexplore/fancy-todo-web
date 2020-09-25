@@ -8,11 +8,11 @@ export interface IHeadProps {
 
 export default function CustomHead(props: IHeadProps) {
   const { title, children } = props;
-  
+
   return (
     <Head>
+      <title> {`${title} | Fancy Todo`} </title>
       {children}
-      <title> { `${title} | Fancy Todo` } </title>
     </Head>
   );
-};
+}

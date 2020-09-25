@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  FormEvent,
-  MouseEvent,
-  ChangeEvent,
-} from 'react';
+import React, { useState, FormEvent, MouseEvent, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -20,21 +14,21 @@ import {
   Snackbar,
   CircularProgress,
 } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import {
   VisibilityOff as VisibilityOffIcon,
   Visibility as VisibilityIcon,
 } from '@material-ui/icons';
 
-import { Container, CustomHead } from '@/components';
+import { Layout } from '@/components';
 import { userAPI, CustomValidator } from '@/utils';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
+import { setError, setSuccess } from '@/redux/actions/snackbar-actions';
 
 // Types
 import {
-  IAlertOptions,
+  ISnackbarOptions,
   ISignInValidations,
   ICustomValidator,
   IValidationFromAPI,
@@ -55,14 +49,9 @@ export default function SignIn({}: ISignInPageProps) {
     password: null,
   });
   const [showInputPassword, setShowInputPassword] = useState<boolean>(false);
-  const [alertOptions, setAlertOptions] = useState<IAlertOptions>({
-    severity: 'info',
-    message: '',
-    open: false,
-  });
   const [loading, setLoading] = useState<boolean>(false);
 
-  const checkSignInErrors = () => {
+  const checkSignInErrors = (): boolean => {
     const { userIdentifier, password } = signInData;
     const checkedSignInErrors: ISignInValidations = {
       userIdentifier: CustomValidator.userIdentifier(userIdentifier),
@@ -87,7 +76,7 @@ export default function SignIn({}: ISignInPageProps) {
 
   const handleOnChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
+  ): void => {
     setSignInErrors({
       ...signInErrors,
       [e.target.name]: (CustomValidator as ICustomValidator)[e.target.name](
@@ -102,7 +91,7 @@ export default function SignIn({}: ISignInPageProps) {
     e:
       | FormEvent<HTMLFormElement | HTMLInputElement | HTMLTextAreaElement>
       | MouseEvent<HTMLButtonElement>,
-  ) => {
+  ): Promise<void> => {
     setLoading(true);
     e.preventDefault();
     const { userIdentifier, password } = signInData;
@@ -115,11 +104,7 @@ export default function SignIn({}: ISignInPageProps) {
         });
         dispatch(setUser(data.user));
         localStorage.setItem('user', JSON.stringify(data.user));
-        setAlertOptions({
-          severity: 'success',
-          message: data.message,
-          open: true,
-        });
+        dispatch(setSuccess(data.message));
         await router.push('/app');
         setLoading(false);
       } else {
@@ -127,9 +112,12 @@ export default function SignIn({}: ISignInPageProps) {
         // handle here
       }
     } catch (err) {
+      setLoading(false);
+
       if (err.response) {
         switch (err.response.status) {
           case 400:
+            dispatch(setError(err.response.data.message));
             if (err.response.data.messages) {
               const signInErrorsFromAPI: ISignInValidations = {} as ISignInValidations;
               err.response.data.messages.forEach(
@@ -142,125 +130,94 @@ export default function SignIn({}: ISignInPageProps) {
                 ...signInErrorsFromAPI,
               });
             }
-
-            setAlertOptions({
-              ...alertOptions,
-              severity: 'error',
-              message: err.response.data.message,
-              open: true,
-            });
-
             break;
 
           default:
-            setAlertOptions({
-              ...alertOptions,
-              severity: 'error',
-              message: err.response.data.message,
-              open: true,
-            });
+            dispatch(setError(err.response.data.message));
             break;
         }
-
-        setLoading(false);
       }
     }
   };
 
   return (
-    <>
-      <CustomHead title='Sign In' />
-      <Container>
-        <Card classes={{ root: classes.cardContainer }}>
-          <Typography variant={`h4`} gutterBottom>
-            Welcome back!
-          </Typography>
-          <CardContent classes={{ root: classes.cardFormSection }}>
-            <form
-              className={classes.signInForm}
-              onSubmit={handleSignIn}
-              // noValidate={false}
-              // autoComplete={`on`}
+    <Layout title={`Sign In`}>
+      <Card classes={{ root: classes.cardContainer }}>
+        <Typography variant={`h4`} gutterBottom>
+          Welcome back!
+        </Typography>
+        <CardContent classes={{ root: classes.cardFormSection }}>
+          <form
+            className={classes.signInForm}
+            onSubmit={handleSignIn}
+            // noValidate={false}
+            // autoComplete={`on`}
+          >
+            <TextField
+              autoComplete={`username`}
+              label={`Username or Email`}
+              name={`userIdentifier`}
+              required
+              value={signInData.userIdentifier}
+              onChange={handleOnChange}
+              error={
+                signInErrors.userIdentifier !== null &&
+                signInErrors.userIdentifier.length > 0
+              }
+              helperText={signInErrors.userIdentifier}
+              disabled={loading}
+            />
+            <TextField
+              autoComplete={`current-password`}
+              label={`Password`}
+              name={`password`}
+              required
+              type={showInputPassword ? `text` : `password`}
+              value={signInData.password}
+              onChange={handleOnChange}
+              error={
+                signInErrors.password !== null &&
+                signInErrors.password.length > 0
+              }
+              helperText={signInErrors.password}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position={`end`}>
+                    <IconButton
+                      onClick={() => setShowInputPassword(!showInputPassword)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      disabled={loading}
+                    >
+                      {showInputPassword ? (
+                        <VisibilityIcon />
+                      ) : (
+                        <VisibilityOffIcon />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              disabled={loading}
+            />
+            <Button
+              classes={{ root: classes.signInButton }}
+              color={`primary`}
+              variant={`contained`}
+              type={`submit`}
+              onClick={handleSignIn}
+              disabled={loading}
             >
-              <TextField
-                autoComplete={`username`}
-                label={`Username or Email`}
-                name={`userIdentifier`}
-                required
-                value={signInData.userIdentifier}
-                onChange={handleOnChange}
-                error={
-                  signInErrors.userIdentifier !== null &&
-                  signInErrors.userIdentifier.length > 0
-                }
-                helperText={signInErrors.userIdentifier}
-                disabled={loading}
-              />
-              <TextField
-                autoComplete={`current-password`}
-                label={`Password`}
-                name={`password`}
-                required
-                type={showInputPassword ? `text` : `password`}
-                value={signInData.password}
-                onChange={handleOnChange}
-                error={
-                  signInErrors.password !== null &&
-                  signInErrors.password.length > 0
-                }
-                helperText={signInErrors.password}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position={`end`}>
-                      <IconButton
-                        onClick={() => setShowInputPassword(!showInputPassword)}
-                        onMouseDown={(e) => e.preventDefault()}
-                        disabled={loading}
-                      >
-                        {showInputPassword ? (
-                          <VisibilityIcon />
-                        ) : (
-                          <VisibilityOffIcon />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                disabled={loading}
-              />
-              <Button
-                classes={{ root: classes.signInButton }}
-                color={`primary`}
-                variant={`contained`}
-                type={`submit`}
-                onClick={handleSignIn}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress /> : `Sign In`}
-              </Button>
-            </form>
-          </CardContent>
-          <CardActions>
-            <Button color={`primary`} onClick={() => router.push('/signup')}>
-              Create account
+              {loading ? <CircularProgress /> : `Sign In`}
             </Button>
-          </CardActions>
-        </Card>
-      </Container>
-      <Snackbar
-        open={alertOptions.open}
-        onClose={() => setAlertOptions({ ...alertOptions, open: false })}
-      >
-        <Alert
-          severity={alertOptions.severity}
-          onClose={() => setAlertOptions({ ...alertOptions, open: false })}
-          variant={`filled`}
-          elevation={6}
-        >
-          {alertOptions.message}
-        </Alert>
-      </Snackbar>
-    </>
+          </form>
+        </CardContent>
+        <CardActions>
+          <Button color={`primary`} onClick={() => router.push('/signup')}>
+            Create account
+          </Button>
+        </CardActions>
+      </Card>
+    </Layout>
   );
 }
 

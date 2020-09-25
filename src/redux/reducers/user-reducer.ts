@@ -1,7 +1,7 @@
 import { IUserReducer, IUser, IAction } from '@/types';
 
 const initialState: IUserReducer = {
-  currentUser: null,
+  currentUser: {} as IUser,
 };
 
 export default function userReducer(
