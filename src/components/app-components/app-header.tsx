@@ -61,7 +61,7 @@ export default function AppHeader({}: IAppHeaderProps) {
   }
 
   return (
-    <header className={classes.appHeaderWrapper}>
+    <section className={classes.appHeaderWrapper}>
       <CssBaseline />
       <AppBar
         position={`fixed`}
@@ -115,7 +115,7 @@ export default function AppHeader({}: IAppHeaderProps) {
           ))}
         </List>
       </Drawer>
-    </header>
+    </section>
   );
 }
 

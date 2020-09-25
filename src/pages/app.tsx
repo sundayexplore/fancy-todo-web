@@ -3,7 +3,7 @@ import React from 'react';
 // import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
-// import { AppLayout, TodoList } from '@/components';
+import { AppLayout, TodoList } from '@/components';
 // import { userAPI } from '@/utils';
 
 // Redux Actions
@@ -16,9 +16,9 @@ export interface IAppProps {}
 
 export default function App({}: IAppProps) {
   return (
-    <>
-      <AppHeader />
-    </>
+    <AppLayout>
+      <TodoList />
+    </AppLayout>
   );
 }
 

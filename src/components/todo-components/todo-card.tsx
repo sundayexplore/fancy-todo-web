@@ -2,18 +2,20 @@ import React from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Card, CardContent, CardActions } from '@material-ui/core';
 
-// import { ITodo } from '@/types';
+import { ITodo } from '@/types';
 
 export interface ITodoCardProps {
-  // todo: ITodo;
+  todo: ITodo;
 }
 
-export default function TodoCard({ }: ITodoCardProps) {
+export default function TodoCard({ todo }: ITodoCardProps) {
   const classes = useStyles();
 
   return (
     <Card classes={{ root: classes.todoCard }}>
-      <CardContent classes={{ root: classes.todoCardContent }}></CardContent>
+      <CardContent classes={{ root: classes.todoCardContent }}>
+        {todo.name}
+      </CardContent>
       <CardActions classes={{ root: classes.todoCardActions }}></CardActions>
     </Card>
   );
