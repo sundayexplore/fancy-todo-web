@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import {
   Card,
   CardContent,
@@ -135,12 +135,9 @@ export default function TodoCard({
 
     try {
       if (checkTodoErrors()) {
-        const { data } = await todoAPI.post(
-          '/',
-          {
-            ...todoData,
-          },
-        );
+        const { data } = await todoAPI.post('/', {
+          ...todoData,
+        });
 
         setLoading(false);
         dispatch(addTodo(data.todo));
@@ -270,7 +267,7 @@ export default function TodoCard({
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     todoCard: {
       width: 200,
