@@ -36,7 +36,8 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     addIcon: {
-      fontSize: 40
-    }
+      fontSize: 40,
+      fontColor: theme.palette.grey[500],
+    },
   }),
 );

@@ -10,8 +10,6 @@ import { AppLayout, TodoList } from '@/components';
 // import { setUser } from '@/redux/actions/user-actions';
 // import { setTodos } from '@/redux/actions/todo-actions';
 
-import { AppHeader } from '@/components/app-components';
-
 export interface IAppProps {}
 
 export default function App({}: IAppProps) {
