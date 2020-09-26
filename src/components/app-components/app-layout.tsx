@@ -58,7 +58,7 @@ export default function AppLayout({ children }: IAppLayoutProps) {
   const snackbar = useSelector((state: IRootState) => state.snackbar);
   const [openMenu, setOpenMenu] = useState<boolean>(true);
   const [snackbarOptions, setSnackbarOptions] = useState<ISnackbarOptions>({
-    severity: 'info',
+    severity: undefined,
     message: null,
     open: false,
   });
@@ -88,6 +88,12 @@ export default function AppLayout({ children }: IAppLayoutProps) {
         message: snackbar.success,
         open: true,
       });
+    } else {
+      setSnackbarOptions({
+        ...snackbarOptions,
+        open: false,
+        message: null,
+      });
     }
   }, [snackbar]);
 
@@ -95,9 +101,9 @@ export default function AppLayout({ children }: IAppLayoutProps) {
     dispatch(resetSnackbar());
 
     setSnackbarOptions({
-      severity: 'info',
-      message: null,
+      ...snackbarOptions,
       open: false,
+      message: null,
     });
   };
 
@@ -105,9 +111,9 @@ export default function AppLayout({ children }: IAppLayoutProps) {
     dispatch(resetSnackbar());
 
     setSnackbarOptions({
-      severity: 'info',
-      message: null,
+      ...snackbarOptions,
       open: false,
+      message: null,
     });
   };
 

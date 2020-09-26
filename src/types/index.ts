@@ -61,6 +61,7 @@ export interface ISignUpValidations {
 
 export interface ITodoValidations {
   name: string | null;
+  dueTime: string | null;
 }
 
 /**

@@ -1,3 +1,5 @@
+import moment, { Moment } from 'moment';
+
 import { ICustomValidator } from '@/types';
 
 export default class CustomValidator implements ICustomValidator {
@@ -63,7 +65,10 @@ export default class CustomValidator implements ICustomValidator {
     return null;
   }
 
-  public static confirmPassword(password: string, confirmTarget: string): string | null {
+  public static confirmPassword(
+    password: string,
+    confirmTarget: string,
+  ): string | null {
     if (password !== confirmTarget || !password || !confirmTarget) {
       return 'Password does not match!';
     }
@@ -74,6 +79,18 @@ export default class CustomValidator implements ICustomValidator {
   public static todoName(input: string): string | null {
     if (!input) {
       return 'Todo Name cannot be empty!';
+    }
+
+    return null;
+  }
+
+  public static dueTime(input: Moment | Date | string | null): string | null {
+    input = moment(input);
+
+    if (!input) {
+      return null;
+    } else if (input.isBefore(moment())) {
+      return `Invalid time!`;
     }
 
     return null;

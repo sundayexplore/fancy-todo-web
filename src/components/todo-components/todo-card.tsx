@@ -11,12 +11,21 @@ import {
   Card,
   CardContent,
   CardActions,
+  CardActionArea,
   IconButton,
   TextField,
   Typography,
   Tooltip,
+  Divider,
 } from '@material-ui/core';
-import { Close as CloseIcon, Check as CheckIcon } from '@material-ui/icons';
+import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import {
+  Close as CloseIcon,
+  Check as CheckIcon,
+  AccessTime as AccessTimeIcon,
+  Today as TodayIcon,
+} from '@material-ui/icons';
 import { red, lightGreen } from '@material-ui/core/colors';
 import moment from 'moment';
 
@@ -34,16 +43,17 @@ export interface ITodoCardProps {
 export default function TodoCard({
   todo = {} as ITodo,
   mode = 'add',
-  onCancel = () => {},
+  onCancel,
   onComplete = () => {},
 }: ITodoCardProps) {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [modeState, setModeState] = useState<'add' | 'update' | 'show'>(mode);
   const [todoData, setTodoData] = useState<ITodo>({
     name: '',
     due: moment(),
-    dueDate: moment(),
-    dueTime: moment(),
+    dueDate: '',
+    dueTime: '',
     priority: 0,
     position: null,
     completed: false,
@@ -51,29 +61,31 @@ export default function TodoCard({
   const [loading, setLoading] = useState<boolean>(false);
   const [todoErrors, setTodoErrors] = useState<ITodoValidations>({
     name: null,
+    dueTime: null,
   });
 
   useEffect(() => {
-    switch (mode) {
+    switch (modeState) {
       case 'add':
         break;
 
       case 'update':
         setTodoData({
           ...todo,
+          due: moment(todo.due),
         });
 
       default:
         break;
     }
-  }, [mode]);
+  }, [modeState]);
 
   const clearTodoData = (): void => {
     setTodoData({
       name: '',
       due: moment(),
-      dueDate: moment(),
-      dueTime: moment(),
+      dueDate: '',
+      dueTime: '',
       priority: 0,
       position: null,
       completed: false,
@@ -81,9 +93,10 @@ export default function TodoCard({
   };
 
   const checkTodoErrors = (): boolean => {
-    const { name } = todoData;
+    const { name, due } = todoData;
     const checkedTodoErrors: ITodoValidations = {
       name: CustomValidator.todoName(name),
+      dueTime: CustomValidator.dueTime(due),
     };
 
     setTodoErrors({
@@ -135,8 +148,11 @@ export default function TodoCard({
 
     try {
       if (checkTodoErrors()) {
+        const { name, due, priority } = todoData;
         const { data } = await todoAPI.post('/', {
-          ...todoData,
+          name,
+          due,
+          priority,
         });
 
         setLoading(false);
@@ -166,8 +182,11 @@ export default function TodoCard({
 
     try {
       if (checkTodoErrors()) {
+        const { name, due, priority } = todoData;
         const { data } = await todoAPI.put(`/${todo._id}`, {
-          ...todoData,
+          name,
+          due,
+          priority,
         });
 
         setLoading(false);
@@ -188,10 +207,37 @@ export default function TodoCard({
     }
   };
 
+  const handleChangeModeToUpdate = (): void => {
+    setModeState('update');
+  };
+
+  const handleCancelLocal = (): void => {
+    setModeState('show');
+  };
+
+  const handleChangeDueDate = (date: MaterialUiPickersDate): void => {
+    setTodoData({
+      ...todoData,
+      due: date,
+    });
+  };
+
+  const handleChangeDueTime = (date: MaterialUiPickersDate): void => {
+    setTodoErrors({
+      ...todoErrors,
+      dueTime: CustomValidator.dueTime(date),
+    });
+
+    setTodoData({
+      ...todoData,
+      due: date,
+    });
+  };
+
   return (
     <Card classes={{ root: classes.todoCard }}>
       <CardContent classes={{ root: classes.todoCardContent }}>
-        {mode === 'add' ? (
+        {modeState === 'add' ? (
           <form onSubmit={handleAddTodo}>
             <TextField
               autoFocus
@@ -205,8 +251,29 @@ export default function TodoCard({
               helperText={todoErrors.name}
               disabled={loading}
             />
+
+            <KeyboardDatePicker
+              value={todoData.due}
+              onChange={handleChangeDueDate}
+              variant={`inline`}
+              keyboardIcon={<TodayIcon />}
+              minDate={moment()}
+              disabled={loading}
+            />
+
+            <KeyboardTimePicker
+              value={todoData.due}
+              onChange={handleChangeDueTime}
+              variant={`inline`}
+              keyboardIcon={<AccessTimeIcon />}
+              error={
+                todoErrors.dueTime !== null && todoErrors.dueTime.length > 0
+              }
+              helperText={todoErrors.dueTime}
+              disabled={loading}
+            />
           </form>
-        ) : mode === 'update' ? (
+        ) : modeState === 'update' ? (
           <form onSubmit={handleUpdateTodo}>
             <TextField
               autoFocus
@@ -222,17 +289,23 @@ export default function TodoCard({
             />
           </form>
         ) : (
-          <Typography
-            variant={`body1`}
-            paragraph
-            gutterBottom
-            align={`justify`}
+          <CardActionArea
+            classes={{ root: classes.showTodoNameWrapper }}
+            onClick={handleChangeModeToUpdate}
           >
-            {todo.name}
-          </Typography>
+            <Typography
+              variant={`body1`}
+              paragraph
+              gutterBottom
+              align={`justify`}
+            >
+              {todo.name}
+            </Typography>
+            <Divider />
+          </CardActionArea>
         )}
       </CardContent>
-      {mode === 'add' ? (
+      {modeState === 'add' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Add Todo`}>
             <IconButton edge={`start`} onClick={onCancel}>
@@ -246,10 +319,10 @@ export default function TodoCard({
             </IconButton>
           </Tooltip>
         </CardActions>
-      ) : mode === 'update' ? (
+      ) : modeState === 'update' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Update Todo`}>
-            <IconButton edge={`start`} onClick={onCancel}>
+            <IconButton edge={`start`} onClick={onCancel || handleCancelLocal}>
               <CloseIcon classes={{ root: classes.closeIcon }} />
             </IconButton>
           </Tooltip>
@@ -284,6 +357,10 @@ const useStyles = makeStyles(() =>
     },
     checkIcon: {
       color: lightGreen[500],
+    },
+    showTodoNameWrapper: {
+      width: '100%',
+      cursor: 'text',
     },
   }),
 );

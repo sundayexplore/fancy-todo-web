@@ -3,6 +3,8 @@ import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { Provider as ReduxProvider } from 'react-redux';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 import AOS from 'aos';
 import { useCookies } from 'react-cookie';
 
@@ -44,7 +46,9 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ReduxProvider store={reduxStore}>
       <MuiThemeProvider theme={muiTheme}>
-        {loading ? <Loading /> : <Component {...pageProps} />}
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          {loading ? <Loading /> : <Component {...pageProps} />}
+        </MuiPickersUtilsProvider>
       </MuiThemeProvider>
     </ReduxProvider>
   );
