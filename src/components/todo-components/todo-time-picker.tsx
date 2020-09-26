@@ -6,27 +6,11 @@ import React, {
   MouseEvent,
 } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import {
-  IconButton,
-  ClickAwayListener,
-  Grow,
-  Paper,
-  Popper,
-  Tooltip,
-} from '@material-ui/core';
+import { IconButton, Popover, Tooltip } from '@material-ui/core';
 import { AccessTime as AccessTimeIcon } from '@material-ui/icons';
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import {
-  TimePicker as TimePickerDefault,
-  TimePickerProps,
-} from '@material-ui/pickers';
 
 // Types
 import { ITodo, ITodoValidations } from '@/types';
-
-const TimePicker = forwardRef<HTMLDivElement, TimePickerProps>((props, ref) => (
-  <TimePickerDefault ref={ref} {...props} />
-));
 
 export interface ITodoTimePickerProps {
   todo: ITodo;
@@ -73,39 +57,23 @@ export default function TodoTimePicker({
         <AccessTimeIcon />
       </IconButton>
 
-      <Popper
+      <Popover
         open={showTimePicker}
         anchorEl={showTimePickerButtonRef.current}
         role={undefined}
         transition
         disablePortal
       >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === 'bottom' ? 'right-top' : 'right-bottom',
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleCloseTimePicker}>
-                <TimePicker
-                  value={todo.due}
-                  onChange={onChange}
-                  variant={`static`}
-                  disabled={loading}
-                  error={
-                    todoErrors.dueTime !== null && todoErrors.dueTime.length > 0
-                  }
-                  helperText={todoErrors.dueTime}
-                  disableToolbar
-                />
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper>
+        <TimePicker
+          value={todo.due}
+          onChange={onChange}
+          variant={`static`}
+          disabled={loading}
+          error={todoErrors.dueTime !== null && todoErrors.dueTime.length > 0}
+          helperText={todoErrors.dueTime}
+          disableToolbar
+        />
+      </Popover>
     </div>
   );
 }

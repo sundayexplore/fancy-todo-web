@@ -12,7 +12,7 @@ import {
   CardContent,
   CardActions,
   CardActionArea,
-  IconButton,
+  Button,
   TextField,
   Typography,
   Tooltip,
@@ -258,6 +258,7 @@ export default function TodoCard({
               error={todoErrors.name !== null && todoErrors.name.length > 0}
               helperText={todoErrors.name}
               disabled={loading}
+              onBlur={handleAddTodo}
             />
           </form>
         ) : modeState === 'update' ? (
@@ -306,29 +307,37 @@ export default function TodoCard({
       {modeState === 'add' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Add Todo`}>
-            <IconButton edge={`start`} onClick={onCancel}>
-              <CloseIcon classes={{ root: classes.closeIcon }} />
-            </IconButton>
+            <Button color={`secondary`} onClick={onCancel}>
+              Cancel
+            </Button>
           </Tooltip>
 
           <Tooltip arrow title={`Add Todo`}>
-            <IconButton edge={`end`} onClick={handleAddTodo}>
-              <CheckIcon classes={{ root: classes.checkIcon }} />
-            </IconButton>
+            <Button
+              variant={`contained`}
+              color={`primary`}
+              onClick={handleAddTodo}
+            >
+              Add
+            </Button>
           </Tooltip>
         </CardActions>
       ) : modeState === 'update' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Update Todo`}>
-            <IconButton edge={`start`} onClick={onCancel || handleCancelLocal}>
-              <CloseIcon classes={{ root: classes.closeIcon }} />
-            </IconButton>
+            <Button color={`secondary`} onClick={onCancel || handleCancelLocal}>
+              Cancel
+            </Button>
           </Tooltip>
 
           <Tooltip arrow title={`Update Todo`}>
-            <IconButton edge={`end`} onClick={handleUpdateTodo}>
-              <CheckIcon classes={{ root: classes.checkIcon }} />
-            </IconButton>
+            <Button
+              variant={`contained`}
+              color={`primary`}
+              onClick={handleUpdateTodo}
+            >
+              Update
+            </Button>
           </Tooltip>
         </CardActions>
       ) : (
@@ -349,12 +358,6 @@ const useStyles = makeStyles(() =>
     },
     todoCardActions: {
       width: '100%',
-    },
-    closeIcon: {
-      color: red[500],
-    },
-    checkIcon: {
-      color: lightGreen[500],
     },
     showTodoNameWrapper: {
       width: '100%',
