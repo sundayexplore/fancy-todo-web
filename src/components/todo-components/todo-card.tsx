@@ -51,7 +51,7 @@ export default function TodoCard({
   const [modeState, setModeState] = useState<'add' | 'update' | 'show'>(mode);
   const [todoData, setTodoData] = useState<ITodo>({
     name: '',
-    due: moment(),
+    due: moment().startOf('day'),
     dueDate: '',
     dueTime: '',
     priority: 0,
@@ -63,6 +63,13 @@ export default function TodoCard({
     name: null,
     dueTime: null,
   });
+
+  useEffect(() => {
+    setTodoData({
+      ...todoData,
+      ...todo,
+    });
+  }, [todo]);
 
   useEffect(() => {
     switch (modeState) {
@@ -193,6 +200,7 @@ export default function TodoCard({
 
         dispatch(updateTodo(data.todo));
         clearTodoData();
+        setModeState('show');
         onComplete();
       } else {
         setLoading(false);
@@ -286,6 +294,7 @@ export default function TodoCard({
               error={todoErrors.name !== null && todoErrors.name.length > 0}
               helperText={todoErrors.name}
               disabled={loading}
+              onBlur={handleUpdateTodo}
             />
           </form>
         ) : (

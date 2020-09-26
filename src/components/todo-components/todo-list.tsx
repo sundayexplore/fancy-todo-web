@@ -20,6 +20,8 @@ export default function TodoList({}: ITodoListProps) {
       classes={{ container: classes.todoListWrapper }}
       spacing={5}
       wrap={`wrap`}
+      justify={`flex-start`}
+      alignItems={`center`}
     >
       {todos
         .filter((todo) => todo.completed === false)
