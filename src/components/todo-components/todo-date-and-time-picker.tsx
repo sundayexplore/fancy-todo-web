@@ -85,7 +85,20 @@ export default function TodoDateAndTimePicker({
               transformOrigin:
                 placement === 'bottom' ? 'center-top' : 'center-bottom',
             }}
-          ></Grow>
+          >
+            <Paper>
+              <ClickAwayListener onClickAway={handleCloseMenu}>
+                <MenuList
+                  autoFocusItem={showMenu}
+                  onKeyDown={handleMenuKeyDown}
+                >
+                  <MenuItem>
+                    
+                  </MenuItem>
+                </MenuList>
+              </ClickAwayListener>
+            </Paper>
+          </Grow>
         )}
       </Popper>
     </div>
