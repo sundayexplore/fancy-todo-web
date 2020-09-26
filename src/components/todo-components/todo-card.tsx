@@ -18,20 +18,23 @@ import {
   Tooltip,
   Divider,
 } from '@material-ui/core';
-import { KeyboardDatePicker, KeyboardTimePicker } from '@material-ui/pickers';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import {
-  Close as CloseIcon,
-  Check as CheckIcon,
-  AccessTime as AccessTimeIcon,
-  Today as TodayIcon,
-} from '@material-ui/icons';
+import { Close as CloseIcon, Check as CheckIcon } from '@material-ui/icons';
 import { red, lightGreen } from '@material-ui/core/colors';
 import moment from 'moment';
 
+// Types
 import { ITodo, ITodoValidations, ICustomValidator } from '@/types';
+
+// Utils
 import { todoAPI, CustomValidator } from '@/utils';
+
+// Redux Actions
 import { addTodo, updateTodo, deleteTodo } from '@/redux/actions/todo-actions';
+
+// Components
+import TodoDatePicker from './todo-date-picker';
+import TodoTimePicker from './todo-time-picker';
 
 export interface ITodoCardProps {
   todo?: ITodo;
@@ -65,13 +68,6 @@ export default function TodoCard({
   });
 
   useEffect(() => {
-    setTodoData({
-      ...todoData,
-      ...todo,
-    });
-  }, [todo]);
-
-  useEffect(() => {
     switch (modeState) {
       case 'add':
         break;
@@ -83,6 +79,10 @@ export default function TodoCard({
         });
 
       default:
+        setTodoData({
+          ...todo,
+          due: moment(todo.due),
+        });
         break;
     }
   }, [modeState]);
@@ -259,27 +259,6 @@ export default function TodoCard({
               helperText={todoErrors.name}
               disabled={loading}
             />
-
-            <KeyboardDatePicker
-              value={todoData.due}
-              onChange={handleChangeDueDate}
-              variant={`inline`}
-              keyboardIcon={<TodayIcon />}
-              minDate={moment()}
-              disabled={loading}
-            />
-
-            <KeyboardTimePicker
-              value={todoData.due}
-              onChange={handleChangeDueTime}
-              variant={`inline`}
-              keyboardIcon={<AccessTimeIcon />}
-              error={
-                todoErrors.dueTime !== null && todoErrors.dueTime.length > 0
-              }
-              helperText={todoErrors.dueTime}
-              disabled={loading}
-            />
           </form>
         ) : modeState === 'update' ? (
           <form onSubmit={handleUpdateTodo}>
@@ -308,11 +287,21 @@ export default function TodoCard({
               gutterBottom
               align={`justify`}
             >
-              {todo.name}
+              {todoData.name}
             </Typography>
-            <Divider />
           </CardActionArea>
         )}
+
+        <Divider />
+
+        <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
+
+        <TodoTimePicker
+          todo={todoData}
+          todoErrors={todoErrors}
+          onChange={handleChangeDueTime}
+          loading={loading}
+        />
       </CardContent>
       {modeState === 'add' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>

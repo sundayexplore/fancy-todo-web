@@ -1,3 +1,5 @@
+import 'fontsource-roboto';
+
 import React, { useEffect, useCallback, useState } from 'react';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';

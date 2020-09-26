@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
+import moment from 'moment';
 
 import { IRootState } from '@/types';
 import TodoCard from './todo-card';
@@ -24,7 +25,11 @@ export default function TodoList({}: ITodoListProps) {
       alignItems={`center`}
     >
       {todos
-        .filter((todo) => todo.completed === false)
+        .filter(
+          (todo) =>
+            todo.completed === false &&
+            moment(todo.due).isSame(moment(), 'day'),
+        )
         .map((todo) => (
           <Grid item key={todo._id}>
             <TodoCard todo={todo} mode={`show`} />
