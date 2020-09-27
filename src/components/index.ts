@@ -17,4 +17,4 @@ export { default as TodoForm } from './todo-components/todo-form';
 export { default as TodoList } from './todo-components/todo-list';
 export { default as BlankTodoCard } from './todo-components/blank-todo-card';
 export { default as TodoDatePicker } from './todo-components/todo-date-picker';
-export { default as TodoTimePicker } from './todo-components/todo-time-picker';
+export { default as TodoTimeForm } from './todo-components/todo-time-form';

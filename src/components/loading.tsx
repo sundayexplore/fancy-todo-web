@@ -7,7 +7,7 @@ import Container from './container';
 
 export interface ILoadingProps {}
 
-export default function CheckAuth({}: ILoadingProps) {
+export default function Loading({}: ILoadingProps) {
   const classes = useStyles();
 
   return (

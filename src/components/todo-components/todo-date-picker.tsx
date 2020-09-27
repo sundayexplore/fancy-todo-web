@@ -1,6 +1,6 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Button, Popover, Tooltip, Typography } from '@material-ui/core';
+import { Button, Popover, Tooltip } from '@material-ui/core';
 import { Today as TodayIcon } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { Calendar } from '@material-ui/pickers';
@@ -49,10 +49,15 @@ export default function TodoDatePicker({
     setDatePickerAnchorEl(null);
   };
 
+  const onChangeDueDate = (date: MaterialUiPickersDate) => {
+    onChange(date);
+    handleHideDatePicker();
+  };
+
   return (
     <div className={classes.wrapper}>
       <Tooltip arrow title={tooltipText}>
-        <Button onClick={handleShowDatePicker} startIcon={<TodayIcon />}>
+        <Button onClick={handleShowDatePicker} startIcon={<TodayIcon />} size={`small`}>
           {dateHeadline}
         </Button>
       </Tooltip>
@@ -72,7 +77,7 @@ export default function TodoDatePicker({
       >
         <Calendar
           date={todo.due as Moment}
-          onChange={onChange}
+          onChange={onChangeDueDate}
           minDate={moment()}
         />
       </Popover>

@@ -132,7 +132,11 @@ export default function AppLayout({ children }: IAppLayoutProps) {
       await router.push('/signin');
     } catch (err) {
       if (err.response) {
-        dispatch(setError(err.reponse.data.message));
+        if (err.response.data) {
+          dispatch(setError(err.response.data.message, err.response.data.name));
+        } else {
+          dispatch(setError('Unknown error has occured!'));
+        }
       }
     }
   };

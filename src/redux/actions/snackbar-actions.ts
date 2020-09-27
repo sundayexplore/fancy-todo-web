@@ -14,12 +14,20 @@ export const setWarning = (warning: string): IAction => ({
   },
 });
 
-export const setError = (error: string): IAction => ({
-  type: 'SET_ERROR',
-  payload: {
-    error,
-  },
-});
+export const setError = (errorMessage: string, errorName?: string): IAction => {
+  let error = errorMessage;
+
+  if (errorName) {
+    error = `${errorName}: ${error}`;
+  }
+  
+  return {
+    type: 'SET_ERROR',
+    payload: {
+      error,
+    },
+  };
+};
 
 export const setSuccess = (success: string): IAction => ({
   type: 'SET_SUCCESS',

@@ -10,8 +10,8 @@ export interface ITodo {
   _id?: string | any;
   name: string;
   due: string | Date | Moment | null;
-  dueDate: string | Date | Moment | null;
-  dueTime: string | Date | Moment | null;
+  dueDate: string | null;
+  dueTime: string | null;
   priority: number;
   position: number | null;
   completed: boolean;

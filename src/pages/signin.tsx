@@ -150,8 +150,8 @@ export default function SignIn({}: ISignInPageProps) {
           <form
             className={classes.signInForm}
             onSubmit={handleSignIn}
-            // noValidate={false}
-            // autoComplete={`on`}
+            noValidate={false}
+            autoComplete={`on`}
           >
             <TextField
               autoComplete={`username`}

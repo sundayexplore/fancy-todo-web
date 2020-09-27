@@ -34,7 +34,7 @@ import { addTodo, updateTodo, deleteTodo } from '@/redux/actions/todo-actions';
 
 // Components
 import TodoDatePicker from './todo-date-picker';
-import TodoTimePicker from './todo-time-picker';
+import TodoTimeForm from './todo-time-form';
 
 export interface ITodoCardProps {
   todo?: ITodo;
@@ -100,10 +100,10 @@ export default function TodoCard({
   };
 
   const checkTodoErrors = (): boolean => {
-    const { name, due } = todoData;
+    const { name, dueTime } = todoData;
     const checkedTodoErrors: ITodoValidations = {
       name: CustomValidator.todoName(name),
-      dueTime: CustomValidator.dueTime(due),
+      dueTime: CustomValidator.dueTime(dueTime),
     };
 
     setTodoErrors({
@@ -230,16 +230,24 @@ export default function TodoCard({
     });
   };
 
-  const handleChangeDueTime = (date: MaterialUiPickersDate): void => {
+  const handleChangeDueTime = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ): void => {
     setTodoErrors({
       ...todoErrors,
-      dueTime: CustomValidator.dueTime(date),
+      dueTime: CustomValidator.dueTime(e.target.value),
     });
 
     setTodoData({
       ...todoData,
-      due: date,
+      dueTime: e.target.value,
     });
+  };
+
+  const handleSetDueTime = (
+    e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>,
+  ): void => {
+    e.preventDefault();
   };
 
   return (
@@ -297,17 +305,17 @@ export default function TodoCard({
 
         <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
 
-        <TodoTimePicker
+        <TodoTimeForm
           todo={todoData}
           todoErrors={todoErrors}
           onChange={handleChangeDueTime}
-          loading={loading}
+          onComplete={handleSetDueTime}
         />
       </CardContent>
       {modeState === 'add' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Add Todo`}>
-            <Button color={`secondary`} onClick={onCancel}>
+            <Button color={`secondary`} onClick={onCancel} size={`medium`}>
               Cancel
             </Button>
           </Tooltip>
@@ -317,6 +325,7 @@ export default function TodoCard({
               variant={`contained`}
               color={`primary`}
               onClick={handleAddTodo}
+              size={`medium`}
             >
               Add
             </Button>
@@ -325,7 +334,11 @@ export default function TodoCard({
       ) : modeState === 'update' ? (
         <CardActions classes={{ root: classes.todoCardActions }}>
           <Tooltip arrow title={`Cancel Update Todo`}>
-            <Button color={`secondary`} onClick={onCancel || handleCancelLocal}>
+            <Button
+              color={`secondary`}
+              onClick={onCancel || handleCancelLocal}
+              size={`medium`}
+            >
               Cancel
             </Button>
           </Tooltip>
@@ -335,6 +348,7 @@ export default function TodoCard({
               variant={`contained`}
               color={`primary`}
               onClick={handleUpdateTodo}
+              size={`medium`}
             >
               Update
             </Button>
