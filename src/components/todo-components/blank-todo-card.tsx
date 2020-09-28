@@ -45,7 +45,7 @@ export default function BlankTodoCard({}: IBlankTodoCardProps) {
               <AddIcon classes={{ root: classes.addIcon }} />
               <Typography
                 classes={{ root: classes.addTypography }}
-                variant={`subtitle2`}
+                variant={`h6`}
                 align={`center`}
               >
                 Add Todo
@@ -61,11 +61,11 @@ export default function BlankTodoCard({}: IBlankTodoCardProps) {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     blankCard: {
-      width: 200,
-      height: 200,
+      width: 250,
+      height: 250,
       display: 'flex',
       borderColor: grey[500],
-      borderWidth: 3,
+      borderWidth: 5,
       padding: theme.spacing(1),
       borderStyle: 'dashed',
       cursor: 'pointer',
@@ -84,8 +84,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     addIcon: {
       color: grey[500],
-      width: 60,
-      height: 60,
+      width: 100,
+      height: 100,
     },
     addTypography: {
       color: grey[500],

@@ -19,6 +19,8 @@ export interface ITodoTimeFormProps {
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onComplete: () => void;
   clearForm: () => void;
+  mode: 'add' | 'update' | 'show';
+  modeHandler: (mode: 'add' | 'update' | 'show') => void;
 }
 
 export default function TodoTimeForm({
@@ -27,6 +29,8 @@ export default function TodoTimeForm({
   onChange,
   onComplete,
   clearForm,
+  mode,
+  modeHandler,
 }: ITodoTimeFormProps) {
   const classes = useStyles();
   const [
@@ -52,11 +56,18 @@ export default function TodoTimeForm({
 
   const handleShowTimeForm = (e: MouseEvent<HTMLButtonElement>): void => {
     setTimeFormAnchorEl(e.currentTarget);
+
+    if (mode === 'show') {
+      modeHandler('update');
+    }
   };
 
   const handleHideTimeForm = (): void => {
     setTimeFormAnchorEl(null);
-    clearForm();
+
+    if (mode === 'add') {
+      clearForm();
+    }
   };
 
   const handleOnComplete = (
@@ -172,10 +183,10 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
     },
     timeForm: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1, 2),
     },
     cardActions: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1, 2),
     },
   }),
 );

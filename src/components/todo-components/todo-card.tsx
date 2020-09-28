@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import {
   ClickAwayListener,
   Card,
@@ -20,8 +20,6 @@ import {
   Divider,
 } from '@material-ui/core';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import { Close as CloseIcon, Check as CheckIcon } from '@material-ui/icons';
-import { red, lightGreen } from '@material-ui/core/colors';
 import moment from 'moment';
 
 // Types
@@ -291,6 +289,10 @@ export default function TodoCard({
     });
   };
 
+  const handleChangeMode = (mode: 'add' | 'update' | 'show'): void => {
+    setModeState(mode);
+  };
+
   return (
     <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
       <Card classes={{ root: classes.todoCard }}>
@@ -304,7 +306,7 @@ export default function TodoCard({
                 required
                 value={todoData.name}
                 onChange={handleOnChange}
-                multiline
+                // multiline
                 error={todoErrors.name !== null && todoErrors.name.length > 0}
                 helperText={todoErrors.name}
                 disabled={loading}
@@ -319,7 +321,7 @@ export default function TodoCard({
                 required
                 value={todoData.name}
                 onChange={handleOnChange}
-                multiline
+                // multiline
                 error={todoErrors.name !== null && todoErrors.name.length > 0}
                 helperText={todoErrors.name}
                 disabled={loading}
@@ -331,17 +333,16 @@ export default function TodoCard({
               onClick={handleChangeModeToUpdate}
             >
               <Typography
-                variant={`body1`}
-                paragraph
-                gutterBottom
+                classes={{ root: classes.todoName }}
+                variant={`h5`}
                 align={`justify`}
               >
                 {todoData.name}
               </Typography>
+
+              <Divider />
             </CardActionArea>
           )}
-
-          <Divider />
 
           <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
 
@@ -351,12 +352,19 @@ export default function TodoCard({
             onChange={handleChangeDueTime}
             onComplete={handleSetDueTime}
             clearForm={clearDueTimeForm}
+            mode={modeState}
+            modeHandler={handleChangeMode}
           />
         </CardContent>
         {modeState === 'add' ? (
           <CardActions classes={{ root: classes.todoCardActions }}>
             <Tooltip arrow title={`Cancel Add Todo`}>
-              <Button color={`secondary`} onClick={onCancel} size={`medium`}>
+              <Button
+                color={`secondary`}
+                onClick={onCancel}
+                size={`small`}
+                disabled={loading}
+              >
                 Cancel
               </Button>
             </Tooltip>
@@ -366,7 +374,8 @@ export default function TodoCard({
                 variant={`contained`}
                 color={`primary`}
                 onClick={handleAddTodo}
-                size={`medium`}
+                size={`small`}
+                disabled={loading}
               >
                 Add
               </Button>
@@ -378,7 +387,8 @@ export default function TodoCard({
               <Button
                 color={`secondary`}
                 onClick={onCancel || handleCancelLocal}
-                size={`medium`}
+                size={`small`}
+                disabled={loading}
               >
                 Cancel
               </Button>
@@ -389,7 +399,8 @@ export default function TodoCard({
                 variant={`contained`}
                 color={`primary`}
                 onClick={handleUpdateTodo}
-                size={`medium`}
+                size={`small`}
+                disabled={loading}
               >
                 Update
               </Button>
@@ -405,21 +416,36 @@ export default function TodoCard({
   );
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     todoCard: {
-      width: 200,
-      height: 200,
+      width: 250,
+      height: 250,
+      padding: theme.spacing(1),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
     todoCardContent: {
       width: '100%',
+      height: '65%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
+      alignItems: 'stretch',
     },
     todoCardActions: {
       width: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: theme.spacing(2),
     },
     showTodoNameWrapper: {
       width: '100%',
       cursor: 'text',
     },
+    todoName: {},
   }),
 );
