@@ -83,11 +83,28 @@ export default class CustomValidator implements ICustomValidator {
   }
 
   public static dueTime(input: string | null): string | null {
-    const separatorRegExp: RegExp = /[^a-z]+/gi;
+    if (!input) {
+      return null;
+    } else if (input !== null) {
+      const separatorRegExp: RegExp = /[a-z]+|[^a-z]+/gi;
+      const inputArr: RegExpMatchArray | null = input!.match(separatorRegExp);
+      const time: number | null = +inputArr![0];
+      const format: string | null = inputArr![1];
 
-    const inputArr: RegExpMatchArray | null = input!.match(separatorRegExp);
+      const defaultErrMessage: string = 'Invalid time!';
 
-    console.log({ inputArr, input });
+      if (isNaN(time)) {
+        return defaultErrMessage;
+      } else if (inputArr!.length > 2) {
+        return defaultErrMessage;
+      } else if (!format) {
+        return defaultErrMessage;
+      } else if (format && !format.match(/\b(am|pm)\b/i)) {
+        return defaultErrMessage;
+      } else if (time > 12 || time < 0) {
+        return defaultErrMessage;
+      }
+    }
 
     return null;
   }

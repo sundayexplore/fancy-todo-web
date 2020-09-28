@@ -10,6 +10,7 @@ export interface ITodo {
   _id?: string | any;
   name: string;
   due: string | Date | Moment | null;
+  isTimeSet: boolean;
   dueDate: string | null;
   dueTime: string | null;
   priority: number;

@@ -35,6 +35,7 @@ import { addTodo, updateTodo, deleteTodo } from '@/redux/actions/todo-actions';
 // Components
 import TodoDatePicker from './todo-date-picker';
 import TodoTimeForm from './todo-time-form';
+import { Duplex } from 'stream';
 
 export interface ITodoCardProps {
   todo?: ITodo;
@@ -54,7 +55,8 @@ export default function TodoCard({
   const [modeState, setModeState] = useState<'add' | 'update' | 'show'>(mode);
   const [todoData, setTodoData] = useState<ITodo>({
     name: '',
-    due: moment().startOf('day'),
+    due: moment(),
+    isTimeSet: false,
     dueDate: '',
     dueTime: '',
     priority: 0,
@@ -91,6 +93,7 @@ export default function TodoCard({
     setTodoData({
       name: '',
       due: moment(),
+      isTimeSet: false,
       dueDate: '',
       dueTime: '',
       priority: 0,
@@ -155,10 +158,11 @@ export default function TodoCard({
 
     try {
       if (checkTodoErrors()) {
-        const { name, due, priority } = todoData;
+        const { name, due, isTimeSet, priority } = todoData;
         const { data } = await todoAPI.post('/', {
           name,
           due,
+          isTimeSet,
           priority,
         });
 
@@ -189,10 +193,11 @@ export default function TodoCard({
 
     try {
       if (checkTodoErrors()) {
-        const { name, due, priority } = todoData;
+        const { name, due, isTimeSet, priority } = todoData;
         const { data } = await todoAPI.put(`/${todo._id}`, {
           name,
           due,
+          isTimeSet,
           priority,
         });
 
@@ -244,10 +249,29 @@ export default function TodoCard({
     });
   };
 
-  const handleSetDueTime = (
-    e: FormEvent<HTMLFormElement> | MouseEvent<HTMLButtonElement>,
-  ): void => {
-    e.preventDefault();
+  const clearDueTimeForm = (): void => {
+    setTodoData({
+      ...todoData,
+      dueTime: '',
+    });
+  };
+
+  const handleSetDueTime = (): void => {
+    let { due, dueTime } = todoData;
+    const time = moment(dueTime, 'hh A');
+
+    due = moment(due);
+
+    due = due.set({
+      hour: time.get('hour'),
+      minute: time.get('minute'),
+    });
+
+    setTodoData({
+      ...todoData,
+      due,
+      isTimeSet: true,
+    });
   };
 
   return (
@@ -310,6 +334,7 @@ export default function TodoCard({
           todoErrors={todoErrors}
           onChange={handleChangeDueTime}
           onComplete={handleSetDueTime}
+          clearForm={clearDueTimeForm}
         />
       </CardContent>
       {modeState === 'add' ? (
