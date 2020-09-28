@@ -5,8 +5,8 @@ import React, {
   FormEvent,
   ChangeEvent,
 } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Button, Popover, TextField } from '@material-ui/core';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { CardActions, Button, Popover, TextField } from '@material-ui/core';
 import { AccessTime as AccessTimeIcon } from '@material-ui/icons';
 import { Moment } from 'moment';
 
@@ -115,7 +115,7 @@ export default function TodoTimeForm({
         </form>
 
         {status === 'unset' ? (
-          <>
+          <CardActions classes={{ root: classes.cardActions }}>
             <Button
               variant={`contained`}
               color={`primary`}
@@ -135,9 +135,9 @@ export default function TodoTimeForm({
             >
               Cancel
             </Button>
-          </>
+          </CardActions>
         ) : status === 'set' ? (
-          <>
+          <CardActions classes={{ root: classes.cardActions }}>
             <Button
               variant={`contained`}
               color={`primary`}
@@ -157,7 +157,7 @@ export default function TodoTimeForm({
             >
               Cancel
             </Button>
-          </>
+          </CardActions>
         ) : (
           ''
         )}
@@ -166,11 +166,16 @@ export default function TodoTimeForm({
   );
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     wrapper: {
       display: 'flex',
     },
-    timeForm: {},
+    timeForm: {
+      padding: theme.spacing(1),
+    },
+    cardActions: {
+      padding: theme.spacing(1),
+    },
   }),
 );

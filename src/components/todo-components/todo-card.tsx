@@ -8,6 +8,7 @@ import React, {
 import { useDispatch } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import {
+  ClickAwayListener,
   Card,
   CardContent,
   CardActions,
@@ -258,9 +259,24 @@ export default function TodoCard({
 
   const handleSetDueTime = (): void => {
     let { due, dueTime } = todoData;
+
+    if (dueTime === null || dueTime.length <= 0) {
+      setTodoData({
+        ...todoData,
+        isTimeSet: false,
+        dueTime: '',
+      });
+
+      return;
+    }
+
     const time = moment(dueTime, 'hh A');
 
     due = moment(due);
+
+    if (due.get('hour') > time.get('hour')) {
+      due = due.add(1, 'day');
+    }
 
     due = due.set({
       hour: time.get('hour'),
@@ -271,118 +287,121 @@ export default function TodoCard({
       ...todoData,
       due,
       isTimeSet: true,
+      dueTime: time.format('hh:mm A'),
     });
   };
 
   return (
-    <Card classes={{ root: classes.todoCard }}>
-      <CardContent classes={{ root: classes.todoCardContent }}>
+    <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
+      <Card classes={{ root: classes.todoCard }}>
+        <CardContent classes={{ root: classes.todoCardContent }}>
+          {modeState === 'add' ? (
+            <form onSubmit={handleAddTodo}>
+              <TextField
+                autoFocus
+                placeholder={`e.g. Buy some carrots`}
+                name={`name`}
+                required
+                value={todoData.name}
+                onChange={handleOnChange}
+                multiline
+                error={todoErrors.name !== null && todoErrors.name.length > 0}
+                helperText={todoErrors.name}
+                disabled={loading}
+              />
+            </form>
+          ) : modeState === 'update' ? (
+            <form onSubmit={handleUpdateTodo}>
+              <TextField
+                autoFocus
+                placeholder={`e.g. Buy some carrots`}
+                name={`name`}
+                required
+                value={todoData.name}
+                onChange={handleOnChange}
+                multiline
+                error={todoErrors.name !== null && todoErrors.name.length > 0}
+                helperText={todoErrors.name}
+                disabled={loading}
+              />
+            </form>
+          ) : (
+            <CardActionArea
+              classes={{ root: classes.showTodoNameWrapper }}
+              onClick={handleChangeModeToUpdate}
+            >
+              <Typography
+                variant={`body1`}
+                paragraph
+                gutterBottom
+                align={`justify`}
+              >
+                {todoData.name}
+              </Typography>
+            </CardActionArea>
+          )}
+
+          <Divider />
+
+          <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
+
+          <TodoTimeForm
+            todo={todoData}
+            todoErrors={todoErrors}
+            onChange={handleChangeDueTime}
+            onComplete={handleSetDueTime}
+            clearForm={clearDueTimeForm}
+          />
+        </CardContent>
         {modeState === 'add' ? (
-          <form onSubmit={handleAddTodo}>
-            <TextField
-              autoFocus
-              placeholder={`e.g. Buy some carrots`}
-              name={`name`}
-              required
-              value={todoData.name}
-              onChange={handleOnChange}
-              multiline
-              error={todoErrors.name !== null && todoErrors.name.length > 0}
-              helperText={todoErrors.name}
-              disabled={loading}
-              onBlur={handleAddTodo}
-            />
-          </form>
+          <CardActions classes={{ root: classes.todoCardActions }}>
+            <Tooltip arrow title={`Cancel Add Todo`}>
+              <Button color={`secondary`} onClick={onCancel} size={`medium`}>
+                Cancel
+              </Button>
+            </Tooltip>
+
+            <Tooltip arrow title={`Add Todo`}>
+              <Button
+                variant={`contained`}
+                color={`primary`}
+                onClick={handleAddTodo}
+                size={`medium`}
+              >
+                Add
+              </Button>
+            </Tooltip>
+          </CardActions>
         ) : modeState === 'update' ? (
-          <form onSubmit={handleUpdateTodo}>
-            <TextField
-              autoFocus
-              placeholder={`e.g. Buy some carrots`}
-              name={`name`}
-              required
-              value={todoData.name}
-              onChange={handleOnChange}
-              multiline
-              error={todoErrors.name !== null && todoErrors.name.length > 0}
-              helperText={todoErrors.name}
-              disabled={loading}
-              onBlur={handleUpdateTodo}
-            />
-          </form>
+          <CardActions classes={{ root: classes.todoCardActions }}>
+            <Tooltip arrow title={`Cancel Update Todo`}>
+              <Button
+                color={`secondary`}
+                onClick={onCancel || handleCancelLocal}
+                size={`medium`}
+              >
+                Cancel
+              </Button>
+            </Tooltip>
+
+            <Tooltip arrow title={`Update Todo`}>
+              <Button
+                variant={`contained`}
+                color={`primary`}
+                onClick={handleUpdateTodo}
+                size={`medium`}
+              >
+                Update
+              </Button>
+            </Tooltip>
+          </CardActions>
         ) : (
-          <CardActionArea
-            classes={{ root: classes.showTodoNameWrapper }}
-            onClick={handleChangeModeToUpdate}
-          >
-            <Typography
-              variant={`body1`}
-              paragraph
-              gutterBottom
-              align={`justify`}
-            >
-              {todoData.name}
-            </Typography>
-          </CardActionArea>
+          <CardActions
+            classes={{ root: classes.todoCardActions }}
+          ></CardActions>
         )}
-
-        <Divider />
-
-        <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
-
-        <TodoTimeForm
-          todo={todoData}
-          todoErrors={todoErrors}
-          onChange={handleChangeDueTime}
-          onComplete={handleSetDueTime}
-          clearForm={clearDueTimeForm}
-        />
-      </CardContent>
-      {modeState === 'add' ? (
-        <CardActions classes={{ root: classes.todoCardActions }}>
-          <Tooltip arrow title={`Cancel Add Todo`}>
-            <Button color={`secondary`} onClick={onCancel} size={`medium`}>
-              Cancel
-            </Button>
-          </Tooltip>
-
-          <Tooltip arrow title={`Add Todo`}>
-            <Button
-              variant={`contained`}
-              color={`primary`}
-              onClick={handleAddTodo}
-              size={`medium`}
-            >
-              Add
-            </Button>
-          </Tooltip>
-        </CardActions>
-      ) : modeState === 'update' ? (
-        <CardActions classes={{ root: classes.todoCardActions }}>
-          <Tooltip arrow title={`Cancel Update Todo`}>
-            <Button
-              color={`secondary`}
-              onClick={onCancel || handleCancelLocal}
-              size={`medium`}
-            >
-              Cancel
-            </Button>
-          </Tooltip>
-
-          <Tooltip arrow title={`Update Todo`}>
-            <Button
-              variant={`contained`}
-              color={`primary`}
-              onClick={handleUpdateTodo}
-              size={`medium`}
-            >
-              Update
-            </Button>
-          </Tooltip>
-        </CardActions>
-      ) : (
-        <CardActions classes={{ root: classes.todoCardActions }}></CardActions>
-      )}
-    </Card>
+      </Card>
+    </ClickAwayListener>
   );
 }
 

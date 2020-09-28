@@ -1,3 +1,5 @@
+import moment, { Moment } from 'moment';
+
 import { ICustomValidator } from '@/types';
 
 export default class CustomValidator implements ICustomValidator {
@@ -83,15 +85,55 @@ export default class CustomValidator implements ICustomValidator {
   }
 
   public static dueTime(input: string | null): string | null {
+    const defaultErrMessage: string = 'Invalid time!';
+
     if (!input) {
       return null;
     } else if (input !== null) {
+      if (
+        input.split(' ').length > 1 &&
+        (input.indexOf(' ') !== 0 && input.split(' ').includes(':'))
+      ) {
+        let momentTime: Moment | string = moment(input, 'hh:mm A');
+        momentTime = momentTime.format('hh:mm A');
+
+        console.log({
+          momentTime,
+          split: input.split(' '),
+        });
+
+        if (input[0] === '0') {
+          momentTime = momentTime.slice(1);
+        }
+
+        if (input !== momentTime) {
+          return defaultErrMessage;
+        }
+
+        return null;
+      } else if (
+        input.split(' ').length > 1 &&
+        !input.split(' ').includes(':')
+      ) {
+        const inputArr: Array<string> = input.split(' ');
+        const time: number = +inputArr[0];
+        const format: string = inputArr[1];
+
+        if (isNaN(time)) {
+          return defaultErrMessage;
+        } else if (format && !format.match(/\b(am|pm)\b/i)) {
+          return defaultErrMessage;
+        } else if (time > 12 || time < 0) {
+          return defaultErrMessage;
+        }
+
+        return null;
+      }
+
       const separatorRegExp: RegExp = /[a-z]+|[^a-z]+/gi;
       const inputArr: RegExpMatchArray | null = input!.match(separatorRegExp);
       const time: number | null = +inputArr![0];
       const format: string | null = inputArr![1];
-
-      const defaultErrMessage: string = 'Invalid time!';
 
       if (isNaN(time)) {
         return defaultErrMessage;
