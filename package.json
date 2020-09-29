@@ -19,7 +19,8 @@
     "build": "next build",
     "start": "next start -p $WEB_PORT",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "push": "git checkout dev && git push origin dev && git checkout master && git merge dev && git push origin master && git checkout dev"
   },
   "dependencies": {
     "@date-io/moment": "1.x",
