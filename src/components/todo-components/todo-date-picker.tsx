@@ -7,7 +7,7 @@ import { Calendar } from '@material-ui/pickers';
 import moment, { Moment } from 'moment';
 
 // Types
-import { ITodo } from '@/types';
+import { ITodo } from '@/typings';
 
 export interface ITodoDatePickerProps {
   todo: ITodo;

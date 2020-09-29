@@ -30,7 +30,7 @@ import { setSelectedTodoCategory } from '@/redux/actions/current-actions';
 import { userAPI } from '@/utils';
 
 // Types
-import { IRootState } from '@/types';
+import { IRootState } from '@/typings';
 
 export interface IAppHeaderProps {}
 

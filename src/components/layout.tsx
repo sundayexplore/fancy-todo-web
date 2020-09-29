@@ -7,7 +7,7 @@ import { Alert } from '@material-ui/lab';
 // import { Header, Footer } from '@/components';
 
 // Types
-import { IRootState, ISnackbarOptions } from '@/types';
+import { IRootState, ISnackbarOptions } from '@/typings';
 
 // Redux Actions
 import { resetSnackbar } from '@/redux/actions/snackbar-actions';

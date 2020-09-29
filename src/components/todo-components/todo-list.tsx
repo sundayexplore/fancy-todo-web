@@ -4,7 +4,7 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import moment from 'moment';
 
-import { IRootState } from '@/types';
+import { IRootState } from '@/typings';
 import TodoCard from './todo-card';
 import BlankTodoCard from './blank-todo-card';
 

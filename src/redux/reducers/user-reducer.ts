@@ -1,4 +1,4 @@
-import { IUserReducer, IUser, IAction } from '@/types';
+import { IUserReducer, IUser, IAction } from '@/typings';
 
 const initialState: IUserReducer = {
   currentUser: {} as IUser,

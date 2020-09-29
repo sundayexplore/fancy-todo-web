@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, Typography } from '@material-ui/core';
 
 
-import { ITodo } from '@/types';
+import { ITodo } from '@/typings';
 
 export interface ITodoFormProps {
   type: 'update' | 'add';

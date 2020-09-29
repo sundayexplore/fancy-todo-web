@@ -1,4 +1,4 @@
-import { ITodoReducer, IAction, ITodo } from '@/types';
+import { ITodoReducer, IAction, ITodo } from '@/typings';
 
 const initialState: ITodoReducer = {
   todos: [] as ITodo[],

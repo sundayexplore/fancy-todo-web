@@ -37,10 +37,10 @@ import {
 import { userAPI } from '@/utils';
 
 // Types
-import { IRootState, ISnackbarOptions } from '@/types';
+import { IRootState, ISnackbarOptions } from '@/typings';
 
 // Components
-import { CustomHead } from '@/components';
+import { CustomHead, UserHeaderMenu } from '@/components';
 
 export interface IAppLayoutProps {
   children: ReactNode;
@@ -163,9 +163,10 @@ export default function AppLayout({ children }: IAppLayoutProps) {
             <Typography variant={`h6`} className={classes.headerTitle}>
               Fancy Todo
             </Typography>
-            <Button color={`inherit`} onClick={handleSignOut}>
+            {/* <Button color={`inherit`} onClick={handleSignOut}>
               Sign Out
-            </Button>
+            </Button> */}
+            <UserHeaderMenu />
           </Toolbar>
         </AppBar>
         <Drawer

@@ -1,4 +1,4 @@
-import { ICurrentReducer, IAction } from '@/types';
+import { ICurrentReducer, IAction } from '@/typings';
 
 const initialState: ICurrentReducer = {
   selectedTodoCategory: 'today',

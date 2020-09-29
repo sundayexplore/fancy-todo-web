@@ -1,4 +1,4 @@
-import { IAction, ITodo } from '@/types';
+import { IAction, ITodo } from '@/typings';
 
 export const setTodos = (todos: ITodo[]): IAction => ({
   type: 'SET_TODOS',

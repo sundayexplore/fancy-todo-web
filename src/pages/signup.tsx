@@ -26,7 +26,7 @@ import {
   ISnackbarOptions,
   IValidationFromAPI,
   ICustomValidator,
-} from '@/types';
+} from '@/typings';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';

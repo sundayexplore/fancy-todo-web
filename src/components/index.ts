@@ -18,3 +18,6 @@ export { default as TodoList } from './todo-components/todo-list';
 export { default as BlankTodoCard } from './todo-components/blank-todo-card';
 export { default as TodoDatePicker } from './todo-components/todo-date-picker';
 export { default as TodoTimeForm } from './todo-components/todo-time-form';
+
+// User Components
+export { default as UserHeaderMenu } from './user-components/user-header-menu';

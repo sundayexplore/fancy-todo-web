@@ -1,4 +1,4 @@
-import { IAction } from '@/types';
+import { IAction } from '@/typings';
 
 export const setInfo = (info: string): IAction => ({
   type: 'SET_INFO',

@@ -1,6 +1,6 @@
 import moment, { Moment } from 'moment';
 
-import { ICustomValidator } from '@/types';
+import { ICustomValidator } from '@/typings';
 
 export default class CustomValidator implements ICustomValidator {
   public static firstName(input: string): string | null {

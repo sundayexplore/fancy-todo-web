@@ -1,4 +1,4 @@
-import { ISnackbarReducer, IAction } from '@/types';
+import { ISnackbarReducer, IAction } from '@/typings';
 
 const initialState: ISnackbarReducer = {
   info: null,

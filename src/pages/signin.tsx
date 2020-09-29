@@ -32,7 +32,7 @@ import {
   ISignInValidations,
   ICustomValidator,
   IValidationFromAPI,
-} from '@/types';
+} from '@/typings';
 
 export interface ISignInPageProps {}
 

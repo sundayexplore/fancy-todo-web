@@ -30,7 +30,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import moment from 'moment';
 
 // Types
-import { ITodo, ITodoValidations, ICustomValidator } from '@/types';
+import { ITodo, ITodoValidations, ICustomValidator } from '@/typings';
 
 // Utils
 import { todoAPI, CustomValidator, userAPI } from '@/utils';
