@@ -19,15 +19,15 @@ export default function todoReducer(
       };
 
     case 'UPDATE_TODO':
-      const copiedTodos = [...state.todos];
-      const updatedTodoIdx = copiedTodos.findIndex(
+      const copiedTodosFromUpdate = [...state.todos];
+      const updatedTodoIdx = copiedTodosFromUpdate.findIndex(
         (todo) => todo._id === action.payload.todo._id,
       );
-      copiedTodos[updatedTodoIdx] = action.payload.todo;
+      copiedTodosFromUpdate[updatedTodoIdx] = action.payload.todo;
 
       return {
         ...state,
-        todos: copiedTodos,
+        todos: copiedTodosFromUpdate,
       };
 
     case 'DELETE_TODO':
@@ -36,6 +36,15 @@ export default function todoReducer(
         todos: [...state.todos].filter(
           (todo) => todo._id !== action.payload.todoId,
         ),
+      };
+
+    case 'COMPLETE_TODO':
+      const todosAfterComplete = [...state.todos].filter(
+        (todo) => todo._id !== action.payload.todoId,
+      );
+      return {
+        ...state,
+        todos: todosAfterComplete,
       };
 
     default:

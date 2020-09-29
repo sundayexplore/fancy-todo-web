@@ -27,3 +27,10 @@ export const deleteTodo = (todoId: string | any): IAction => ({
     todoId,
   },
 });
+
+export const completeTodo = (todoId: string | any): IAction => ({
+  type: 'COMPLETE_TODO',
+  payload: {
+    todoId,
+  },
+});

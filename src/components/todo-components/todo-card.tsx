@@ -14,11 +14,13 @@ import {
   CardActions,
   CardActionArea,
   Button,
+  IconButton,
   TextField,
   Typography,
   Tooltip,
   Divider,
 } from '@material-ui/core';
+import { DoneOutline as DoneOutlineIcon } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import moment from 'moment';
 
@@ -26,15 +28,19 @@ import moment from 'moment';
 import { ITodo, ITodoValidations, ICustomValidator } from '@/types';
 
 // Utils
-import { todoAPI, CustomValidator } from '@/utils';
+import { todoAPI, CustomValidator, userAPI } from '@/utils';
 
 // Redux Actions
-import { addTodo, updateTodo, deleteTodo } from '@/redux/actions/todo-actions';
+import {
+  addTodo,
+  updateTodo,
+  deleteTodo,
+  completeTodo,
+} from '@/redux/actions/todo-actions';
 
 // Components
 import TodoDatePicker from './todo-date-picker';
 import TodoTimeForm from './todo-time-form';
-import { Duplex } from 'stream';
 
 export interface ITodoCardProps {
   todo?: ITodo;
@@ -315,6 +321,23 @@ export default function TodoCard({
     }
   };
 
+  const handleCompleteTodo = async (): Promise<void> => {
+    try {
+      setLoading(true);
+
+      const { data } = await todoAPI.patch(`/complete/${todo._id}`);
+
+      setLoading(false);
+      dispatch(completeTodo(data.todo._id));
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response) {
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
       <Card classes={{ root: classes.todoCard }}>
@@ -430,9 +453,13 @@ export default function TodoCard({
             </Tooltip>
           </CardActions>
         ) : (
-          <CardActions
-            classes={{ root: classes.todoCardActions }}
-          ></CardActions>
+          <CardActions classes={{ root: classes.todoCardActionsCenter }}>
+            <Tooltip arrow title={`Complete Todo`}>
+              <IconButton onClick={handleCompleteTodo}>
+                <DoneOutlineIcon fontSize={`large`} />
+              </IconButton>
+            </Tooltip>
+          </CardActions>
         )}
       </Card>
     </ClickAwayListener>
@@ -462,6 +489,13 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       display: 'flex',
       justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: theme.spacing(2),
+    },
+    todoCardActionsCenter: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
       alignItems: 'center',
       padding: theme.spacing(2),
     },
