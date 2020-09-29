@@ -23,6 +23,8 @@ export interface IUser {
   lastName: string;
   username: string;
   email: string;
+  verified: boolean;
+  profileImageURL: string;
 }
 
 export interface ISignInData {

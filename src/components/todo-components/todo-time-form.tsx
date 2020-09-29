@@ -21,6 +21,7 @@ export interface ITodoTimeFormProps {
   clearForm: () => void;
   mode: 'add' | 'update' | 'show';
   modeHandler: (mode: 'add' | 'update' | 'show') => void;
+  statusHandler: (status: 'set' | 'unset') => void;
 }
 
 export default function TodoTimeForm({
@@ -31,6 +32,7 @@ export default function TodoTimeForm({
   clearForm,
   mode,
   modeHandler,
+  statusHandler,
 }: ITodoTimeFormProps) {
   const classes = useStyles();
   const [
@@ -65,7 +67,7 @@ export default function TodoTimeForm({
   const handleHideTimeForm = (): void => {
     setTimeFormAnchorEl(null);
 
-    if (mode === 'add') {
+    if (status === 'unset') {
       clearForm();
     }
   };
@@ -75,11 +77,17 @@ export default function TodoTimeForm({
   ): void => {
     e.preventDefault();
 
-    if (!todo.dueTime || todo.dueTime.length <= 0) {
-      handleHideTimeForm();
+    if (todoErrors.dueTime !== null && todoErrors.dueTime.length > 0) {
+      return;
     } else {
-      handleHideTimeForm();
-      onComplete();
+      if (!todo.dueTime || todo.dueTime.length <= 0) {
+        handleHideTimeForm();
+        clearForm();
+        statusHandler('unset');
+      } else {
+        handleHideTimeForm();
+        onComplete();
+      }
     }
   };
 

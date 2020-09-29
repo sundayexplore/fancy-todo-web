@@ -293,6 +293,28 @@ export default function TodoCard({
     setModeState(mode);
   };
 
+  const handleTodoTimeStatus = (status: 'set' | 'unset'): void => {
+    switch (status) {
+      case 'set':
+        setTodoData({
+          ...todoData,
+          isTimeSet: true,
+        });
+        break;
+
+      case 'unset':
+        setTodoData({
+          ...todoData,
+          isTimeSet: false,
+          dueTime: '',
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
       <Card classes={{ root: classes.todoCard }}>
@@ -354,6 +376,7 @@ export default function TodoCard({
             clearForm={clearDueTimeForm}
             mode={modeState}
             modeHandler={handleChangeMode}
+            statusHandler={handleTodoTimeStatus}
           />
         </CardContent>
         {modeState === 'add' ? (
