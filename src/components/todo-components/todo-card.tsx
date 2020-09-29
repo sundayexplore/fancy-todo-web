@@ -19,8 +19,13 @@ import {
   Typography,
   Tooltip,
   Divider,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
-import { DoneOutline as DoneOutlineIcon } from '@material-ui/icons';
+import {
+  DoneOutline as DoneOutlineIcon,
+  MoreHoriz as MoreHorizIcon,
+} from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import moment from 'moment';
 
@@ -73,6 +78,9 @@ export default function TodoCard({
     name: null,
     dueTime: null,
   });
+  const [todoMenuButton, setTodoMenuButton] = useState<HTMLElement | null>(
+    null,
+  );
 
   useEffect(() => {
     switch (modeState) {
@@ -338,6 +346,32 @@ export default function TodoCard({
     }
   };
 
+  const handleShowTodoMenu = (e: MouseEvent<HTMLButtonElement>): void => {
+    setTodoMenuButton(e.currentTarget);
+  };
+
+  const handleHideTodoMenu = (): void => {
+    setTodoMenuButton(null);
+  };
+
+  const handleDeleteTodo = async (): Promise<void> => {
+    try {
+      setLoading(true);
+
+      const { data } = await todoAPI.delete(`/${todo._id}`);
+
+      setLoading(false);
+      dispatch(deleteTodo(data.todo._id));
+      handleHideTodoMenu();
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response) {
+        console.log(err.response.data.message);
+      }
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
       <Card classes={{ root: classes.todoCard }}>
@@ -389,18 +423,43 @@ export default function TodoCard({
             </CardActionArea>
           )}
 
-          <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
+          <div className={classes.todoPanelWrapper}>
+            <div className={classes.todoPanel}>
+              <TodoDatePicker todo={todoData} onChange={handleChangeDueDate} />
 
-          <TodoTimeForm
-            todo={todoData}
-            todoErrors={todoErrors}
-            onChange={handleChangeDueTime}
-            onComplete={handleSetDueTime}
-            clearForm={clearDueTimeForm}
-            mode={modeState}
-            modeHandler={handleChangeMode}
-            statusHandler={handleTodoTimeStatus}
-          />
+              <TodoTimeForm
+                todo={todoData}
+                todoErrors={todoErrors}
+                onChange={handleChangeDueTime}
+                onComplete={handleSetDueTime}
+                clearForm={clearDueTimeForm}
+                mode={modeState}
+                modeHandler={handleChangeMode}
+                statusHandler={handleTodoTimeStatus}
+              />
+            </div>
+
+            {mode !== 'add' ? (
+              <div className={classes.todoOptionsWrapper}>
+                <IconButton size={`small`} onClick={handleShowTodoMenu}>
+                  <MoreHorizIcon />
+                </IconButton>
+
+                <Menu
+                  anchorEl={todoMenuButton}
+                  open={Boolean(todoMenuButton)}
+                  onClose={handleHideTodoMenu}
+                  keepMounted
+                >
+                  <MenuItem dense onClick={handleDeleteTodo}>
+                    Delete Todo
+                  </MenuItem>
+                </Menu>
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
         </CardContent>
         {modeState === 'add' ? (
           <CardActions classes={{ root: classes.todoCardActions }}>
@@ -504,5 +563,29 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: 'text',
     },
     todoName: {},
+    todoPanelWrapper: {
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: theme.spacing(1),
+      '& > *': {
+        width: '100%',
+        height: '100%',
+      },
+    },
+    todoPanel: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
+    },
+    todoOptionsWrapper: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   }),
 );
