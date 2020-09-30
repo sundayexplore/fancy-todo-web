@@ -79,8 +79,6 @@ export default function UserHeaderMenu({}: IUserHeaderMenuProps) {
         onClose={handleHideMenu}
       >
         <MenuList>
-          <MenuItem>Account</MenuItem>
-          <MenuItem>Settings</MenuItem>
           <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
         </MenuList>
       </Popover>
