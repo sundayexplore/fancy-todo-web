@@ -47,18 +47,18 @@ export default function AppHeader({}: IAppHeaderProps) {
   const handleMenuOpen = () => setOpenMenu(true);
   const handleMenuClose = () => setOpenMenu(false);
 
-  const handleTodoCategoryChange = (category: 'today') =>
+  const handleTodoCategoryChange = (category: string) =>
     dispatch(setSelectedTodoCategory(category));
 
   const handleSignOut = async () => {
     try {
-      const { } = await userAPI.post('/signout');
+      const {} = await userAPI.post('/signout');
       localStorage.clear();
       await router.push('/signin');
     } catch (err) {
       // handle here
     }
-  }
+  };
 
   return (
     <section className={classes.appHeaderWrapper}>
@@ -80,7 +80,9 @@ export default function AppHeader({}: IAppHeaderProps) {
           <Typography variant={`h6`} className={classes.headerTitle}>
             Fancy Todo
           </Typography>
-          <Button color={`inherit`} onClick={handleSignOut}>Sign Out</Button>
+          <Button color={`inherit`} onClick={handleSignOut}>
+            Sign Out
+          </Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -103,12 +105,12 @@ export default function AppHeader({}: IAppHeaderProps) {
         </div>
         <Divider />
         <List>
-          {['Today'].map((category) => (
+          {['Today', 'Upcoming'].map((category) => (
             <ListItem
               button
               key={category}
-              onClick={() => handleTodoCategoryChange('today')}
-              selected={selectedTodoCategory === 'today'}
+              onClick={() => handleTodoCategoryChange(category)}
+              selected={selectedTodoCategory === category}
             >
               <ListItemText primary={category} />
             </ListItem>

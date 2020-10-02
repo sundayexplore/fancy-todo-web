@@ -1,19 +1,19 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import moment from 'moment';
 
-import { IRootState } from '@/typings';
 import TodoCard from './todo-card';
 import BlankTodoCard from './blank-todo-card';
 
-export interface ITodoListProps {}
+import { ITodo } from '@/typings';
 
-export default function TodoList({}: ITodoListProps) {
+export interface ITodoListProps {
+  todos: ITodo[];
+}
+
+export default function TodoList({ todos = [] as ITodo[] }: ITodoListProps) {
   const classes = useStyles();
-  // const { selectedTodoCategory } = useSelector((state: IRootState) => state.current);
-  const { todos } = useSelector((state: IRootState) => state.todo);
 
   return (
     <Grid
@@ -25,11 +25,7 @@ export default function TodoList({}: ITodoListProps) {
       alignItems={`center`}
     >
       {todos
-        .filter(
-          (todo) =>
-            todo.completed === false &&
-            moment(todo.due).isSame(moment(), 'day'),
-        )
+        .filter((todo) => todo.completed === false)
         .map((todo) => (
           <Grid item key={todo._id}>
             <TodoCard todo={todo} mode={`show`} />

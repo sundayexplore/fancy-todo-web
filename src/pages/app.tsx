@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
+import moment from 'moment';
 
 import { Loading, AppLayout, TodoList } from '@/components';
 import { userAPI } from '@/utils';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
-import { setTodos } from '@/redux/actions/todo-actions';
+import { setTodos as setTodosRedux } from '@/redux/actions/todo-actions';
 import { setWarning, setError } from '@/redux/actions/snackbar-actions';
+
+import { IRootState, ITodo } from '@/typings';
 
 export interface IAppProps {}
 
@@ -20,13 +23,20 @@ export default function App({}: IAppProps) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(true);
+  const [todos, setTodos] = useState<ITodo[]>([] as ITodo[]);
+  const { selectedTodoCategory } = useSelector(
+    (state: IRootState) => state.current,
+  );
+  const { todos: todosFromRedux } = useSelector(
+    (state: IRootState) => state.todo,
+  );
 
   const syncWithUseCallback = useCallback(async (): Promise<void> => {
     try {
       const { data } = await userAPI.get('/sync');
 
       dispatch(setUser(data.user));
-      dispatch(setTodos(data.todos));
+      dispatch(setTodosRedux(data.todos));
       setLoading(false);
     } catch (err) {
       if (err.response) {
@@ -37,7 +47,7 @@ export default function App({}: IAppProps) {
                 await userAPI.post('/refresh');
                 const { data: syncData } = await userAPI.get('/sync');
                 dispatch(setUser(syncData.user));
-                dispatch(setTodos(syncData.Todos));
+                dispatch(setTodosRedux(syncData.Todos));
                 setLoading(false);
               } else {
                 setLoading(false);
@@ -73,13 +83,33 @@ export default function App({}: IAppProps) {
     syncWithUseCallback();
   }, []);
 
+  useEffect(() => {
+    switch (selectedTodoCategory.toLowerCase()) {
+      case 'today':
+        setTodos(
+          [...todosFromRedux].filter((todo) =>
+            moment(todo.due).isSame(moment(), 'day'),
+          ),
+        );
+        break;
+
+      case 'upcoming':
+        setTodos(
+          [...todosFromRedux].filter((todo) =>
+            moment(todo.due).isAfter(moment(), 'day'),
+          ),
+        );
+        break;
+    }
+  }, [selectedTodoCategory, todosFromRedux]);
+
   return (
     <>
       {loading ? (
         <Loading />
       ) : (
         <AppLayout>
-          <TodoList />
+          <TodoList todos={todos} />
         </AppLayout>
       )}
     </>

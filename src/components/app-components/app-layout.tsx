@@ -120,25 +120,8 @@ export default function AppLayout({ children }: IAppLayoutProps) {
   const handleMenuOpen = (): void => setOpenMenu(true);
   const handleMenuClose = (): void => setOpenMenu(false);
 
-  const handleTodoCategoryChange = (category: 'today'): void => {
+  const handleTodoCategoryChange = (category: string): void => {
     dispatch(setSelectedTodoCategory(category));
-  };
-
-  const handleSignOut = async (): Promise<void> => {
-    try {
-      const { data } = await userAPI.post('/signout');
-      localStorage.clear();
-      dispatch(setSuccess(data.message));
-      await router.push('/signin');
-    } catch (err) {
-      if (err.response) {
-        if (err.response.data) {
-          dispatch(setError(err.response.data.message, err.response.data.name));
-        } else {
-          dispatch(setError('Unknown error has occured!'));
-        }
-      }
-    }
   };
 
   return (
@@ -163,9 +146,6 @@ export default function AppLayout({ children }: IAppLayoutProps) {
             <Typography variant={`h6`} className={classes.headerTitle}>
               Fancy Todo
             </Typography>
-            {/* <Button color={`inherit`} onClick={handleSignOut}>
-              Sign Out
-            </Button> */}
             <UserHeaderMenu />
           </Toolbar>
         </AppBar>
@@ -189,12 +169,14 @@ export default function AppLayout({ children }: IAppLayoutProps) {
           </div>
           <Divider />
           <List>
-            {['Today'].map((category) => (
+            {['Today', 'Upcoming'].map((category) => (
               <ListItem
                 button
-                key={category}
-                onClick={() => handleTodoCategoryChange('today')}
-                selected={selectedTodoCategory === 'today'}
+                key={category.toLowerCase()}
+                onClick={() => handleTodoCategoryChange(category.toLowerCase())}
+                selected={
+                  selectedTodoCategory.toLowerCase() === category.toLowerCase()
+                }
               >
                 <ListItemText primary={category} />
               </ListItem>
