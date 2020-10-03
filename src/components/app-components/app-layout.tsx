@@ -6,7 +6,6 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   IconButton,
   Drawer,
   CssBaseline,
@@ -29,12 +28,10 @@ import clsx from 'clsx';
 import { setSelectedTodoCategory } from '@/redux/actions/current-actions';
 import {
   resetSnackbar,
-  setSuccess,
-  setError,
 } from '@/redux/actions/snackbar-actions';
 
 // Utils
-import { userAPI } from '@/utils';
+import { capitalize } from '@/utils';
 
 // Types
 import { IRootState, ISnackbarOptions } from '@/typings';
@@ -51,7 +48,6 @@ export default function AppLayout({ children }: IAppLayoutProps) {
   const theme = useTheme();
   const router = useRouter();
   const dispatch = useDispatch();
-  const { currentUser } = useSelector((state: IRootState) => state.user);
   const { selectedTodoCategory } = useSelector(
     (state: IRootState) => state.current,
   );
@@ -126,7 +122,7 @@ export default function AppLayout({ children }: IAppLayoutProps) {
 
   return (
     <>
-      <CustomHead title={currentUser.username} />
+      <CustomHead title={capitalize(selectedTodoCategory)} />
       <section className={classes.appLayoutWrapper}>
         <CssBaseline />
         <AppBar
