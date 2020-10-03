@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useCookies } from 'react-cookie';
-import moment from 'moment';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+import { Calendar } from '@material-ui/pickers';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import moment, { Moment } from 'moment';
 
 import { Loading, AppLayout, TodoList } from '@/components';
 import { userAPI } from '@/utils';
@@ -16,9 +19,6 @@ import { setWarning, setError } from '@/redux/actions/snackbar-actions';
 // Typings
 import { IRootState, ITodo } from '@/typings';
 
-// Utils
-import { capitalize } from '@/utils';
-
 export interface IAppProps {}
 
 export default function App({}: IAppProps) {
@@ -28,6 +28,9 @@ export default function App({}: IAppProps) {
   const classes = useStyles();
   const [loading, setLoading] = useState<boolean>(true);
   const [todos, setTodos] = useState<ITodo[]>([] as ITodo[]);
+  const [currentDate, setCurrentDate] = useState<
+    Moment | MaterialUiPickersDate
+  >(moment());
   const { selectedTodoCategory } = useSelector(
     (state: IRootState) => state.current,
   );
@@ -107,25 +110,81 @@ export default function App({}: IAppProps) {
     }
   }, [selectedTodoCategory, todosFromRedux]);
 
-  const decideRender = (): JSX.Element => {
+  const onChangeDate = (date: MaterialUiPickersDate) => {
+    if (date && date!.isValid()) {
+      setCurrentDate(date);
+
+      setTodos(
+        [...todosFromRedux].filter((todo) =>
+          moment(todo.due).isSame(date, 'day'),
+        ),
+      );
+    }
+  };
+
+  const decideRender = (): JSX.Element | undefined => {
     const overdueTodos = todosFromRedux.filter((todo) =>
       moment(todo.due).isBefore(moment(), 'day'),
     );
 
-    if (overdueTodos.length > 0 && selectedTodoCategory === 'today') {
-      return (
-        <>
-          <TodoList
-            header={capitalize('overdue')}
-            todos={overdueTodos}
-            addTodoCard={false}
-          />
-          <TodoList header={capitalize(selectedTodoCategory)} todos={todos} />
-        </>
-      );
-    }
+    switch (selectedTodoCategory.toLowerCase()) {
+      case 'today':
+        if (overdueTodos.length > 0) {
+          return (
+            <>
+              <TodoList
+                category={'overdue'}
+                todos={overdueTodos}
+                addTodoCard={false}
+              />
 
-    return <TodoList header={capitalize(selectedTodoCategory)} todos={todos} />;
+              <TodoList category={selectedTodoCategory} todos={todos} />
+            </>
+          );
+        } else {
+          return <TodoList category={selectedTodoCategory} todos={todos} />;
+        }
+
+      case 'upcoming':
+        return (
+          <Grid container spacing={8}>
+            <Grid item>
+              <Calendar
+                date={currentDate}
+                onChange={onChangeDate}
+                minDate={moment()}
+              />
+            </Grid>
+
+            <Grid item>
+              {overdueTodos.length > 0 ? (
+                <>
+                  <TodoList
+                    category={'overdue'}
+                    todos={overdueTodos}
+                    addTodoCard={false}
+                  />
+
+                  <TodoList
+                    category={selectedTodoCategory}
+                    todos={todos}
+                    currentDate={currentDate}
+                  />
+                </>
+              ) : (
+                <TodoList
+                  category={selectedTodoCategory}
+                  todos={todos}
+                  currentDate={currentDate}
+                />
+              )}
+            </Grid>
+          </Grid>
+        );
+
+      default:
+        return <TodoList category={selectedTodoCategory} todos={todos} />;
+    }
   };
 
   return <>{loading ? <Loading /> : <AppLayout>{decideRender()}</AppLayout>}</>;

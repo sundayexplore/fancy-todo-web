@@ -1,39 +1,72 @@
-import React, { ComponentType } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Grid, Typography } from '@material-ui/core';
+import React from 'react';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Grid, Typography, Divider } from '@material-ui/core';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import moment, { Moment } from 'moment';
 
 import TodoCard from './todo-card';
 import BlankTodoCard from './blank-todo-card';
 
+// Typings
 import { ITodo } from '@/typings';
+
+// Utils
+import { capitalize } from '@/utils';
 
 export interface ITodoListProps {
   todos: ITodo[];
-  header: string | ComponentType;
+  category: 'today' | 'upcoming' | string;
+  currentDate?: Moment | MaterialUiPickersDate;
   addTodoCard?: boolean;
 }
 
 export default function TodoList({
-  todos = [] as ITodo[],
+  todos,
+  category,
+  currentDate = moment(),
   addTodoCard = true,
-  header: Header,
 }: ITodoListProps) {
   const classes = useStyles();
 
-  const renderHeader = () => {
-    if ((Header as string).length > 0) {
-      return (
-        <Grid item>
-          <Typography>{Header}</Typography>
-        </Grid>
-      );
-    }
+  const renderHeader = (): JSX.Element => {
+    switch (category.toLowerCase()) {
+      case 'today':
+        return (
+          <Grid item classes={{ root: classes.todoListHeader }}>
+            <Typography variant={`h4`} gutterBottom>
+              {capitalize(category)}
 
-    return (
-      <Grid item>
-        <Header />
-      </Grid>
-    );
+              <Typography color={`textSecondary`}>
+                {moment().format('dddd, MMMM Do YYYY')}
+              </Typography>
+            </Typography>
+
+            <Divider />
+          </Grid>
+        );
+
+      case 'upcoming':
+        return (
+          <Grid item classes={{ root: classes.todoListHeader }}>
+            <Typography variant={`h4`} gutterBottom>
+              {capitalize(category)}
+            </Typography>
+
+            <Divider />
+          </Grid>
+        );
+
+      default:
+        return (
+          <Grid item classes={{ root: classes.todoListHeader }}>
+            <Typography variant={`h4`} gutterBottom>
+              {capitalize(category)}
+            </Typography>
+
+            <Divider />
+          </Grid>
+        );
+    }
   };
 
   return (
@@ -64,7 +97,7 @@ export default function TodoList({
 
         {addTodoCard ? (
           <Grid item>
-            <BlankTodoCard />
+            <BlankTodoCard currentDate={currentDate} />
           </Grid>
         ) : (
           ''
@@ -74,8 +107,11 @@ export default function TodoList({
   );
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     todoListWrapper: {},
+    todoListHeader: {
+      paddingBottom: theme.spacing(2),
+    },
   }),
 );

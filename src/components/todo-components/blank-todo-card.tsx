@@ -9,12 +9,18 @@ import {
 } from '@material-ui/core';
 import { Add as AddIcon } from '@material-ui/icons';
 import { grey } from '@material-ui/core/colors';
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import moment, { Moment } from 'moment';
 
 import TodoCard from './todo-card';
 
-export interface IBlankTodoCardProps {}
+export interface IBlankTodoCardProps {
+  currentDate?: Moment | MaterialUiPickersDate;
+}
 
-export default function BlankTodoCard({}: IBlankTodoCardProps) {
+export default function BlankTodoCard({
+  currentDate = moment(),
+}: IBlankTodoCardProps) {
   const classes = useStyles();
   const [showAddTodoCard, setShowAddTodoCard] = useState<boolean>(false);
 
@@ -35,6 +41,7 @@ export default function BlankTodoCard({}: IBlankTodoCardProps) {
       {showAddTodoCard ? (
         <TodoCard
           mode={`add`}
+          defaultDate={currentDate}
           onCancel={handleCancelAddTodo}
           onComplete={handleCompleteAddTodo}
         />

@@ -27,7 +27,7 @@ import {
   MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 // Types
 import { ITodo, ITodoValidations, ICustomValidator } from '@/typings';
@@ -49,6 +49,7 @@ import TodoTimeForm from './todo-time-form';
 
 export interface ITodoCardProps {
   todo?: ITodo;
+  defaultDate?: Moment | MaterialUiPickersDate;
   mode?: 'add' | 'update' | 'show';
   onCancel?: () => void;
   onComplete?: () => void;
@@ -56,6 +57,7 @@ export interface ITodoCardProps {
 
 export default function TodoCard({
   todo = {} as ITodo,
+  defaultDate = moment(),
   mode = 'add',
   onCancel,
   onComplete = () => {},
@@ -65,7 +67,7 @@ export default function TodoCard({
   const [modeState, setModeState] = useState<'add' | 'update' | 'show'>(mode);
   const [todoData, setTodoData] = useState<ITodo>({
     name: '',
-    due: moment(),
+    due: defaultDate,
     isTimeSet: false,
     dueDate: '',
     dueTime: '',
