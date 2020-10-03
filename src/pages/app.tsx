@@ -13,7 +13,11 @@ import { setUser } from '@/redux/actions/user-actions';
 import { setTodos as setTodosRedux } from '@/redux/actions/todo-actions';
 import { setWarning, setError } from '@/redux/actions/snackbar-actions';
 
+// Typings
 import { IRootState, ITodo } from '@/typings';
+
+// Utils
+import { capitalize } from '@/utils';
 
 export interface IAppProps {}
 
@@ -79,11 +83,11 @@ export default function App({}: IAppProps) {
     }
   }, []);
 
-  useEffect(() => {
+  useEffect((): void => {
     syncWithUseCallback();
   }, []);
 
-  useEffect(() => {
+  useEffect((): void => {
     switch (selectedTodoCategory.toLowerCase()) {
       case 'today':
         setTodos(
@@ -103,17 +107,28 @@ export default function App({}: IAppProps) {
     }
   }, [selectedTodoCategory, todosFromRedux]);
 
-  return (
-    <>
-      {loading ? (
-        <Loading />
-      ) : (
-        <AppLayout>
-          <TodoList todos={todos} />
-        </AppLayout>
-      )}
-    </>
-  );
+  const decideRender = (): JSX.Element => {
+    const overdueTodos = todosFromRedux.filter((todo) =>
+      moment(todo.due).isBefore(moment(), 'day'),
+    );
+
+    if (overdueTodos.length > 0 && selectedTodoCategory === 'today') {
+      return (
+        <>
+          <TodoList
+            header={capitalize('overdue')}
+            todos={overdueTodos}
+            addTodoCard={false}
+          />
+          <TodoList header={capitalize(selectedTodoCategory)} todos={todos} />
+        </>
+      );
+    }
+
+    return <TodoList header={capitalize(selectedTodoCategory)} todos={todos} />;
+  };
+
+  return <>{loading ? <Loading /> : <AppLayout>{decideRender()}</AppLayout>}</>;
 }
 
 const useStyles = makeStyles(() => createStyles({}));
