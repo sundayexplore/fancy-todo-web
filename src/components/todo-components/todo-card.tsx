@@ -47,6 +47,7 @@ import { setSuccess, setError } from '@/redux/actions/snackbar-actions';
 // Components
 import TodoDatePicker from './todo-date-picker';
 import TodoTimeForm from './todo-time-form';
+import TodoPriorityPicker from './todo-priority-picker';
 
 export interface ITodoCardProps {
   todo?: ITodo;
@@ -265,25 +266,29 @@ export default function TodoCard({
     const { name, isTimeSet, priority, position, completed } = todoData;
 
     try {
-      if (checkTodoErrors()) {
-        const { data } = await todoAPI.put(`/${todo._id}`, {
-          name,
-          due: date?.toISOString(),
-          isTimeSet,
-          priority,
-          position,
-          completed,
-        });
+      if (mode !== 'add') {
+        if (checkTodoErrors()) {
+          const { data } = await todoAPI.put(`/${todo._id}`, {
+            name,
+            due: date?.toISOString(),
+            isTimeSet,
+            priority,
+            position,
+            completed,
+          });
 
-        setLoading(false);
+          setLoading(false);
 
-        dispatch(setSuccess(data.message));
-        dispatch(updateTodo(data.todo));
+          dispatch(setSuccess(data.message));
+          dispatch(updateTodo(data.todo));
 
-        onComplete();
+          onComplete();
+        } else {
+          setLoading(false);
+          // handle here
+        }
       } else {
         setLoading(false);
-        // handle here
       }
     } catch (err) {
       setLoading(false);
@@ -423,6 +428,50 @@ export default function TodoCard({
     }
   };
 
+  const handleChangePriority = async (priority: number): Promise<void> => {
+    setLoading(true);
+
+    setTodoData({
+      ...todoData,
+      priority,
+    });
+
+    const { name, due, isTimeSet, position, completed } = todoData;
+
+    try {
+      if (mode !== 'add') {
+        if (checkTodoErrors()) {
+          const { data } = await todoAPI.put(`/${todo._id}`, {
+            name,
+            due,
+            isTimeSet,
+            priority,
+            position,
+            completed,
+          });
+
+          setLoading(false);
+
+          dispatch(setSuccess(data.message));
+          dispatch(updateTodo(data.todo));
+
+          onComplete();
+        } else {
+          setLoading(false);
+          // handle here
+        }
+      } else {
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
+      }
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={onCancel || handleCancelLocal}>
       <Card classes={{ root: classes.todoCard }}>
@@ -487,6 +536,11 @@ export default function TodoCard({
                 mode={modeState}
                 modeHandler={handleChangeMode}
                 statusHandler={handleTodoTimeStatus}
+              />
+
+              <TodoPriorityPicker
+                todo={todoData}
+                onTodoPriorityChange={handleChangePriority}
               />
             </div>
 

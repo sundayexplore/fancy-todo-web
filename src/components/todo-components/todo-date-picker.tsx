@@ -62,6 +62,7 @@ export default function TodoDatePicker({
     }
 
     onChange(date);
+    handleHideDatePicker();
   };
 
   return (
