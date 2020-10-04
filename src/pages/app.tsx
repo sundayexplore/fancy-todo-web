@@ -103,7 +103,7 @@ export default function App({}: IAppProps) {
       case 'upcoming':
         setTodos(
           [...todosFromRedux].filter((todo) =>
-            moment(todo.due).isAfter(moment(), 'day'),
+            moment(todo.due).isSame(currentDate, 'day'),
           ),
         );
         break;
@@ -147,8 +147,13 @@ export default function App({}: IAppProps) {
 
       case 'upcoming':
         return (
-          <Grid container spacing={8}>
-            <Grid item>
+          <Grid
+            container
+            spacing={8}
+            justify={`space-between`}
+            alignItems={`stretch`}
+          >
+            <Grid item xs={3}>
               <Calendar
                 date={currentDate}
                 onChange={onChangeDate}
@@ -156,7 +161,7 @@ export default function App({}: IAppProps) {
               />
             </Grid>
 
-            <Grid item>
+            <Grid item xs={9}>
               {overdueTodos.length > 0 ? (
                 <>
                   <TodoList

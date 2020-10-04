@@ -1,17 +1,19 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { Button, Popover, Tooltip } from '@material-ui/core';
+import { Button, Popover, Tooltip, CardActions } from '@material-ui/core';
 import { Today as TodayIcon } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { Calendar } from '@material-ui/pickers';
+import { red } from '@material-ui/core/colors';
 import moment, { Moment } from 'moment';
+import clsx from 'clsx';
 
 // Types
 import { ITodo } from '@/typings';
 
 export interface ITodoDatePickerProps {
   todo: ITodo;
-  onChange: (date: MaterialUiPickersDate) => void;
+  onChange: (date: MaterialUiPickersDate) => void | Promise<void>;
 }
 
 export default function TodoDatePicker({
@@ -32,7 +34,9 @@ export default function TodoDatePicker({
 
     setTooltipText(todoDue.format('dddd, MMMM Do YYYY'));
 
-    if (todoDue.isSame(moment(), 'day')) {
+    if (todoDue.isSame(moment().subtract(1, 'day'), 'day')) {
+      setDateHeadline('Yesterday');
+    } else if (todoDue.isSame(moment(), 'day')) {
       setDateHeadline('Today');
     } else if (todoDue.isSame(moment().add(1, 'day'), 'day')) {
       setDateHeadline('Tomorrow');
@@ -49,15 +53,28 @@ export default function TodoDatePicker({
     setDatePickerAnchorEl(null);
   };
 
-  const onChangeDueDate = (date: MaterialUiPickersDate) => {
+  const onChangeDueDate = (
+    date: MaterialUiPickersDate,
+    isFinish?: boolean,
+  ): void => {
+    if (!isFinish) {
+      return;
+    }
+
     onChange(date);
-    handleHideDatePicker();
   };
 
   return (
     <div className={classes.wrapper}>
       <Tooltip arrow title={tooltipText}>
-        <Button onClick={handleShowDatePicker} startIcon={<TodayIcon />} size={`small`}>
+        <Button
+          className={clsx({
+            [classes.overdueButton]: moment(todo.due).isBefore(moment(), 'day'),
+          })}
+          onClick={handleShowDatePicker}
+          startIcon={<TodayIcon />}
+          size={`small`}
+        >
           {dateHeadline}
         </Button>
       </Tooltip>
@@ -76,7 +93,11 @@ export default function TodoDatePicker({
         }}
       >
         <Calendar
-          date={todo.due as Moment}
+          date={
+            (todo.due as Moment).isBefore(moment(), 'day')
+              ? moment()
+              : (todo.due as Moment)
+          }
           onChange={onChangeDueDate}
           minDate={moment()}
         />
@@ -89,6 +110,9 @@ const useStyles = makeStyles(() =>
   createStyles({
     wrapper: {
       display: 'flex',
+    },
+    overdueButton: {
+      color: red[500],
     },
   }),
 );

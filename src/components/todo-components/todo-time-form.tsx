@@ -30,8 +30,8 @@ export default function TodoTimeForm({
   onChange,
   onComplete,
   clearForm,
-  mode,
-  modeHandler,
+  // mode,
+  // modeHandler,
   statusHandler,
 }: ITodoTimeFormProps) {
   const classes = useStyles();
@@ -59,9 +59,9 @@ export default function TodoTimeForm({
   const handleShowTimeForm = (e: MouseEvent<HTMLButtonElement>): void => {
     setTimeFormAnchorEl(e.currentTarget);
 
-    if (mode === 'show') {
-      modeHandler('update');
-    }
+    // if (mode === 'show') {
+    //   modeHandler('update');
+    // }
   };
 
   const handleHideTimeForm = (): void => {

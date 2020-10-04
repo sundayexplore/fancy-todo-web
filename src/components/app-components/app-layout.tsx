@@ -11,6 +11,7 @@ import {
   CssBaseline,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
   Divider,
   useTheme,
@@ -21,14 +22,14 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  Today as TodayIcon,
+  DateRange as DateRangeIcon,
 } from '@material-ui/icons';
 import clsx from 'clsx';
 
 // Redux Actions
 import { setSelectedTodoCategory } from '@/redux/actions/current-actions';
-import {
-  resetSnackbar,
-} from '@/redux/actions/snackbar-actions';
+import { resetSnackbar } from '@/redux/actions/snackbar-actions';
 
 // Utils
 import { capitalize } from '@/utils';
@@ -174,6 +175,15 @@ export default function AppLayout({ children }: IAppLayoutProps) {
                   selectedTodoCategory.toLowerCase() === category.toLowerCase()
                 }
               >
+                <ListItemIcon>
+                  {category.toLowerCase() === 'today' ? (
+                    <TodayIcon />
+                  ) : category.toLowerCase() === 'upcoming' ? (
+                    <DateRangeIcon />
+                  ) : (
+                    ''
+                  )}
+                </ListItemIcon>
                 <ListItemText primary={category} />
               </ListItem>
             ))}

@@ -84,6 +84,19 @@ export default function TodoCard({
     null,
   );
 
+  const clearTodoData = (): void => {
+    setTodoData({
+      name: '',
+      due: moment(),
+      isTimeSet: false,
+      dueDate: '',
+      dueTime: '',
+      priority: 0,
+      position: null,
+      completed: false,
+    });
+  };
+
   useEffect(() => {
     switch (modeState) {
       case 'add':
@@ -104,18 +117,11 @@ export default function TodoCard({
     }
   }, [modeState]);
 
-  const clearTodoData = (): void => {
-    setTodoData({
-      name: '',
-      due: moment(),
-      isTimeSet: false,
-      dueDate: '',
-      dueTime: '',
-      priority: 0,
-      position: null,
-      completed: false,
-    });
-  };
+  useEffect(() => {
+    return () => {
+      clearTodoData();
+    };
+  }, []);
 
   const checkTodoErrors = (): boolean => {
     const { name, dueTime } = todoData;
@@ -182,8 +188,8 @@ export default function TodoCard({
         });
 
         setLoading(false);
+        
         dispatch(addTodo(data.todo));
-        clearTodoData();
         onComplete();
       } else {
         setLoading(false);
@@ -219,8 +225,6 @@ export default function TodoCard({
         setLoading(false);
 
         dispatch(updateTodo(data.todo));
-        clearTodoData();
-        setModeState('show');
         onComplete();
       } else {
         setLoading(false);
@@ -243,11 +247,35 @@ export default function TodoCard({
     setModeState('show');
   };
 
-  const handleChangeDueDate = (date: MaterialUiPickersDate): void => {
+  const handleChangeDueDate = async (
+    date: MaterialUiPickersDate,
+  ): Promise<void> => {
+    setLoading(true);
+
     setTodoData({
       ...todoData,
       due: date,
     });
+
+    const { name, isTimeSet, priority, position, completed } = todoData;
+
+    try {
+      const { data } = await todoAPI.put(`/${todo._id}`, {
+        name,
+        due: date?.toISOString(),
+        isTimeSet,
+        priority,
+        position,
+        completed,
+      });
+
+      setLoading(false);
+
+      dispatch(updateTodo(data.todo));
+      onComplete();
+    } catch (err) {
+      setLoading(false);
+    }
   };
 
   const handleChangeDueTime = (
@@ -572,10 +600,6 @@ const useStyles = makeStyles((theme: Theme) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingTop: theme.spacing(1),
-      '& > *': {
-        width: '100%',
-        height: '100%',
-      },
     },
     todoPanel: {
       display: 'flex',

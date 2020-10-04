@@ -50,6 +50,10 @@ export default function TodoList({
           <Grid item classes={{ root: classes.todoListHeader }}>
             <Typography variant={`h4`} gutterBottom>
               {capitalize(category)}
+
+              <Typography color={`textSecondary`}>
+                {currentDate!.format('dddd, MMMM Do YYYY')}
+              </Typography>
             </Typography>
 
             <Divider />
@@ -71,6 +75,7 @@ export default function TodoList({
 
   return (
     <Grid
+      classes={{ root: classes.todoListWrapper }}
       container
       direction={`column`}
       wrap={`nowrap`}
@@ -109,7 +114,10 @@ export default function TodoList({
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    todoListWrapper: {},
+    todoListWrapper: {
+      // paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(6),
+    },
     todoListHeader: {
       paddingBottom: theme.spacing(2),
     },
