@@ -30,6 +30,17 @@ export default function TodoList({
 
   const renderHeader = (): JSX.Element => {
     switch (category.toLowerCase()) {
+      case 'inbox':
+        return (
+          <Grid item classes={{ root: classes.todoListHeader }}>
+            <Typography variant={`h4`} gutterBottom>
+              {capitalize(category)}
+            </Typography>
+
+            <Divider />
+          </Grid>
+        );
+
       case 'today':
         return (
           <Grid item classes={{ root: classes.todoListHeader }}>

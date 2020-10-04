@@ -22,6 +22,7 @@ import {
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
+  Inbox as InboxIcon,
   Today as TodayIcon,
   DateRange as DateRangeIcon,
 } from '@material-ui/icons';
@@ -166,7 +167,7 @@ export default function AppLayout({ children }: IAppLayoutProps) {
           </div>
           <Divider />
           <List>
-            {['Today', 'Upcoming'].map((category) => (
+            {['Inbox', 'Today', 'Upcoming'].map((category) => (
               <ListItem
                 button
                 key={category.toLowerCase()}
@@ -176,7 +177,9 @@ export default function AppLayout({ children }: IAppLayoutProps) {
                 }
               >
                 <ListItemIcon>
-                  {category.toLowerCase() === 'today' ? (
+                  {category.toLowerCase() === 'inbox' ? (
+                    <InboxIcon />
+                  ) : category.toLowerCase() === 'today' ? (
                     <TodayIcon />
                   ) : category.toLowerCase() === 'upcoming' ? (
                     <DateRangeIcon />
@@ -199,7 +202,11 @@ export default function AppLayout({ children }: IAppLayoutProps) {
         </main>
       </section>
 
-      <Snackbar open={snackbarOptions.open} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+      <Snackbar
+        open={snackbarOptions.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
         <Alert
           severity={snackbarOptions.severity}
           onClose={handleCloseAlert}

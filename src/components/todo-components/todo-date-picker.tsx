@@ -4,7 +4,7 @@ import { Button, Popover, Tooltip, CardActions } from '@material-ui/core';
 import { Today as TodayIcon } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
 import { Calendar } from '@material-ui/pickers';
-import { red } from '@material-ui/core/colors';
+import { red, green, orange, purple } from '@material-ui/core/colors';
 import moment, { Moment } from 'moment';
 import clsx from 'clsx';
 
@@ -70,6 +70,16 @@ export default function TodoDatePicker({
         <Button
           className={clsx({
             [classes.overdueButton]: moment(todo.due).isBefore(moment(), 'day'),
+            [classes.todayButton]: moment(todo.due).isSame(moment(), 'day'),
+            [classes.tomorrowButton]: moment(todo.due).isSame(
+              moment().add(1, 'day'),
+              'day',
+            ),
+            [classes.sameWeekButton]:
+              !moment(todo.due).isBefore(moment(), 'day') &&
+              !moment(todo.due).isSame(moment(), 'day') &&
+              !moment(todo.due).isSame(moment().add(1, 'day'), 'day') &&
+              moment(todo.due).isSame(moment(), 'week'),
           })}
           onClick={handleShowDatePicker}
           startIcon={<TodayIcon />}
@@ -113,6 +123,15 @@ const useStyles = makeStyles(() =>
     },
     overdueButton: {
       color: red[500],
+    },
+    todayButton: {
+      color: green[500],
+    },
+    tomorrowButton: {
+      color: orange[500],
+    },
+    sameWeekButton: {
+      color: purple[500],
     },
   }),
 );

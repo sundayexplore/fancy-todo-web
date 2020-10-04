@@ -92,6 +92,14 @@ export default function App({}: IAppProps) {
 
   useEffect((): void => {
     switch (selectedTodoCategory.toLowerCase()) {
+      case 'inbox':
+        setTodos(
+          [...todosFromRedux].sort((todoA, todoB) =>
+            moment(todoA.due).diff(moment(todoB.due)),
+          ),
+        );
+        break;
+
       case 'today':
         setTodos(
           [...todosFromRedux].filter((todo) =>
@@ -128,6 +136,9 @@ export default function App({}: IAppProps) {
     );
 
     switch (selectedTodoCategory.toLowerCase()) {
+      case 'inbox':
+        return <TodoList category={`inbox`} todos={todos} />;
+
       case 'today':
         if (overdueTodos.length > 0) {
           return (

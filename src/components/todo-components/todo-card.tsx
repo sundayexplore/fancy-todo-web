@@ -72,7 +72,7 @@ export default function TodoCard({
     isTimeSet: false,
     dueDate: '',
     dueTime: '',
-    priority: 0,
+    priority: 4,
     position: null,
     completed: false,
   });
@@ -92,7 +92,7 @@ export default function TodoCard({
       isTimeSet: false,
       dueDate: '',
       dueTime: '',
-      priority: 0,
+      priority: 4,
       position: null,
       completed: false,
     });

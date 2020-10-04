@@ -17,7 +17,7 @@ export default function TodoForm({ type, todo }: ITodoFormProps) {
   //   due: '',
   //   dueDate: '',
   //   dueTime: '',
-  //   priority: 0,
+  //   priority: 4,
   //   position: null,
   //   completed: false
   // });
@@ -26,7 +26,7 @@ export default function TodoForm({ type, todo }: ITodoFormProps) {
   //   due: todo?.due || '',
   //   dueDate: todo?.dueDate || '',
   //   dueTime: todo?.dueTime || '',
-  //   priority: todo?.priority || 0,
+  //   priority: todo?.priority || 4,
   //   position: todo?.position || null,
   //   completed: todo?.completed || false
   // });
