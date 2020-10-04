@@ -33,7 +33,7 @@ import moment, { Moment } from 'moment';
 import { ITodo, ITodoValidations, ICustomValidator } from '@/typings';
 
 // Utils
-import { todoAPI, CustomValidator, userAPI } from '@/utils';
+import { todoAPI, CustomValidator } from '@/utils';
 
 // Redux Actions
 import {
@@ -42,6 +42,7 @@ import {
   deleteTodo,
   completeTodo,
 } from '@/redux/actions/todo-actions';
+import { setSuccess, setError } from '@/redux/actions/snackbar-actions';
 
 // Components
 import TodoDatePicker from './todo-date-picker';
@@ -188,8 +189,10 @@ export default function TodoCard({
         });
 
         setLoading(false);
-        
+
+        dispatch(setSuccess(data.message));
         dispatch(addTodo(data.todo));
+
         onComplete();
       } else {
         setLoading(false);
@@ -198,8 +201,8 @@ export default function TodoCard({
     } catch (err) {
       setLoading(false);
 
-      if (err.response) {
-        console.log(err.response.data.message);
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
       }
     }
   };
@@ -224,7 +227,9 @@ export default function TodoCard({
 
         setLoading(false);
 
+        dispatch(setSuccess(data.message));
         dispatch(updateTodo(data.todo));
+
         onComplete();
       } else {
         setLoading(false);
@@ -233,8 +238,8 @@ export default function TodoCard({
     } catch (err) {
       setLoading(false);
 
-      if (err.response) {
-        console.log(err.response.data.message);
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
       }
     }
   };
@@ -260,21 +265,32 @@ export default function TodoCard({
     const { name, isTimeSet, priority, position, completed } = todoData;
 
     try {
-      const { data } = await todoAPI.put(`/${todo._id}`, {
-        name,
-        due: date?.toISOString(),
-        isTimeSet,
-        priority,
-        position,
-        completed,
-      });
+      if (checkTodoErrors()) {
+        const { data } = await todoAPI.put(`/${todo._id}`, {
+          name,
+          due: date?.toISOString(),
+          isTimeSet,
+          priority,
+          position,
+          completed,
+        });
 
-      setLoading(false);
+        setLoading(false);
 
-      dispatch(updateTodo(data.todo));
-      onComplete();
+        dispatch(setSuccess(data.message));
+        dispatch(updateTodo(data.todo));
+
+        onComplete();
+      } else {
+        setLoading(false);
+        // handle here
+      }
     } catch (err) {
       setLoading(false);
+
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
+      }
     }
   };
 
@@ -360,18 +376,20 @@ export default function TodoCard({
   };
 
   const handleCompleteTodo = async (): Promise<void> => {
-    try {
-      setLoading(true);
+    setLoading(true);
 
+    try {
       const { data } = await todoAPI.patch(`/complete/${todo._id}`);
 
       setLoading(false);
+
+      dispatch(setSuccess(data.message));
       dispatch(completeTodo(data.todo._id));
     } catch (err) {
       setLoading(false);
 
-      if (err.response) {
-        console.log(err.response.data.message);
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
       }
     }
   };
@@ -391,13 +409,16 @@ export default function TodoCard({
       const { data } = await todoAPI.delete(`/${todo._id}`);
 
       setLoading(false);
+
+      dispatch(setSuccess(data.message));
       dispatch(deleteTodo(data.todo._id));
+
       handleHideTodoMenu();
     } catch (err) {
       setLoading(false);
 
-      if (err.response) {
-        console.log(err.response.data.message);
+      if (err.response && err.response.data) {
+        dispatch(setError(err.response.data.message));
       }
     }
   };

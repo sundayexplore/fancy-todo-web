@@ -102,7 +102,7 @@ IAppLayoutProps) {
 
       {/* <Footer /> */}
 
-      <Snackbar open={snackbarOptions.open} onClose={handleCloseSnackbar}>
+      <Snackbar open={snackbarOptions.open} autoHideDuration={6000} onClose={handleCloseSnackbar}>
         <Alert
           severity={snackbarOptions.severity}
           onClose={handleCloseAlert}
