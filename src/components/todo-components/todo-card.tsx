@@ -27,7 +27,9 @@ import {
   MoreHoriz as MoreHorizIcon,
 } from '@material-ui/icons';
 import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date';
+import { red, orange, blue } from '@material-ui/core/colors';
 import moment, { Moment } from 'moment';
+import clsx from 'clsx';
 
 // Types
 import { ITodo, ITodoValidations, ICustomValidator } from '@/typings';
@@ -619,7 +621,14 @@ export default function TodoCard({
         ) : (
           <CardActions classes={{ root: classes.todoCardActionsCenter }}>
             <Tooltip arrow title={`Complete Todo`}>
-              <IconButton onClick={handleCompleteTodo}>
+              <IconButton
+                className={clsx({
+                  [classes.priority1]: todo.priority === 1,
+                  [classes.priority2]: todo.priority === 2,
+                  [classes.priority3]: todo.priority === 3,
+                })}
+                onClick={handleCompleteTodo}
+              >
                 <DoneOutlineIcon fontSize={`large`} />
               </IconButton>
             </Tooltip>
@@ -687,6 +696,15 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    priority1: {
+      color: red[500],
+    },
+    priority2: {
+      color: orange[500],
+    },
+    priority3: {
+      color: blue[500],
     },
   }),
 );
