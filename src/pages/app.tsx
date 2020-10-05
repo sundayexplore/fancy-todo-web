@@ -131,8 +131,9 @@ export default function App({}: IAppProps) {
   };
 
   const decideRender = (): JSX.Element | undefined => {
-    const overdueTodos = todosFromRedux.filter((todo) =>
-      moment(todo.due).isBefore(moment(), 'day'),
+    const overdueTodos = todosFromRedux.filter(
+      (todo) =>
+        moment(todo.due).isBefore(moment(), 'date') && todo.completed === false,
     );
 
     switch (selectedTodoCategory.toLowerCase()) {
