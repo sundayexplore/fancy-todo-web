@@ -8,7 +8,6 @@ export { default as Footer } from './footer';
 export { default as Loading } from './loading';
 
 // App Components
-export { default as AppHeader } from './app-components/app-header';
 export { default as AppLayout } from './app-components/app-layout';
 
 // Todo Components
