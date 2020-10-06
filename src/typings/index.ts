@@ -21,8 +21,10 @@ export interface ITodo {
 export interface IUser {
   firstName: string;
   lastName: string;
+  isUsernameSet: boolean;
   username: string;
   email: string;
+  isPasswordSet: boolean;
   verified: boolean;
   profileImageURL: string;
 }

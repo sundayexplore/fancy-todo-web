@@ -11,16 +11,21 @@ import {
   Button,
   InputAdornment,
   IconButton,
-  Snackbar,
+  Divider,
   CircularProgress,
 } from '@material-ui/core';
 import {
   VisibilityOff as VisibilityOffIcon,
   Visibility as VisibilityIcon,
 } from '@material-ui/icons';
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
 
 import { Layout } from '@/components';
-import { userAPI, CustomValidator } from '@/utils';
+import { userAPI, CustomValidator, GOOGLE_OAUTH_CLIENT_ID } from '@/utils';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
@@ -102,9 +107,12 @@ export default function SignIn({}: ISignInPageProps) {
           userIdentifier,
           password,
         });
+
         dispatch(setUser(data.user));
         localStorage.setItem('user', JSON.stringify(data.user));
+
         dispatch(setSuccess(data.message));
+
         await router.push('/app');
         setLoading(false);
       } else {
@@ -140,6 +148,41 @@ export default function SignIn({}: ISignInPageProps) {
     }
   };
 
+  const googleSignInOnSuccess = async (
+    response: GoogleLoginResponse | GoogleLoginResponseOffline,
+  ): Promise<void> => {
+    setLoading(true);
+
+    response = response as GoogleLoginResponse;
+
+    try {
+      const { data } = await userAPI.post('/auth/google', {
+        googleIdToken: response.tokenId,
+      });
+
+      dispatch(setUser(data.user));
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      dispatch(setSuccess(data.message));
+
+      setLoading(false);
+
+      await router.push('/app');
+    } catch (err) {
+      setLoading(false);
+
+      if (err.response) {
+        if (err.response.data) {
+          dispatch(setError(err.response.data.message));
+        }
+      }
+    }
+  };
+
+  const googleSignInOnFailure = (err: any): void => {
+    dispatch(setError(err.response.data.message));
+  };
+
   return (
     <Layout title={`Sign In`}>
       <Card classes={{ root: classes.cardContainer }}>
@@ -147,6 +190,17 @@ export default function SignIn({}: ISignInPageProps) {
           Welcome back!
         </Typography>
         <CardContent classes={{ root: classes.cardFormSection }}>
+          <GoogleLogin
+            clientId={GOOGLE_OAUTH_CLIENT_ID as string}
+            buttonText={`Continue with Google`}
+            onSuccess={googleSignInOnSuccess}
+            onFailure={googleSignInOnFailure}
+            cookiePolicy={`single_host_origin`}
+            isSignedIn
+          />
+
+          <Divider />
+
           <form
             className={classes.signInForm}
             onSubmit={handleSignIn}
