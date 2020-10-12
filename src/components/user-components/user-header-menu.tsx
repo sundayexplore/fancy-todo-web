@@ -59,7 +59,9 @@ export default function UserHeaderMenu({}: IUserHeaderMenuProps) {
           <Avatar>
             {user.lastName && user.lastName.length > 0
               ? `${user.firstName[0].concat(user.lastName[0]).toUpperCase()}`
-              : user.firstName[0].toUpperCase()}
+              : user.firstName && user.firstName.length > 0
+              ? user.firstName[0].toUpperCase()
+              : ''}
           </Avatar>
         )}
       </IconButton>
@@ -79,7 +81,7 @@ export default function UserHeaderMenu({}: IUserHeaderMenuProps) {
         onClose={handleHideMenu}
       >
         <MenuList>
-          <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+          <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
         </MenuList>
       </Popover>
     </div>

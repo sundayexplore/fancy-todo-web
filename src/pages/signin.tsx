@@ -23,9 +23,15 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 import { Layout } from '@/components';
-import { userAPI, CustomValidator, GOOGLE_OAUTH_CLIENT_ID } from '@/utils';
+import {
+  userAPI,
+  CustomValidator,
+  GOOGLE_OAUTH_CLIENT_ID,
+  FACEBOOK_OAUTH_APP_ID,
+} from '@/utils';
 
 // Redux Actions
 import { setUser } from '@/redux/actions/user-actions';
@@ -33,7 +39,6 @@ import { setError, setSuccess } from '@/redux/actions/snackbar-actions';
 
 // Types
 import {
-  ISnackbarOptions,
   ISignInValidations,
   ICustomValidator,
   IValidationFromAPI,
@@ -197,6 +202,12 @@ export default function SignIn({}: ISignInPageProps) {
             onFailure={googleSignInOnFailure}
             cookiePolicy={`single_host_origin`}
             // isSignedIn
+          />
+
+          <FacebookLogin
+            appId={FACEBOOK_OAUTH_APP_ID as string}
+            autoLoad
+            callback={(something) => console.log(something)}
           />
 
           <Divider />

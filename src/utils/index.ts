@@ -13,3 +13,6 @@ export const GOOGLE_OAUTH_CLIENT_ID: string | any =
   process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID;
 export const GOOGLE_OAUTH_CLIENT_SECRET: string | any =
   process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_SECRET;
+
+export const FACEBOOK_OAUTH_APP_ID: string | any =
+  process.env.NEXT_PUBLIC_FACEBOOK_OAUTH_APP_ID;
