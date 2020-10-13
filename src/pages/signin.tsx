@@ -11,7 +11,6 @@ import {
   Button,
   InputAdornment,
   IconButton,
-  Divider,
   CircularProgress,
 } from '@material-ui/core';
 import {
@@ -23,14 +22,14 @@ import {
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
 } from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
+// import FacebookLogin from 'react-facebook-login';
 
 import { Layout } from '@/components';
 import {
   userAPI,
   CustomValidator,
   GOOGLE_OAUTH_CLIENT_ID,
-  FACEBOOK_OAUTH_APP_ID,
+  // FACEBOOK_OAUTH_APP_ID,
 } from '@/utils';
 
 // Redux Actions
@@ -158,11 +157,9 @@ export default function SignIn({}: ISignInPageProps) {
   ): Promise<void> => {
     setLoading(true);
 
-    response = response as GoogleLoginResponse;
-
     try {
       const { data } = await userAPI.post('/auth/google', {
-        googleIdToken: response.tokenId,
+        googleIdToken: (response as GoogleLoginResponse).tokenId,
       });
 
       dispatch(setUser(data.user));
@@ -191,26 +188,10 @@ export default function SignIn({}: ISignInPageProps) {
   return (
     <Layout title={`Sign In`}>
       <Card classes={{ root: classes.cardContainer }}>
-        <Typography variant={`h4`} gutterBottom>
-          Welcome back!
-        </Typography>
-        <CardContent classes={{ root: classes.cardFormSection }}>
-          <GoogleLogin
-            clientId={GOOGLE_OAUTH_CLIENT_ID as string}
-            buttonText={`Continue with Google`}
-            onSuccess={googleSignInOnSuccess}
-            onFailure={googleSignInOnFailure}
-            cookiePolicy={`single_host_origin`}
-            // isSignedIn
-          />
-
-          <FacebookLogin
-            appId={FACEBOOK_OAUTH_APP_ID as string}
-            autoLoad
-            callback={(something) => console.log(something)}
-          />
-
-          <Divider />
+        <CardContent classes={{ root: classes.cardContent }}>
+          <Typography variant={`h4`} gutterBottom>
+            Welcome back!
+          </Typography>
 
           <form
             className={classes.signInForm}
@@ -276,7 +257,25 @@ export default function SignIn({}: ISignInPageProps) {
             </Button>
           </form>
         </CardContent>
-        <CardActions>
+
+        <CardActions classes={{ root: classes.cardActions }}>
+          <section className={classes.socialSignInButtonWrapper}>
+            <GoogleLogin
+              className={classes.googleSignInButton}
+              clientId={GOOGLE_OAUTH_CLIENT_ID as string}
+              buttonText={`Continue with Google`}
+              onSuccess={googleSignInOnSuccess}
+              onFailure={googleSignInOnFailure}
+              cookiePolicy={`single_host_origin`}
+              // isSignedIn
+            />
+            {/* <FacebookLogin
+              appId={FACEBOOK_OAUTH_APP_ID as string}
+              autoLoad
+              callback={(something) => console.log(something)}
+            /> */}
+          </section>
+
           <Button color={`primary`} onClick={() => router.push('/signup')}>
             Create account
           </Button>
@@ -286,16 +285,20 @@ export default function SignIn({}: ISignInPageProps) {
   );
 }
 
-const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     cardContainer: {
-      padding: theme.spacing(4),
+      padding: theme.spacing(2),
     },
-    cardFormSection: {
+    cardContent: {
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
+      padding: theme.spacing(1),
+      '& > *': {
+        width: '100%',
+      },
     },
     signInForm: {
       width: '100%',
@@ -307,14 +310,37 @@ const useStyles = makeStyles<Theme, ISignInPageProps>((theme) =>
         width: '100%',
       },
       '& > .MuiTextField-root': {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1),
-        width: 250,
+        margin: theme.spacing(1, 0),
+        width: 300,
         flexGrow: 1,
       },
     },
     signInButton: {
       marginTop: theme.spacing(3),
+    },
+    cardActions: {
+      marginTop: theme.spacing(2),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+      padding: theme.spacing(1),
+      '& > *': {
+        margin: theme.spacing(2, 0),
+      },
+    },
+    socialSignInButtonWrapper: {
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      '& > *': {
+        width: '100%',
+      },
+    },
+    googleSignInButton: {
+      width: '100%',
     },
   }),
 );
