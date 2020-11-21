@@ -18,7 +18,9 @@
     "dev": "next -p 8000",
     "build": "next build",
     "start": "next start -p $WEB_PORT",
-    "push": "git checkout dev && git push origin dev && git checkout master && git merge dev && git push origin master && git checkout dev"
+    "push": "npm-run-all docker:dev docker:latest",
+    "docker:dev": "git checkout dev && docker build -f Dev.Dockerfile -t sundayexplore/fancy-todo-web:dev . && docker push sundayexplore/fancy-todo-web:dev && git push origin dev",
+    "docker:latest": "git checkout master && git merge dev && docker build -f Prod.Dockerfile -t sundayexplore/fancy-todo-web:latest . && docker push sundayexplore/fancy-todo-web:latest && git push origin master && git checkout dev"
   },
   "dependencies": {
     "@date-io/moment": "1.x",
@@ -55,6 +57,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/redux": "^3.6.0",
     "babel-loader": "^8.1.0",
+    "npm-run-all": "^4.1.5",
     "ts-loader": "^7.0.4",
     "typescript": "~3.7.5"
   }
