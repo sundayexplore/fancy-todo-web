@@ -18,8 +18,6 @@
     "dev": "next -p 8000",
     "build": "next build",
     "start": "next start -p $WEB_PORT",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "push": "git checkout dev && git push origin dev && git checkout master && git merge dev && git push origin master && git checkout dev"
   },
   "dependencies": {
@@ -48,11 +46,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
-    "@storybook/addon-actions": "^5.3.19",
-    "@storybook/addon-links": "^5.3.19",
-    "@storybook/addons": "^5.3.19",
-    "@storybook/preset-typescript": "^3.0.0",
-    "@storybook/react": "^5.3.19",
     "@svgr/webpack": "^5.4.0",
     "@types/aos": "^3.0.3",
     "@types/moment": "^2.13.0",
