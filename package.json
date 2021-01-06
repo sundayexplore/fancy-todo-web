@@ -29,7 +29,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@material-ui/pickers": "^3.2.10",
     "aos": "^2.3.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "clsx": "^1.1.1",
     "fontsource-roboto": "^3.0.3",
     "moment": "^2.26.0",
